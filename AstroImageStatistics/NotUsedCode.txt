@@ -1,0 +1,6 @@
+﻿Log("Special mode - trying to get fixed point ...")
+                Dim Data(,) As Single = FITSReader.ReadInFloat32(FileName, False)
+                Dim histData = From clr In Data.AsParallel
+                               Group By clr Into Hist = Group
+                               Select New With {.Color = clr, .Count = Hist.LongCount}
+                Log(histData.Count.ToString.Trim & " different values")

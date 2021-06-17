@@ -1,0 +1,411 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="15.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <Import Project="..\packages\OpenCvSharp4.runtime.win.4.5.1.20201229\build\net\OpenCvSharp4.runtime.win.props" Condition="Exists('..\packages\OpenCvSharp4.runtime.win.4.5.1.20201229\build\net\OpenCvSharp4.runtime.win.props')" />
+  <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
+  <PropertyGroup>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
+    <ProjectGuid>{94F2193C-8E66-4359-B790-250F3B1F21EA}</ProjectGuid>
+    <OutputType>WinExe</OutputType>
+    <StartupObject>AstroImageStatistics.My.MyApplication</StartupObject>
+    <RootNamespace>AstroImageStatistics</RootNamespace>
+    <AssemblyName>AstroImageStatistics</AssemblyName>
+    <FileAlignment>512</FileAlignment>
+    <MyType>WindowsForms</MyType>
+    <TargetFrameworkVersion>v4.8</TargetFrameworkVersion>
+    <AutoGenerateBindingRedirects>true</AutoGenerateBindingRedirects>
+    <Deterministic>true</Deterministic>
+    <TargetFrameworkProfile />
+    <NuGetPackageImportStamp>
+    </NuGetPackageImportStamp>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionExplicit>On</OptionExplicit>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionCompare>Binary</OptionCompare>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionStrict>Off</OptionStrict>
+  </PropertyGroup>
+  <PropertyGroup>
+    <OptionInfer>On</OptionInfer>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Debug|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Debug\</OutputPath>
+    <DefineDebug>false</DefineDebug>
+  </PropertyGroup>
+  <PropertyGroup Condition="'$(Configuration)|$(Platform)' == 'Release|x64'">
+    <PlatformTarget>x64</PlatformTarget>
+    <OutputPath>bin\x64\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationIcon>Statistics.ico</ApplicationIcon>
+  </PropertyGroup>
+  <ItemGroup>
+    <Reference Include="AdvancedDataGridView, Version=1.1.24722.8, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\DG.AdvancedDataGridView.1.1.24722.8\lib\net40\AdvancedDataGridView.dll</HintPath>
+    </Reference>
+    <Reference Include="ASCOM.Astrometry, Version=6.0.0.0, Culture=neutral, PublicKeyToken=565de7938946fba7, processorArchitecture=MSIL">
+      <SpecificVersion>False</SpecificVersion>
+      <HintPath>..\..\..\..\Windows\assembly\GAC_MSIL\ASCOM.Astrometry\6.0.0.0__565de7938946fba7\ASCOM.Astrometry.dll</HintPath>
+    </Reference>
+    <Reference Include="BitMiracle.LibTiff.NET, Version=2.4.639.0, Culture=neutral, PublicKeyToken=53879b3e20e7a7d6, processorArchitecture=MSIL">
+      <HintPath>..\packages\BitMiracle.LibTiff.NET.2.4.639\lib\net40\BitMiracle.LibTiff.NET.dll</HintPath>
+    </Reference>
+    <Reference Include="ClosedXML, Version=0.95.4.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ClosedXML.0.95.4\lib\net46\ClosedXML.dll</HintPath>
+    </Reference>
+    <Reference Include="DocumentFormat.OpenXml, Version=2.12.0.0, Culture=neutral, PublicKeyToken=8fb06cb64d019a17, processorArchitecture=MSIL">
+      <HintPath>..\packages\DocumentFormat.OpenXml.2.12.0\lib\net46\DocumentFormat.OpenXml.dll</HintPath>
+    </Reference>
+    <Reference Include="ExcelNumberFormat, Version=1.1.0.0, Culture=neutral, PublicKeyToken=23c6f5d73be07eca, processorArchitecture=MSIL">
+      <HintPath>..\packages\ExcelNumberFormat.1.1.0\lib\net20\ExcelNumberFormat.dll</HintPath>
+    </Reference>
+    <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
+    </Reference>
+    <Reference Include="Microsoft.CSharp" />
+    <Reference Include="Newtonsoft.Json, Version=12.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.12.0.3\lib\net45\Newtonsoft.Json.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp4.4.5.1.20201229\lib\net48\OpenCvSharp.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Blob, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp4.4.5.1.20201229\lib\net48\OpenCvSharp.Blob.dll</HintPath>
+    </Reference>
+    <Reference Include="OpenCvSharp.Extensions, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenCvSharp4.4.5.1.20201229\lib\net48\OpenCvSharp.Extensions.dll</HintPath>
+    </Reference>
+    <Reference Include="PresentationCore" />
+    <Reference Include="System" />
+    <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Data" />
+    <Reference Include="System.Deployment" />
+    <Reference Include="System.Drawing" />
+    <Reference Include="System.Drawing.Common, Version=4.0.0.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Drawing.Common.5.0.0\lib\net461\System.Drawing.Common.dll</HintPath>
+    </Reference>
+    <Reference Include="System.IO.FileSystem.Primitives, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.FileSystem.Primitives.4.3.0\lib\net46\System.IO.FileSystem.Primitives.dll</HintPath>
+      <Private>True</Private>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="System.IO.Packaging, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.IO.Packaging.5.0.0\lib\net46\System.IO.Packaging.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Memory, Version=4.0.1.1, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Memory.4.5.4\lib\net461\System.Memory.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Numerics" />
+    <Reference Include="System.Numerics.Vectors, Version=4.1.4.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Numerics.Vectors.4.5.0\lib\net46\System.Numerics.Vectors.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Runtime.CompilerServices.Unsafe, Version=5.0.0.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.Runtime.CompilerServices.Unsafe.5.0.0\lib\net45\System.Runtime.CompilerServices.Unsafe.dll</HintPath>
+    </Reference>
+    <Reference Include="System.ValueTuple, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
+      <HintPath>..\packages\System.ValueTuple.4.5.0\lib\net47\System.ValueTuple.dll</HintPath>
+    </Reference>
+    <Reference Include="System.Windows.Forms" />
+    <Reference Include="System.Xml" />
+    <Reference Include="System.Core" />
+    <Reference Include="System.Xml.Linq" />
+    <Reference Include="System.Data.DataSetExtensions" />
+    <Reference Include="System.Net.Http" />
+    <Reference Include="WindowsBase" />
+    <Reference Include="ZedGraph">
+      <HintPath>..\..\..\src\bin\ZedGraph.dll</HintPath>
+    </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Import Include="Microsoft.VisualBasic" />
+    <Import Include="System" />
+    <Import Include="System.Collections" />
+    <Import Include="System.Collections.Generic" />
+    <Import Include="System.Data" />
+    <Import Include="System.Drawing" />
+    <Import Include="System.Diagnostics" />
+    <Import Include="System.Windows.Forms" />
+    <Import Include="System.Linq" />
+    <Import Include="System.Xml.Linq" />
+    <Import Include="System.Threading.Tasks" />
+  </ItemGroup>
+  <ItemGroup>
+    <Compile Include="..\..\src\atomics\ImgArrayFunctions.vb">
+      <Link>ImgArrayFunctions.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cPlateSolve.vb">
+      <Link>cPlateSolve.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\AstroCalc.vb">
+      <Link>AstroCalc.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\AstroStatistics.vb">
+      <Link>AstroStatistics.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\BayerFunctions.vb">
+      <Link>BayerFunctions.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cAstroParser.vb">
+      <Link>cAstroParser.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cColorMaps.vb">
+      <Link>cColorMaps.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cDLLDynCall.vb">
+      <Link>cDLLDynCall.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSHeaderChanger.vb">
+      <Link>cFITSHeaderChanger.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSHeaderKeywords.vb">
+      <Link>cFITSHeaderKeywords.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSHeaderParser.vb">
+      <Link>cFITSHeaderParser.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSReader.vb">
+      <Link>cFITSReader.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSWriter.vb">
+      <Link>cFITSWriter.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cImgForm.vb">
+      <Link>cImgForm.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cIntelIPP.vb">
+      <Link>cIntelIPP.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cLockBitmap.vb">
+      <Link>cLockBitmap.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cLogTextBox.vb">
+      <Link>cLogTextBox.vb</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cNEFReader.vb">
+      <Link>cNEFReader.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ComponentModelConverter.vb">
+      <Link>ComponentModelConverter.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cOpenCvSharp.vb">
+      <Link>cOpenCvSharp.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cSingleValueStatistics.vb">
+      <Link>cSingleValueStatistics.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cStatMultiThread.vb">
+      <Link>cStatMultiThread.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cStopper.vb">
+      <Link>cStopper.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\DragDrop.vb">
+      <Link>DragDrop.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Everything.vb">
+      <Link>Everything.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Extensions.vb">
+      <Link>Extensions.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Generics.vb">
+      <Link>Generics.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ImageFileFormatSpecific.vb">
+      <Link>ImageFileFormatSpecific.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ImageProcessing.vb">
+      <Link>ImageProcessing.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\RecursiveDirScan.vb">
+      <Link>RecursiveDirScan.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\RTFTextBox.vb">
+      <Link>RTFTextBox.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\SignalProcessing.vb">
+      <Link>SignalProcessing.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
+      <Link>ZEDGraphForm.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ZedGraphService.vb">
+      <Link>ZedGraphService.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ZEDGraphUtil.vb">
+      <Link>ZEDGraphUtil.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\GUIElements\PictureBoxEx.vb">
+      <Link>PictureBoxEx.vb</Link>
+      <SubType>Component</SubType>
+    </Compile>
+    <Compile Include="AstroImageStatistics.vb" />
+    <Compile Include="cDB.vb" />
+    <Compile Include="cFITSGrepper.vb" />
+    <Compile Include="cIntelIPP_NewCode.vb" />
+    <Compile Include="frmAstroBinSearch.Designer.vb">
+      <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmAstroBinSearch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmHeaderAsIs.Designer.vb">
+      <DependentUpon>frmHeaderAsIs.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmHeaderAsIs.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmSinglePixelStat.Designer.vb">
+      <DependentUpon>frmSinglePixelStat.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmSinglePixelStat.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmWorkflow.Designer.vb">
+      <DependentUpon>frmWorkflow.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmWorkflow.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="MainForm.Designer.vb">
+      <DependentUpon>MainForm.vb</DependentUpon>
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmFITSGrep.Designer.vb">
+      <DependentUpon>frmFITSGrep.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmFITSGrep.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmImageDisplay.Designer.vb">
+      <DependentUpon>frmImageDisplay.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmImageDisplay.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmLastOpenedFiles.Designer.vb">
+      <DependentUpon>frmLastOpenedFiles.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmLastOpenedFiles.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmManualAdjust.Designer.vb">
+      <DependentUpon>frmManualAdjust.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmManualAdjust.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmNavigator.Designer.vb">
+      <DependentUpon>frmNavigator.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmNavigator.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="My Project\AssemblyInfo.vb" />
+    <Compile Include="My Project\Application.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Application.myapp</DependentUpon>
+      <DesignTime>True</DesignTime>
+    </Compile>
+    <Compile Include="My Project\Resources.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DesignTime>True</DesignTime>
+      <DependentUpon>Resources.resx</DependentUpon>
+    </Compile>
+    <Compile Include="My Project\Settings.Designer.vb">
+      <AutoGen>True</AutoGen>
+      <DependentUpon>Settings.settings</DependentUpon>
+      <DesignTimeSharedInput>True</DesignTimeSharedInput>
+    </Compile>
+    <Compile Include="MyDB.vb" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="frmAstroBinSearch.resx">
+      <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmHeaderAsIs.resx">
+      <DependentUpon>frmHeaderAsIs.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmSinglePixelStat.resx">
+      <DependentUpon>frmSinglePixelStat.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmWorkflow.resx">
+      <DependentUpon>frmWorkflow.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="MainForm.resx">
+      <DependentUpon>MainForm.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmFITSGrep.resx">
+      <DependentUpon>frmFITSGrep.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmImageDisplay.resx">
+      <DependentUpon>frmImageDisplay.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmLastOpenedFiles.resx">
+      <DependentUpon>frmLastOpenedFiles.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmManualAdjust.resx">
+      <DependentUpon>frmManualAdjust.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmNavigator.resx">
+      <DependentUpon>frmNavigator.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="My Project\Resources.resx">
+      <Generator>VbMyResourcesResXFileCodeGenerator</Generator>
+      <LastGenOutput>Resources.Designer.vb</LastGenOutput>
+      <CustomToolNamespace>My.Resources</CustomToolNamespace>
+      <SubType>Designer</SubType>
+    </EmbeddedResource>
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="..\HelpContent.rtf">
+      <Link>HelpContent.rtf</Link>
+    </EmbeddedResource>
+    <None Include="My Project\Application.myapp">
+      <Generator>MyApplicationCodeGenerator</Generator>
+      <LastGenOutput>Application.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="My Project\Settings.settings">
+      <Generator>SettingsSingleFileGenerator</Generator>
+      <CustomToolNamespace>My</CustomToolNamespace>
+      <LastGenOutput>Settings.Designer.vb</LastGenOutput>
+    </None>
+    <None Include="App.config" />
+    <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <EmbeddedResource Include="BuildDate.txt" />
+    <Content Include="..\..\src\bin\Everything64.dll">
+      <Link>Everything64.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
+    <Content Include="FITSHeaderKeywords.txt" />
+    <Content Include="FromMyObservatory.txt" />
+    <Content Include="NotUsedCode.txt" />
+    <Content Include="Statistics.ico" />
+    <Content Include="ToDo.txt" />
+  </ItemGroup>
+  <Import Project="$(MSBuildToolsPath)\Microsoft.VisualBasic.targets" />
+  <PropertyGroup>
+    <PreBuildEvent>echo %25date%25 %25time%25 &gt; "$(ProjectDir)\BuildDate.txt"</PreBuildEvent>
+  </PropertyGroup>
+  <PropertyGroup>
+    <PostBuildEvent>del "$(ProjectDir)\BuildDate.txt"</PostBuildEvent>
+  </PropertyGroup>
+  <Target Name="EnsureNuGetPackageBuildImports" BeforeTargets="PrepareForBuild">
+    <PropertyGroup>
+      <ErrorText>Dieses Projekt verweist auf mindestens ein NuGet-Paket, das auf diesem Computer fehlt. Verwenden Sie die Wiederherstellung von NuGet-Paketen, um die fehlenden Dateien herunterzuladen. Weitere Informationen finden Sie unter "http://go.microsoft.com/fwlink/?LinkID=322105". Die fehlende Datei ist "{0}".</ErrorText>
+    </PropertyGroup>
+    <Error Condition="!Exists('..\packages\OpenCvSharp4.runtime.win.4.5.1.20201229\build\net\OpenCvSharp4.runtime.win.props')" Text="$([System.String]::Format('$(ErrorText)', '..\packages\OpenCvSharp4.runtime.win.4.5.1.20201229\build\net\OpenCvSharp4.runtime.win.props'))" />
+  </Target>
+</Project>

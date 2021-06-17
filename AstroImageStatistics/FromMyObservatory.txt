@@ -1,0 +1,316 @@
+﻿ Private Sub RunExposeSeries()
+
+        Dim ExpMode_Series As Integer = 0
+        Dim ExpMode_Focus As Integer = 1
+        Dim ExpMode_Calibrate As Integer = 2
+        Dim FocusArea As Integer = 60
+
+        'Basic variables
+        Dim ImageDataInt32(,) As UInt32 = Nothing            'individual image
+        Dim ImageDataInt32_SUM(,) As UInt32 = Nothing        'sum image
+        Dim ExpStopWatch As New Stopwatch
+
+        'Stop async tasks on camera
+        If BGWorkers.Camera_PWI.IsBusy Then
+            BGWorkers.Camera_PWI.CancelAsync()
+            Do
+                DE()
+            Loop Until BGWorkers.Camera_PWI.IsBusy = False
+        End If
+
+        'List of RA and DEC differences
+        Dim DeltaRA As New List(Of Double)
+        Dim DeltaDec As New List(Of Double)
+
+        Dim FocusPeakX As Integer = -1 : Dim FocusPeakY As Integer = -1
+
+        'Run exposure (not in background worker)
+        With DB.ASCOM_Camera_PWI
+            If DB.ASCOM_Camera_PWI.Connected = True Then
+
+                'ROI all
+                .StartX = 0
+                .StartY = 0
+                .NumX = .CameraXSize - 1
+                .NumY = .CameraYSize - 1
+                DB.ASCOM_Camera_PWI.AbortExposure()
+                DB.ASCOM_Camera_PWI.StopExposure()
+
+                'Prepare all camera settings
+                .Gain = CType(tbCamPWI_Gain.Text, Short)
+                Dim FrameCount As Integer = CType(tbCamPWI_ExpCount.Text, Integer)
+                Dim ExposeTime As Double = Val(tbCamPWI_ExpTime.Text.Replace(",", "."))
+
+                'Prepare storage process
+                Dim StorageRoot As String = DB.INI.Get("Storage", "RawCapture", String.Empty)
+                Dim DatePath As String = Format(Now, "yyyy_MM_dd")
+                Dim TimePath As String = Format(Now, "HH_mm_ss")
+                Dim ImageBaseName As String = tbObservingName.Text
+                Dim CurrentDir As String = System.IO.Path.Combine(New String() {StorageRoot, DatePath, TimePath, ImageBaseName})
+                If System.IO.Directory.Exists(CurrentDir) = False Then
+                    System.IO.Directory.CreateDirectory(CurrentDir)
+                Else
+                    'Rename directory in case of ...
+                End If
+                tspbExpose.Maximum = CInt(ExposeTime * 1000)
+
+                AddToLog("Starting exposure of " & FrameCount.ToString.Trim & " frames")
+                For Frame As Integer = 1 To FrameCount
+                    tsslExposingDetails.Text = "Exposing frame " & Format(Frame, "0000").ToString.Trim & "/" & Format(FrameCount, "0000").ToString.Trim & " with " & ExposeTime.ToString.Trim & " s and gain " & .Gain.ToString.Trim
+                    'If this is the first frame, the parallel capture and read did not start, to init the first capture
+                    If Frame = 1 Then
+                        ExpStopWatch.Reset() : ExpStopWatch.Start()
+                        DB.ASCOM_Camera_PWI.StartExposure(ExposeTime, True)
+                    End If
+                    'Wait for the capture to end and notify the GUI
+                    Do
+                        Dim ElapedTime As Long = ExpStopWatch.ElapsedMilliseconds
+                        If ElapedTime <= tspbExpose.Maximum Then tspbExpose.Value = CInt(ElapedTime) Else tspbExpose.Value = tspbExpose.Maximum
+                        'Do jobs as in the background worker
+                        DB.Val.Set(DB.eKey.Camera_PWI_Temp_Current, Format(DB.ASCOM_Camera_PWI.CCDTemperature, "#0.0").Replace(",", "."))
+                        DE()
+                    Loop Until DB.ASCOM_Camera_PWI.ImageReady = True
+                    tspbExpose.Value = 0 : DE()
+                    'Read data from the cam
+                    ImageDataInt32 = CType(DB.ASCOM_Camera_PWI.ImageArray, UInt32(,))
+                    'Calculate a sum image
+                    If FrameCount > 1 Then
+                        If Frame = 1 Then
+                            ReDim ImageDataInt32_SUM(ImageDataInt32.GetUpperBound(0), ImageDataInt32.GetUpperBound(0))
+                            For Idx1 As Integer = 0 To ImageDataInt32.GetUpperBound(0)
+                                For Idx2 As Integer = 0 To ImageDataInt32.GetUpperBound(1)
+                                    ImageDataInt32_SUM(Idx1, Idx2) = ImageDataInt32(Idx1, Idx2)
+                                Next Idx2
+                            Next Idx1
+                        Else
+                            For Idx1 As Integer = 0 To ImageDataInt32.GetUpperBound(0)
+                                For Idx2 As Integer = 0 To ImageDataInt32.GetUpperBound(1)
+                                    ImageDataInt32_SUM(Idx1, Idx2) += ImageDataInt32(Idx1, Idx2)
+                                Next Idx2
+                            Next Idx1
+                        End If
+                    End If
+                    'Report time it took to capture and init new capture
+                    'If this is not the last capture, init a new capture before processing the passed data
+                    If Frame < FrameCount Then
+                        ExpStopWatch.Reset() : ExpStopWatch.Start()
+                        DB.ASCOM_Camera_PWI.StartExposure(ExposeTime, True)
+                    End If
+
+                    'Precalc data
+                    Dim RecJ2000 As String = CStr(DB.Val(DB.eKey.Mount_RA_J2000))
+                    Dim DecJ2000 As Double = Ato.AstroCalc.ParseDeclination(CStr(DB.Val(DB.eKey.Mount_Dec_J2000)))
+
+                    'Generate FITS header
+                    Dim CustomHeaderElements As New List(Of String())
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.OBJECT, tbObservingName.Text)                                             'verbose object name (e.g. "M45")
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.OBSERVER, DB.INI.Get("ImageInfos", "Observer", "Martin Weiss"))           'observer
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.TELESCOP, "PlaneWave CDK 12.5")                                           'observing instrument
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.INSTRUME, "ZWO ASI094MC Pro")                                             'observing camera
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.TELFOC, "2541")
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.TELAPER, "0.318")
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.DATE_OBS, cFITSKeywords.GetDateWithTime(Now))                             'observation start time
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.RA, RecJ2000)
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.DEC, DecJ2000.ToString.Trim.Replace(",", "."))
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.EXPTIME, CStr(ExposeTime.ToString.Trim.Replace(",", ".")))                'exposure time
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.GAIN, CStr(DB.ASCOM_Camera_PWI.Gain.ToString.Trim.Replace(",", ".")))     'GAIN is not a standard FITS header keyword ...
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.FOCUS, CStr(DB.Val(DB.eKey.FocusPWI_Position)))                           'focuser position
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.SETTEMP, CStr(DB.Val(DB.eKey.Camera_PWI_Temp_Target)))                    'CCD temperature set
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.CCDTEMP, CStr(DB.Val(DB.eKey.Camera_PWI_Temp_Current)))                   'CCD temperature current
+
+                    'Write captured data AS IS to file
+                    If cbStoreAllCaptures.Checked = True Then
+                        Dim Filename As String = CurrentDir & "\FRAME_" & Format(Frame, "000".ToString.Trim) & ".FITS"
+                        Dim RawFITSHeader As New List(Of String()) : RawFITSHeader.AddRange(CustomHeaderElements)
+                        AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.BAYERPAT, "1")                                                        'the camera has a bayer pattern
+                        AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.COLORTYP, "RGGB")                                                     'bayer pattern
+                        AddToLog("Storing frame as <" & Filename & "> ...")
+                        cFITSWriter.Write(Filename, ImageDataInt32, cFITSWriter.eBitPix.Int32, RawFITSHeader)
+                        AddToLog("  Storing finished")
+                    End If
+
+                    'Display image - peak area
+                    If cbFocusMode.Checked = True Then
+                        Dim FocusZoom As Integer = 5
+                        If Integer.TryParse(tbFocusModeZoom.Text, FocusZoom) = False Then FocusZoom = 5
+                        If Frame = 1 Then
+                            'Get peak and display peak
+                            Dim PeakVal As UInt32 = ImgProcessing.PeakXY(ImageDataInt32, FocusPeakX, FocusPeakY)
+                            AddToLog("Peak @ <" & FocusPeakX.ToString.Trim & ":" & FocusPeakY.ToString.Trim & ">, value: " & PeakVal.ToString.Trim)
+                            Dim ZoomedData(,) As UInt32 = ImgProcessing.GetArea(ImageDataInt32, FocusPeakX, FocusPeakY, 11, 11, FocusZoom)
+                            'pbLiveImage.Image = cImageDisplay.CalculateImageFromData(ZoomedData).BitmapToProcess
+                        Else
+                            'ROI is already set - display all
+                            Dim ZoomedData(,) As UInt32 = ImgProcessing.ZoomAll(ImageDataInt32, FocusZoom)
+                            'pbLiveImage.Image = cImageDisplay.CalculateImageFromData(ZoomedData).BitmapToProcess
+                        End If
+                    End If
+
+                    'ROI (only in focus mode)
+                    If cbFocusMode.Checked = True Then
+                        If FocusPeakX <> -1 And FocusPeakY <> -1 And Frame = 1 Then
+                            SetROI(DB.ASCOM_Camera_PWI, FocusPeakX, FocusPeakY, FocusArea, FocusArea)
+                        End If
+                    End If
+
+                    'Run solver if requested
+                    If cbSolveAllCaptures.Checked = True Then
+
+                        'Write luminance byte data
+                        Dim ByteDataFile As String = CurrentDir & "\FRAME_" & Format(Frame, "000".ToString.Trim) & "_LUM.FITS"
+                        Dim ByteDataFITS As New List(Of String()) : ByteDataFITS.AddRange(CustomHeaderElements)
+                        AddToLog("Storing luminance frame as <" & ByteDataFile & "> for solver ...")
+                        cFITSWriter.Write(ByteDataFile, ImgProcessing.Lum8Bit(ImageDataInt32), cFITSWriter.eBitPix.Byte, CustomHeaderElements)
+
+                        'Solve byte data
+                        AddToLog("Starting plate solver ...")
+                        With New cPlateSolve
+
+                            .RA = AstroParser.ParseRA(CStr(DB.Val(DB.eKey.Mount_RA_J2000))) * .GradToRad
+                            .Dec = AstroParser.ParseDeclination(CStr(DB.Val(DB.eKey.Mount_Dec_J2000))) * .GradToRad
+                            .SetDimX(48.93)
+                            .SetDimY(32.71)
+                            .HoldOpenTime = 100
+
+                            'Store an image containing all RA and DEC errors as an image
+                            Dim RawOut As String() = {}
+                            Dim ErrorCode2 As String = .Solve(ByteDataFile, RawOut)
+                            AddToLog("Error: " & .ErrorRA.ToString.Trim & " '' RA, " & .ErrorDec.ToString.Trim & " '' Dec")
+                            AddToLog("Error: " & .PixelErrorRA.ToString.Trim & "  pixel RA, " & .PixelErrorDec.ToString.Trim & " pixel Dec")
+                            DeltaRA.Add(.ErrorRA)
+                            DeltaDec.Add(.ErrorDec)
+
+                            Clipboard.SetImage(GraphPlotter.GenerateData("Position error", "RA ['']", "DEC ['']", 400, 400, DeltaRA, DeltaDec))
+
+                        End With
+                        AddToLog("    Plate Solver finished.")
+
+                    End If
+
+                    If ExposeState = eExposeState.Stopping Then Exit For
+
+                Next Frame
+
+            End If
+
+        End With
+
+        'Display histogram data
+        AddToLog("Calculating final image statistics ...")
+        Dim SingleStatCalc As New AstroNET.Statistics(DB.INI.Get("Storage", "IPPPath", String.Empty))
+        Dim SingleStat As AstroNET.Statistics.sStatistics
+        If IsNothing(ImageDataInt32_SUM) = True Then
+            SingleStatCalc.DataProcessor_UInt32.ImageData = ImageDataInt32
+            SingleStat = SingleStatCalc.ImageStatistics(SingleStatCalc.DataMode)
+        Else
+            SingleStatCalc.DataProcessor_UInt32.ImageData = ImageDataInt32_SUM
+            SingleStat = SingleStatCalc.ImageStatistics(SingleStatCalc.DataMode)
+            ImageProcessing.BayerFlatBalance(ImageDataInt32_SUM, SingleStat.BayerHistograms)
+        End If
+        Experimental.DisplayGraph(SingleStat.BayerHistograms)
+        'tsslExposeStatistics.Text = "MAX: <" & Max(0, 0).ToString.Trim & ">,<" & Max(0, 1).ToString.Trim & ">,<" & Max(1, 0).ToString.Trim & ">,<" & Max(1, 1).ToString.Trim & ">"
+
+        'Make ready for next exposure
+        AddToLog("Exposure sequence finished.")
+        tsslExposingDetails.Text = "Exposure sequence finished."
+        ExposeState = eExposeState.Idle
+        btnExpose.Text = "Start Expose"
+
+        'Run async work again
+        BGWorkers.Camera_PWI.RunWorkerAsync()
+
+    End Sub
+
+
+
+
+
+
+    ===============================================================================================================================================
+    ===============================================================================================================================================
+    ===============================================================================================================================================
+
+
+
+        Private Sub TestSolverToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles TestSolverToolStripMenuItem.Click
+
+        Dim Solver As New cPlateSolve
+        Dim DataFromMount As Boolean = False
+
+        With ofdMain
+            .Filter = "FITS files (*.fits)|*.fits|JPG files (*.jpg)|*.jpg|PNG files (*.png)|*.png"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
+        Dim Binning As Integer = 1
+
+        Dim RAText As String() = {}
+        Dim DecText As String() = {}
+        If DataFromMount = True Then
+            'Get RA and DEC from mount
+            RAText = CStr(DB.Val(DB.eKey.Mount_RA_J2000)).Split(":"c)
+            DecText = CStr(DB.Val(DB.eKey.Mount_Dec_J2000)).Split(":"c)
+
+        Else
+            'Get the FITS header information
+            Dim X As List(Of cFITSHeaderParser.sHeaderElement) = cFITSHeaderChanger.ReadHeader(ofdMain.FileName)
+            Dim File_RA As String = String.Empty
+            Dim File_Dec As String = String.Empty
+            For Each Entry As cFITSHeaderParser.sHeaderElement In X
+                If Entry.Keyword.Trim.ToUpper = "RA" Then File_RA = Entry.Value.Trim
+                If Entry.Keyword.Trim.ToUpper = "DEC" Then File_Dec = Entry.Value.Trim
+            Next Entry
+        End If
+
+        Dim FITSFile1 As String = ofdMain.FileName
+        Dim ErrorCode1 As String = String.Empty
+
+        With Solver
+
+            .SetRA(CInt(RAText(0)), CInt(RAText(1)), Val(RAText(2)))                        'theoretical position (Wikipedia, J2000.0)
+            .SetDec(CInt(DecText(0)), CInt(DecText(1)), Val(DecText(2)))                    'theoretical position (Wikipedia, J2000.0)
+
+
+            .SetDimX(48.93 / Binning)                                                       'constant for system [telescope-camera]
+            .SetDimY(32.71 / Binning)                                                       'constant for system [telescope-camera]
+            .HoldOpenTime = 100
+            Dim RawOut As String() = {}
+            ErrorCode1 = .Solve(FITSFile1, RawOut)
+            AddToLog(RawOut)
+        End With
+
+        Exit Sub
+
+    End Sub
+
+
+
+
+
+
+
+        Private Shared Sub BGW_Camera_PWI_DoWork(sender As Object, e As System.ComponentModel.DoWorkEventArgs) Handles Camera_PWI.DoWork
+        Do
+            Dim MyBGWorker As System.ComponentModel.BackgroundWorker = CType(sender, System.ComponentModel.BackgroundWorker)
+            Dim NewConnectedName As String = String.Empty
+            If DB.ConnectToPWICamera(NewConnectedName) = True Then
+                'Process user inputs
+                DB.ASCOM_Camera_PWI.CoolerOn = DB.Val.GetTyped(DB.eKey.User_Camera_PWI_CoolerState, False)
+                Dim CCDTempRequested As Double = CDbl(DB.Val(DB.eKey.User_Camera_PWI_Temp_Target))
+                DB.ASCOM_Camera_PWI.SetCCDTemperature = CCDTempRequested
+                With MyBGWorker
+                    .ReportProgress(BGW_DBUpdate, New DB.ProgressObject(DB.eKey.Camera_PWI_Temp_Current, Format(DB.ASCOM_Camera_PWI.CCDTemperature, "#0.0").Replace(",", ".")))
+                    .ReportProgress(BGW_DBUpdate, New DB.ProgressObject(DB.eKey.Camera_PWI_Temp_Target, Format(DB.ASCOM_Camera_PWI.SetCCDTemperature, "#0.0").Replace(",", ".")))
+                    .ReportProgress(BGW_DBUpdate, New DB.ProgressObject(DB.eKey.Camera_PWI_CoolerPower, DB.ASCOM_Camera_PWI.CoolerPower))
+                    If .CancellationPending Then
+                        e.Cancel = True
+                        Exit Do
+                    End If
+                End With
+            End If
+            If String.IsNullOrEmpty(NewConnectedName) = False Then
+                MyBGWorker.ReportProgress(BGW_LogOutput, "Connected PWI camera: <" & NewConnectedName & ">")
+            End If
+            System.Threading.Thread.Sleep(BGWorkerSleepTime)
+        Loop Until 1 = 0
+    End Sub

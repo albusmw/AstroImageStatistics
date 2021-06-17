@@ -1,0 +1,155 @@
+﻿
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+CROTA2               0.000000          degrees           Image twist: +axis2 W of N at EQUINOX;
+                                                         In the opposite direction to the
+                                                         conventional Position Angle, where
+                                                         P.A. = -CROTA2.
+      
+BITMASK             136838191            -               Fatal bitstring mask template used to 
+                                                         reject input frame pixels. Bits are
+                                                         defined here. Band dependent.
+
+WRELEASE     'release-v3.5.1'            -               WISE Science Data System (WSDS)
+                                                         software release tag
+                           
+FILETYPE    'intensity image'            -               Image product description. Can be either: 
+                                                         "intensity image" (int),
+                                                         "depth-of-coverage image" (cov), or
+                                                         "1-sigma uncertainty image" (unc).
+                            
+BUNIT                    'DN'            -               Image pixel units: = Data Number (DN) for
+                                                         int and unc FILETYPEs; = "effective pixels"
+                                                         for the cov FILETYPE. Image types are
+                                                         described here.
+
+ORIGIN    'WISE Science Data Center, IPAC, Caltech'      Origin of image data.
+      
+FCREATE   '2010-10-19T00:10:10.000Z'     -               WSDC file creation date/time (UTC); 
+                                                         format is: yyyy-mm-ddThr:min:sec
+       
+DATEOBS1  '2010-01-20T12:59:19.768'      -               Observation midpoint date/time of earliest
+                                                         input frame used (UTC); format is:
+                                                         yyyy-mm-ddThr:min:sec
+    
+DATEOBS2  '2010-01-28T16:19:18.187'      -               Observation midpoint date/time of latest
+                                                         input frame used (UTC); format is:
+                                                         yyyy-mm-ddThr:min:sec
+                 
+BAND                        1            -               Wavelength band number, = 1,2,3 or 4.
+                         
+WAVELEN                 3.368            μm              Effective wavelength of band. Corresponds
+                                                         to a spectrum having νfν=constant as
+                                                         derived here.
+         
+COADDID       '0629m485_aa11'            -               Atlas-image tile identifier (see description)
+                                                         Unique for each sky footprint tile.
+                         
+NUMFRMS                   369            -               Final number of frames touching footprint
+                                                         after all filtering is performed for 
+                                                         given band. The same frames are used
+                                                         for multiframe photometry. Band dependent.
+      
+MOONREJ                     0            -               Number of frames rejected due to moon
+                                                         glow by co-add moon rejection algorithm.
+                                                         Band dependent.
+     
+MOONINP                     0            -               Initial number of frames with suspect moon-glow
+                                                         as determined by moon-mask prior to any 
+                                                         filtering by co-add moon rejection algorithm.
+                                                         Usually MOONINP >= MOONREJ. Band dependent.
+
+MAGZP                    20.5          magnitudes        Relative co-add photometric zero point.
+                                                         Band dependent.
+          
+MAGZPUNC               0.0002          magnitudes        One-sigma uncertainty in co-add photometric
+                                                         zero point. Band dependent.
+        
+SIZEX                1.564444          degrees           Linear dimension of orthographically projected
+                                                         tile on sky along axis 1.
+            
+SIZEY                1.564444          degrees           Linear dimension of orthographically projected
+                                                         tile on sky along axis 2.
+    
+MEDINT       2.00513887405396            DN              Median of intensity pixels. Band dependent.
+                
+MEDCOV              36.796875          pixels            Median depth-of-coverage in units of
+                                                         number of effective overlapping pixels.
+                                                         Band dependent.
+              
+MINCOV            5.724609375          pixels            Minimum depth-of-coverage in units of
+                                                         number of effective overlapping pixels.
+                                                         Band dependent.
+             
+MAXCOV             53.7890625          pixels            Maximum depth-of-coverage in units of
+                                                         number of effective overlapping pixels.
+                                                         Band dependent.
+             
+LOWCOVPC      4.106051312E-07            %               Percentage of area in co-add tile with 
+                                                         depth-of-coverage <= 5 pixels - depths at 
+                                                         which temporal outlier rejection could be
+                                                         unreliable. Band dependent.
+
+NOMCOVPC      7.156051112E-05            %               Percentage of area in co-add tile with
+                                                         depth-of-coverage <= 8 pixels - the depth
+                                                         where some mission requirements are defined.
+                                                         Band dependent.
+   
+ROBSIG      0.033795153767903            DN              Robust spatial sigma of intensity pixels whose
+                                                         depths fall within: MEDCOV +/- 0.25. The 
+                                                         sigma is computed from a trimmed standard-
+                                                         deviation from the mode using only the lower- 
+                                                         tail of the intensity pixel distribution.
+                                                         Band dependent.
+   
+PIXCHIS1    0.904601390490027            -               Pseudo reduced-χ2 measure #1 computed from the
+                                                         ratio: ROBSIG/(median of unc pixels) for depths-
+                                                         of-coverage falling within: MEDCOV +/- 0.25.
+                                                         See also section II.3.e.i. Band dependent.
+   
+PIXCHIS2    0.913015147327707            -               Pseudo reduced-χ2 measure #2 computed from the
+                                                         ratio: ROBSIG/(mode of unc pixels) for depths-
+                                                         of-coverage falling within: MEDCOV +/- 0.25.
+                                                         See also section II.3.e.i. Band dependent.
+    
+MEDNMSK                 12610          pixels            Median number of pixels masked per frame
+                                                         (over all NUMFRMS) due to bad pixels, saturation,
+                                                         spatial outliers (e.g., cosmic-ray spikes),
+                                                         and temporal outliers (e.g., fast moving objects,
+                                                         non-uniform moon glow, or other inconsistencies
+                                                         between overlapping pixels). Band dependent.
+       
+ELON         39.0639507312699          degrees           Ecliptic longitude (λ) at image center.
+       
+ELAT        -67.1869042616238          degrees           Ecliptic latitude (β) at image center.
+        
+GLON         255.794081986761          degrees           Galactic longitude (l) at image center.
+       
+GLAT        -46.0174380744293          degrees           Galactic latitude (b) at image center.
+     
+MOONMASK '/wise/fops/ref/coadd/wise-w1-moonmask.fits'    Moon image mask used in processing (for
+                                                         internal tracking). Band dependent.
+
+
+
+
+21.37.21:623|  DATE-LOC  =                   '2020-04-02T14:55:53'
+21.37.21:623|  DATE-OBS  =                   '2020-04-02T18:55:53'

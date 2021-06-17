@@ -1,0 +1,59 @@
+﻿- ReadHeader gibt es doppelt
+- On 16bit fixed: If BZero and BScale project data outside value range, use "force direct" to avoid overflow
+- Move over Histo stürzt ab bei Float
+
+Solver testing:
+	QHY600_H_alpha_60_40_50_001_001_Photographic.fits
+	FITS:				RA      =      '06:32:57.33'					":GR#"
+						DEC     =      '+04:55:58.0'					":GD#"
+						(should be JNow as queried from the mount)
+						RA <6:31:53>
+						DEC <+4° 57' 00.65"">
+						(converted to J2000)
+	Astrometry.net:		https://nova.astrometry.net/user_images/3506660#annotated
+						Center (RA, Dec):	(97.991, 4.988)
+						Center (RA, hms):	06h 31m 57.948s
+						Center (Dec, dms):	+04° 59' 15.363"
+						Size:	74.7 x 49.8 arcmin
+						Radius:	0.748 deg
+						Pixel scale:	0.468 arcsec/pixel
+						Orientation:	Up is 92.9 degrees E of N
+						(seems to be J2000)
+	PlateSolve2:		RA		<6:31:57>
+						DEC		<+4° 59' 15.65"">
+						(J2000 - same results as Astrometry.net)
+	Convert to JNow:	RA		<6:33:01>
+						DEC		<+4° 58' 12.90""> (JNow)
+
+
+Histo code:				https://pastebin.com/Wb0J48E1
+
+- frmImageDisplay:		* Nicht nur percentage, sondern direkt Wert eingebbar machen für cut-off percentage
+                        * Anzeigen wieviele Pixel im Range sind 
+
+FITSGrep: File \\192.168.100.10\astro\2019_10_26 (Focus)\FOCUS_ROI_9890.FITS wird als corrupt angezeigt
+
+
+Missing FITS keywords:
+from C:\Users\albusmw\Dropbox\Astro\!WORK\Andreas Gutekunst - 1540_Hα
+SITELAT 
+SITELONG
+UT      
+XPIXELSZ
+CDELTM1 
+YPIXELSZ
+CDELTM2 
+FILTERS 
+CVF     
+READOUTT
+X1      
+Y1      
+X2      
+Y2      
+COMPRESS
+FOCAL   
+DIAMETER
+FOCUSPOS
+FOCUSTMP
+BITCAMPX
+STACKNB 
