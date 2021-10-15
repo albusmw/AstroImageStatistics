@@ -91,7 +91,7 @@ Public Class frmNavigator
         Next FileIdx
 
         'Run mosaik statistics
-        MosaikStatistics = MosaikStatCalc.ImageStatistics(AstroNET.Statistics.sStatistics.eDataMode.Fixed)
+        MosaikStatistics = MosaikStatCalc.ImageStatistics()
         tbStatResult.Text = Join(MosaikStatistics.StatisticsReport(True, True).ToArray, System.Environment.NewLine)
 
         ShowDataForm(MosaikForm, MosaikStatCalc.DataProcessor_UInt16.ImageData(0).Data, MosaikStatistics.MonoStatistics_Int.Min.Key, MosaikStatistics.MonoStatistics_Int.Max.Key)

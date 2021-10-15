@@ -97,6 +97,8 @@ Partial Class MainForm
         Me.ToolStripMenuItem12 = New System.Windows.Forms.ToolStripSeparator()
         Me.CodeBelowIsNotForHereToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.CloudWatcherCombinerToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.GrayPNGToFITSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiTest_AstrometryQuery = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ALADINCoords = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ChangeHeader = New System.Windows.Forms.ToolStripMenuItem()
@@ -122,7 +124,9 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.GrayPNGToFITSToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.tspbMultiFile = New System.Windows.Forms.ToolStripProgressBar()
+        Me.tsslMultiFile = New System.Windows.Forms.ToolStripStatusLabel()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -520,7 +524,7 @@ Partial Class MainForm
         '
         'tsmiTest
         '
-        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTest_WriteTestData, Me.AfiineTranslateToolStripMenuItem, Me.tsmiTest_ASCOMDyn, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem})
+        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTest_WriteTestData, Me.AfiineTranslateToolStripMenuItem, Me.tsmiTest_ASCOMDyn, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery})
         Me.tsmiTest.Name = "tsmiTest"
         Me.tsmiTest.Size = New System.Drawing.Size(68, 22)
         Me.tsmiTest.Text = "Test code"
@@ -594,6 +598,18 @@ Partial Class MainForm
         Me.CloudWatcherCombinerToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
         Me.CloudWatcherCombinerToolStripMenuItem.Text = "CloudWatcher combiner"
         '
+        'GrayPNGToFITSToolStripMenuItem
+        '
+        Me.GrayPNGToFITSToolStripMenuItem.Name = "GrayPNGToFITSToolStripMenuItem"
+        Me.GrayPNGToFITSToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
+        Me.GrayPNGToFITSToolStripMenuItem.Text = "Gray PNG to FITS"
+        '
+        'tsmiTest_AstrometryQuery
+        '
+        Me.tsmiTest_AstrometryQuery.Name = "tsmiTest_AstrometryQuery"
+        Me.tsmiTest_AstrometryQuery.Size = New System.Drawing.Size(274, 22)
+        Me.tsmiTest_AstrometryQuery.Text = "Astrometry Batch Query"
+        '
         'tsmiTools
         '
         Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTools_ALADINCoords, Me.tsmiTools_ChangeHeader, Me.tsmiTools_RemoveOverscan, Me.SpecialTestFileToolStripMenuItem, Me.CheckROICutoutToolStripMenuItem})
@@ -641,18 +657,18 @@ Partial Class MainForm
         'tsmiWorkflow_Runner
         '
         Me.tsmiWorkflow_Runner.Name = "tsmiWorkflow_Runner"
-        Me.tsmiWorkflow_Runner.Size = New System.Drawing.Size(180, 22)
+        Me.tsmiWorkflow_Runner.Size = New System.Drawing.Size(162, 22)
         Me.tsmiWorkflow_Runner.Text = "Open runner"
         '
         'ToolStripMenuItem13
         '
         Me.ToolStripMenuItem13.Name = "ToolStripMenuItem13"
-        Me.ToolStripMenuItem13.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripMenuItem13.Size = New System.Drawing.Size(159, 6)
         '
         'FixRADECErrorToolStripMenuItem
         '
         Me.FixRADECErrorToolStripMenuItem.Name = "FixRADECErrorToolStripMenuItem"
-        Me.FixRADECErrorToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.FixRADECErrorToolStripMenuItem.Size = New System.Drawing.Size(162, 22)
         Me.FixRADECErrorToolStripMenuItem.Text = "Fix RA_DEC error"
         '
         'ofdMain
@@ -677,7 +693,7 @@ Partial Class MainForm
         'ssMain
         '
         Me.ssMain.ImageScalingSize = New System.Drawing.Size(24, 24)
-        Me.ssMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsslRunning, Me.tsslMain, Me.tspbMain})
+        Me.ssMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsslRunning, Me.tsslMain, Me.tspbMain, Me.ToolStripStatusLabel1, Me.tspbMultiFile, Me.tsslMultiFile})
         Me.ssMain.Location = New System.Drawing.Point(0, 1177)
         Me.ssMain.Name = "ssMain"
         Me.ssMain.Padding = New System.Windows.Forms.Padding(1, 0, 9, 0)
@@ -807,11 +823,22 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'GrayPNGToFITSToolStripMenuItem
+        'ToolStripStatusLabel1
         '
-        Me.GrayPNGToFITSToolStripMenuItem.Name = "GrayPNGToFITSToolStripMenuItem"
-        Me.GrayPNGToFITSToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
-        Me.GrayPNGToFITSToolStripMenuItem.Text = "Gray PNG to FITS"
+        Me.ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
+        Me.ToolStripStatusLabel1.Size = New System.Drawing.Size(10, 17)
+        Me.ToolStripStatusLabel1.Text = "|"
+        '
+        'tspbMultiFile
+        '
+        Me.tspbMultiFile.Name = "tspbMultiFile"
+        Me.tspbMultiFile.Size = New System.Drawing.Size(100, 16)
+        '
+        'tsslMultiFile
+        '
+        Me.tsslMultiFile.Name = "tsslMultiFile"
+        Me.tsslMultiFile.Size = New System.Drawing.Size(22, 17)
+        Me.tsslMultiFile.Text = "---"
         '
         'MainForm
         '
@@ -950,4 +977,8 @@ Partial Class MainForm
     Friend WithEvents FixRADECErrorToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SubtractMedianToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents GrayPNGToFITSToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiTest_AstrometryQuery As ToolStripMenuItem
+    Friend WithEvents ToolStripStatusLabel1 As ToolStripStatusLabel
+    Friend WithEvents tspbMultiFile As ToolStripProgressBar
+    Friend WithEvents tsslMultiFile As ToolStripStatusLabel
 End Class

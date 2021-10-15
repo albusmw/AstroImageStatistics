@@ -106,7 +106,7 @@ Public Class frmWorkflow
         Using Container_MaxMin As New AstroNET.Statistics(DB.IPP)
             Container_MaxMin.ResetAllProcessors()
             Container_MaxMin.DataProcessor_UInt16.LoadImageData(MaxMin)
-            Stat_MaxMin = Container_MaxMin.ImageStatistics(Container_MaxMin.DataFixFloat)
+            Stat_MaxMin = Container_MaxMin.ImageStatistics()
         End Using
         Log("Statistics Max-Min:")
         Log(ReportIndent, Stat_MaxMin.StatisticsReport(True, False).ToArray())

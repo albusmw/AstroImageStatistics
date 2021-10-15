@@ -48,6 +48,7 @@ Partial Class frmLastOpenedFiles
         Me.Controls.Add(Me.lbFiles)
         Me.KeyPreview = True
         Me.Name = "frmLastOpenedFiles"
+        Me.ShowInTaskbar = False
         Me.Text = "Last opened files"
         Me.ResumeLayout(False)
 

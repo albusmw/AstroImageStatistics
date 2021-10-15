@@ -34,19 +34,25 @@ Public Class cDB
     <ComponentModel.DefaultValue(False)>
     Public Property ForceDirect As Boolean = False
 
+    <ComponentModel.Category(Cat_load)>
+    <ComponentModel.DisplayName("c) No output if loading > ... files")>
+    <ComponentModel.Description("Do not plot or display anything if > ... files are loaded")>
+    <ComponentModel.DefaultValue(10)>
+    Public Property NoOutputOnManyFiles As Integer = 10
+
     '===================================================================================================================================================
 
     <ComponentModel.Category(Cat_analysis)>
     <ComponentModel.DisplayName("a) Mono statistics")>
     <ComponentModel.Description("Calculate the mono statistics (can be of interest if e.g. color balance is applied to a mono image which would be wrong ...)")>
     <ComponentModel.DefaultValue(True)>
-    Public Property MonoStatistics As Boolean = True
+    Public Property CalcStat_Mono As Boolean = True
 
     <ComponentModel.Category(Cat_analysis)>
     <ComponentModel.DisplayName("b) Bayer statistics")>
     <ComponentModel.Description("Calculate the bayer statistics (can be of interest if e.g. color balance is applied to a mono image which would be wrong ...)")>
     <ComponentModel.DefaultValue(True)>
-    Public Property BayerStatistics As Boolean = True
+    Public Property CalcStat_Bayer As Boolean = True
 
     <ComponentModel.Category(Cat_analysis)>
     <ComponentModel.DisplayName("c) Stacking")>

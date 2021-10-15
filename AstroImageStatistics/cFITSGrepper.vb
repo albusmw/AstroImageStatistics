@@ -36,7 +36,7 @@ Public Class cFITSGrepper
         End Sub
     End Structure
 
-    Private WithEvents DirScanner As Ato.RecursivDirScanner
+    Private WithEvents DirScanner As Ato.RecursiveDirScanner
 
     '''<summary>Report generated during thee grep process.</summary>
     Public Report As New List(Of String)
@@ -69,7 +69,7 @@ Public Class cFITSGrepper
         'Run "normal" recursive search if no results
         If AllFoundFiles.Count = 0 Then
             ReportSave(New sProgress("Running traditional search ..."))
-            DirScanner = New Ato.RecursivDirScanner(RootFolder)
+            DirScanner = New Ato.RecursiveDirScanner(RootFolder)
             DirScanner.Scan(DirFilter, FileFilter & ".fit?")
             AllFoundFiles.AddRange(DirScanner.AllFiles)
         End If

@@ -16,7 +16,7 @@ Public Class frmSinglePixelStat
         AllFiles = New List(Of String)
         AllDataOffsets = New Dictionary(Of String, Integer)
         AllWidths = New Dictionary(Of String, Integer)
-        Dim DirScanner As New Ato.RecursivDirScanner(tbRootFolder.Text)
+        Dim DirScanner As New Ato.RecursiveDirScanner(tbRootFolder.Text)
         DirScanner.Scan(tbFilter.Text)
         LongestFileName = 0
         'Read all FITS headers and remember data offset

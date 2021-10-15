@@ -24,7 +24,7 @@ Public Class AstroImageStatistics_Fun
 
         'Exit on no data
         If IsNothing(File_RA_JNow) Or IsNothing(File_Dec_JNow) Then
-            Return New String() {}
+            Return New String() {"NO RA OR DEC SPECIFIED!"}
         End If
 
         'Data from QHYCapture (10Micron) are in JNow, so convert to J2000 for PlateSolve

@@ -5,42 +5,51 @@ Public Class frmAstroBinSearch
 
     Dim API_Key As String = "557ecc514617693189a3b30cae4dcf49388edc3e"
     Dim API_secret As String = "7a095792be040799d35119e9d50c8ffe43811061"
+    Dim LB As cLogTextBox
+    Public ReadOnly Property MyPath As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
 
-        LogBox.Log("Started ...")
+        'Compose the query
+        Log("Started ...")
         Dim RequestContent As New List(Of String)
         RequestContent.Add("http://astrobin.com/api/v1/")
         RequestContent.Add("image/")
-        RequestContent.Add("?user=equinoxx")
-        'RequestContent.Add("?description__icontains=CDK20")
+        If cbFilter_User.Checked = True Then RequestContent.Add("?user=" & tbFilter_User.Text)
+        If cbFilter_TitleContains.Checked = True Then RequestContent.Add("?title__icontains=" & tbFilter_TitleContains.Text)
+        If cbFilter_DescriptionContains.Checked = True Then RequestContent.Add("?description__icontains=" & tbFilter_DescriptionContains.Text)
         'RequestContent.Add("?imaging_cameras__icontains=16803")
-        RequestContent.Add("&limit=100")
+        RequestContent.Add("&limit=" & tbLimit.Text)
         RequestContent.Add("&api_key=" & API_Key & "&api_secret=" & API_secret & "&format=json")
 
-        LogBox.Log("Running query ...")
+        Log("Running query ...")
         Dim Request As String = Join(RequestContent.ToArray, String.Empty)
+        tbURL.Text = Request
         Dim ErrorInfo As String = String.Empty
         Dim Answer As String = RESTQuery(Request, ErrorInfo)
+
+        If IsNothing(Answer) = True Then
+            Log("No results ...")
+            Exit Sub
+        End If
 
         Dim jsonResult = Newtonsoft.Json.JsonConvert.DeserializeObject(Of Dictionary(Of String, Object))(Answer)
         Dim AllObjects As Newtonsoft.Json.Linq.JArray = jsonResult.Item("objects")
 
         Dim Counter As Integer = 0
-        LogBox.Log("I have loaded " & AllObjects.Count.ToString.Trim & " elements")
+        Log("I have loaded " & AllObjects.Count.ToString.Trim & " elements")
 
         For Each Entry As Object In AllObjects
             Counter += 1
-            LogBox.Log("Loading element " & Counter.ToString.Trim)
+            Log("Loading element " & Counter.ToString.Trim)
             Dim Location As Object = Entry.Item("id")
             Dim NormalImage As Object = Entry.Item("url_regular")
             Dim ImageContent As Byte() = ImageQuery(NormalImage, String.Empty)
             If IsNothing(ImageContent) = False Then
-                System.IO.File.WriteAllBytes("previews\AstroBinPreview" & Format(Counter, "0000") & ".jpg", ImageContent)
+                Dim FileName As String = System.IO.Path.Combine(MyPath, "previews\AstroBinPreview" & Format(Counter, "0000") & ".jpg")
+                System.IO.File.WriteAllBytes(FileName, ImageContent)
             End If
         Next Entry
-
-        LogBox.Log("OK!")
 
     End Sub
 
@@ -76,5 +85,18 @@ Public Class frmAstroBinSearch
             Return Nothing
         End Try
     End Function
+
+    Private Sub Log(ByVal Text As String)
+        LB.Log(Text)
+        DE()
+    End Sub
+
+    Private Sub frmAstroBinSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        LB = New cLogTextBox(tbLog)
+    End Sub
+
+    Private Sub DE()
+        System.Windows.Forms.Application.DoEvents()
+    End Sub
 
 End Class

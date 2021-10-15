@@ -22,6 +22,7 @@ Partial Class frmHeaderAsIs
     'Das Bearbeiten mit dem Code-Editor ist nicht möglich.
     <System.Diagnostics.DebuggerStepThrough()> _
     Private Sub InitializeComponent()
+        Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmHeaderAsIs))
         Me.tbHeader = New System.Windows.Forms.TextBox()
         Me.SuspendLayout()
         '
@@ -37,6 +38,7 @@ Partial Class frmHeaderAsIs
         Me.tbHeader.ScrollBars = System.Windows.Forms.ScrollBars.Both
         Me.tbHeader.Size = New System.Drawing.Size(905, 721)
         Me.tbHeader.TabIndex = 0
+        Me.tbHeader.WordWrap = False
         '
         'frmHeaderAsIs
         '
@@ -44,6 +46,7 @@ Partial Class frmHeaderAsIs
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
         Me.ClientSize = New System.Drawing.Size(929, 745)
         Me.Controls.Add(Me.tbHeader)
+        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
         Me.Name = "frmHeaderAsIs"
         Me.Text = "Header as is"
         Me.ResumeLayout(False)

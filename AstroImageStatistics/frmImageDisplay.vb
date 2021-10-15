@@ -90,7 +90,7 @@ Public Class frmImageDisplay
 
         'Build a LUT for all colors present in the picture - the LUT is build as 3 vectors with R/G/B values due to speed reason (dictionary is slow ...)
         Stopper.Tic()
-        CalculateLUT()
+        GenerateLUT()
         Stopper.Toc("Generating LUT for each pixel value in the image")
 
         'Generate the output picture
@@ -121,7 +121,8 @@ Public Class frmImageDisplay
 
     End Sub
 
-    Private Sub CalculateLUT()
+    '''<summary>Generate the LUT (Look-up-table) to display the image.</summary>
+    Private Sub GenerateLUT()
 
         'Calculate data range and scaling
         Dim Data_Min As Long = StatToUsed.MonoStatistics_Int.Min.Key : If Props.MinMaxPctRescale = True Then Data_Min = Props.MinCutOff_ADU
@@ -304,7 +305,7 @@ Public Class frmImageDisplay
         If ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data.LongLength = 0 Then Exit Sub
 
         'Calculate statistics
-        ZoomStatistics = ZoomStatCalc.ImageStatistics(AstroNET.Statistics.sStatistics.eDataMode.Fixed)
+        ZoomStatistics = ZoomStatCalc.ImageStatistics()
         Dim Report As New List(Of String)
         Report.Add("ROI X  : " & ROICoord.Left.ValRegIndep & " ... [" & ROICenter.X.ValRegIndep & "] ... " & (ROICoord.Left + ROICoord.Width).ValRegIndep)
         Report.Add("ROI Y  : " & ROICoord.Top.ValRegIndep & " ... [" & ROICenter.Y.ValRegIndep & "] ... " & (ROICoord.Top + ROICoord.Height).ValRegIndep)
