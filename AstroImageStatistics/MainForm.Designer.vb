@@ -34,7 +34,7 @@ Partial Class MainForm
         Me.ToolStripMenuItem11 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsmiFile_Compress2nd = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiSaveLastStatXLS = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiFile_SaveLastStat = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiSaveAllFilesStat = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiSaveFITSAndStats = New System.Windows.Forms.ToolStripMenuItem()
         Me.StoreStackingResultToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -78,12 +78,15 @@ Partial Class MainForm
         Me.tsmiAnalysis_MultiFile_Open = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysis_MultiFile_LoadAbove = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAdjustRGB = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiProcessing_AdjustRGB = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiStretch = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiPlateSolve = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiSetPixelToValue = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing_MedianFilter = New System.Windows.Forms.ToolStripMenuItem()
         Me.SubtractMedianToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiProcessing_LSBMSB = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiProcessing_Specials = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiProcessing_Specials_NINAFix = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTest = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTest_WriteTestData = New System.Windows.Forms.ToolStripMenuItem()
         Me.AfiineTranslateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -115,6 +118,9 @@ Partial Class MainForm
         Me.tsslRunning = New System.Windows.Forms.ToolStripStatusLabel()
         Me.tsslMain = New System.Windows.Forms.ToolStripStatusLabel()
         Me.tspbMain = New System.Windows.Forms.ToolStripProgressBar()
+        Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.tspbMultiFile = New System.Windows.Forms.ToolStripProgressBar()
+        Me.tsslMultiFile = New System.Windows.Forms.ToolStripStatusLabel()
         Me.pgMain = New System.Windows.Forms.PropertyGrid()
         Me.sfdMain = New System.Windows.Forms.SaveFileDialog()
         Me.gbDetails = New System.Windows.Forms.GroupBox()
@@ -124,9 +130,7 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.ToolStripStatusLabel1 = New System.Windows.Forms.ToolStripStatusLabel()
-        Me.tspbMultiFile = New System.Windows.Forms.ToolStripProgressBar()
-        Me.tsslMultiFile = New System.Windows.Forms.ToolStripStatusLabel()
+        Me.tsmiAnalysis_XvsYPlot = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -154,7 +158,7 @@ Partial Class MainForm
         '
         'tsmiFile
         '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_Open, Me.tsmiFile_OpenRecent, Me.tsmiFile_OpenLastFile, Me.ToolStripMenuItem8, Me.tsmiFile_FITSGrep, Me.tsmiFile_AstroBinSearch, Me.ToolStripMenuItem11, Me.tsmiFile_Compress2nd, Me.ToolStripMenuItem2, Me.tsmiSaveLastStatXLS, Me.tsmiSaveAllFilesStat, Me.tsmiSaveFITSAndStats, Me.StoreStackingResultToolStripMenuItem, Me.tsmiSaveImageData, Me.ToolStripMenuItem4, Me.tsmiFile_ClearStatMem, Me.ToolStripMenuItem1, Me.OpenEXELocationToolStripMenuItem, Me.ToolStripMenuItem5, Me.ExitToolStripMenuItem})
+        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_Open, Me.tsmiFile_OpenRecent, Me.tsmiFile_OpenLastFile, Me.ToolStripMenuItem8, Me.tsmiFile_FITSGrep, Me.tsmiFile_AstroBinSearch, Me.ToolStripMenuItem11, Me.tsmiFile_Compress2nd, Me.ToolStripMenuItem2, Me.tsmiFile_SaveLastStat, Me.tsmiSaveAllFilesStat, Me.tsmiSaveFITSAndStats, Me.StoreStackingResultToolStripMenuItem, Me.tsmiSaveImageData, Me.ToolStripMenuItem4, Me.tsmiFile_ClearStatMem, Me.ToolStripMenuItem1, Me.OpenEXELocationToolStripMenuItem, Me.ToolStripMenuItem5, Me.ExitToolStripMenuItem})
         Me.tsmiFile.Name = "tsmiFile"
         Me.tsmiFile.Size = New System.Drawing.Size(37, 22)
         Me.tsmiFile.Text = "File"
@@ -163,14 +167,14 @@ Partial Class MainForm
         '
         Me.tsmiFile_Open.Name = "tsmiFile_Open"
         Me.tsmiFile_Open.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
-        Me.tsmiFile_Open.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiFile_Open.Size = New System.Drawing.Size(368, 22)
         Me.tsmiFile_Open.Text = "Open file(s) to analyse"
         Me.tsmiFile_Open.ToolTipText = "Open one or more files for analysis"
         '
         'tsmiFile_OpenRecent
         '
         Me.tsmiFile_OpenRecent.Name = "tsmiFile_OpenRecent"
-        Me.tsmiFile_OpenRecent.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiFile_OpenRecent.Size = New System.Drawing.Size(368, 22)
         Me.tsmiFile_OpenRecent.Text = "Open recent files ..."
         Me.tsmiFile_OpenRecent.ToolTipText = "Open recent used files"
         '
@@ -178,68 +182,68 @@ Partial Class MainForm
         '
         Me.tsmiFile_OpenLastFile.Name = "tsmiFile_OpenLastFile"
         Me.tsmiFile_OpenLastFile.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
-        Me.tsmiFile_OpenLastFile.Size = New System.Drawing.Size(300, 22)
-        Me.tsmiFile_OpenLastFile.Text = "Open last file processed"
+        Me.tsmiFile_OpenLastFile.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_OpenLastFile.Text = "Open last file processed in assoociated software"
         Me.tsmiFile_OpenLastFile.ToolTipText = "Use the standard configured viewer to open the last opened file (e.g. with FITSWo" &
     "rk)"
         '
         'ToolStripMenuItem8
         '
         Me.ToolStripMenuItem8.Name = "ToolStripMenuItem8"
-        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(297, 6)
+        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(365, 6)
         '
         'tsmiFile_FITSGrep
         '
         Me.tsmiFile_FITSGrep.Name = "tsmiFile_FITSGrep"
-        Me.tsmiFile_FITSGrep.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiFile_FITSGrep.Size = New System.Drawing.Size(368, 22)
         Me.tsmiFile_FITSGrep.Text = "FITS Grep"
         '
         'tsmiFile_AstroBinSearch
         '
         Me.tsmiFile_AstroBinSearch.Name = "tsmiFile_AstroBinSearch"
-        Me.tsmiFile_AstroBinSearch.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiFile_AstroBinSearch.Size = New System.Drawing.Size(368, 22)
         Me.tsmiFile_AstroBinSearch.Text = "AstroBin search"
         '
         'ToolStripMenuItem11
         '
         Me.ToolStripMenuItem11.Name = "ToolStripMenuItem11"
-        Me.ToolStripMenuItem11.Size = New System.Drawing.Size(297, 6)
+        Me.ToolStripMenuItem11.Size = New System.Drawing.Size(365, 6)
         '
         'tsmiFile_Compress2nd
         '
         Me.tsmiFile_Compress2nd.Name = "tsmiFile_Compress2nd"
-        Me.tsmiFile_Compress2nd.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiFile_Compress2nd.Size = New System.Drawing.Size(368, 22)
         Me.tsmiFile_Compress2nd.Text = "Compress 2nd file"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(297, 6)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(365, 6)
         '
-        'tsmiSaveLastStatXLS
+        'tsmiFile_SaveLastStat
         '
-        Me.tsmiSaveLastStatXLS.Name = "tsmiSaveLastStatXLS"
-        Me.tsmiSaveLastStatXLS.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
-        Me.tsmiSaveLastStatXLS.Size = New System.Drawing.Size(300, 22)
-        Me.tsmiSaveLastStatXLS.Text = "Save last image statistics EXCEL file"
+        Me.tsmiFile_SaveLastStat.Name = "tsmiFile_SaveLastStat"
+        Me.tsmiFile_SaveLastStat.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
+        Me.tsmiFile_SaveLastStat.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_SaveLastStat.Text = "Save last image statistics (EXCEL)"
         '
         'tsmiSaveAllFilesStat
         '
         Me.tsmiSaveAllFilesStat.Name = "tsmiSaveAllFilesStat"
-        Me.tsmiSaveAllFilesStat.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiSaveAllFilesStat.Size = New System.Drawing.Size(368, 22)
         Me.tsmiSaveAllFilesStat.Text = "Save all-files statistics"
         '
         'tsmiSaveFITSAndStats
         '
         Me.tsmiSaveFITSAndStats.Name = "tsmiSaveFITSAndStats"
-        Me.tsmiSaveFITSAndStats.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiSaveFITSAndStats.Size = New System.Drawing.Size(368, 22)
         Me.tsmiSaveFITSAndStats.Text = "Save FITS and statistics summary"
         '
         'StoreStackingResultToolStripMenuItem
         '
         Me.StoreStackingResultToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiSaveMeanFile, Me.SumImageDoubleToolStripMenuItem, Me.StdDevImageToolStripMenuItem, Me.MaxMinInt32ToolStripMenuItem, Me.ToolStripMenuItem3, Me.ResetStackingToolStripMenuItem1, Me.MaxImageToolStripMenuItem})
         Me.StoreStackingResultToolStripMenuItem.Name = "StoreStackingResultToolStripMenuItem"
-        Me.StoreStackingResultToolStripMenuItem.Size = New System.Drawing.Size(300, 22)
+        Me.StoreStackingResultToolStripMenuItem.Size = New System.Drawing.Size(368, 22)
         Me.StoreStackingResultToolStripMenuItem.Text = "Save stacking image"
         '
         'tsmiSaveMeanFile
@@ -287,46 +291,46 @@ Partial Class MainForm
         '
         Me.tsmiSaveImageData.Name = "tsmiSaveImageData"
         Me.tsmiSaveImageData.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.tsmiSaveImageData.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiSaveImageData.Size = New System.Drawing.Size(368, 22)
         Me.tsmiSaveImageData.Text = "Save current image"
         '
         'ToolStripMenuItem4
         '
         Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(297, 6)
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(365, 6)
         '
         'tsmiFile_ClearStatMem
         '
         Me.tsmiFile_ClearStatMem.Name = "tsmiFile_ClearStatMem"
-        Me.tsmiFile_ClearStatMem.Size = New System.Drawing.Size(300, 22)
+        Me.tsmiFile_ClearStatMem.Size = New System.Drawing.Size(368, 22)
         Me.tsmiFile_ClearStatMem.Text = "Clear statistics memory"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(297, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(365, 6)
         '
         'OpenEXELocationToolStripMenuItem
         '
         Me.OpenEXELocationToolStripMenuItem.Name = "OpenEXELocationToolStripMenuItem"
-        Me.OpenEXELocationToolStripMenuItem.Size = New System.Drawing.Size(300, 22)
+        Me.OpenEXELocationToolStripMenuItem.Size = New System.Drawing.Size(368, 22)
         Me.OpenEXELocationToolStripMenuItem.Text = "Open EXE location"
         '
         'ToolStripMenuItem5
         '
         Me.ToolStripMenuItem5.Name = "ToolStripMenuItem5"
-        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(297, 6)
+        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(365, 6)
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
         Me.ExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(300, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(368, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'tsmiAnalysis
         '
-        Me.tsmiAnalysis.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_RowColStat, Me.tsmiAnalysis_Plot, Me.tsmiAnalysisHotPixel, Me.ToolStripMenuItem7, Me.tsmiAnalysis_MultiAreaCompare, Me.tsmiAnalysis_ManualColorBalancer, Me.tsmiAnalysisVignette, Me.tsmiAnalysisPixelMap, Me.tsmiAnalysis_RawFITSHeader, Me.tsmiAnalysis_FloatAsIntError, Me.tsmiAnalysis_MultiFile})
+        Me.tsmiAnalysis.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_RowColStat, Me.tsmiAnalysis_Plot, Me.tsmiAnalysisHotPixel, Me.ToolStripMenuItem7, Me.tsmiAnalysis_MultiAreaCompare, Me.tsmiAnalysis_ManualColorBalancer, Me.tsmiAnalysisVignette, Me.tsmiAnalysisPixelMap, Me.tsmiAnalysis_RawFITSHeader, Me.tsmiAnalysis_FloatAsIntError, Me.tsmiAnalysis_MultiFile, Me.tsmiAnalysis_XvsYPlot})
         Me.tsmiAnalysis.Name = "tsmiAnalysis"
         Me.tsmiAnalysis.Size = New System.Drawing.Size(62, 22)
         Me.tsmiAnalysis.Text = "Analysis"
@@ -481,16 +485,16 @@ Partial Class MainForm
         '
         'tsmiProcessing
         '
-        Me.tsmiProcessing.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAdjustRGB, Me.tsmiStretch, Me.tsmiPlateSolve, Me.tsmiSetPixelToValue, Me.tsmiProcessing_MedianFilter, Me.SubtractMedianToolStripMenuItem})
+        Me.tsmiProcessing.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiProcessing_AdjustRGB, Me.tsmiStretch, Me.tsmiPlateSolve, Me.tsmiSetPixelToValue, Me.tsmiProcessing_MedianFilter, Me.SubtractMedianToolStripMenuItem, Me.tsmiProcessing_LSBMSB, Me.tsmiProcessing_Specials})
         Me.tsmiProcessing.Name = "tsmiProcessing"
         Me.tsmiProcessing.Size = New System.Drawing.Size(76, 22)
         Me.tsmiProcessing.Text = "Processing"
         '
-        'tsmiAdjustRGB
+        'tsmiProcessing_AdjustRGB
         '
-        Me.tsmiAdjustRGB.Name = "tsmiAdjustRGB"
-        Me.tsmiAdjustRGB.Size = New System.Drawing.Size(301, 22)
-        Me.tsmiAdjustRGB.Text = "Adjust RGB channels (using modus)"
+        Me.tsmiProcessing_AdjustRGB.Name = "tsmiProcessing_AdjustRGB"
+        Me.tsmiProcessing_AdjustRGB.Size = New System.Drawing.Size(301, 22)
+        Me.tsmiProcessing_AdjustRGB.Text = "Adjust RGB channels (using modus)"
         '
         'tsmiStretch
         '
@@ -521,6 +525,25 @@ Partial Class MainForm
         Me.SubtractMedianToolStripMenuItem.Name = "SubtractMedianToolStripMenuItem"
         Me.SubtractMedianToolStripMenuItem.Size = New System.Drawing.Size(301, 22)
         Me.SubtractMedianToolStripMenuItem.Text = "Subtract median"
+        '
+        'tsmiProcessing_LSBMSB
+        '
+        Me.tsmiProcessing_LSBMSB.Name = "tsmiProcessing_LSBMSB"
+        Me.tsmiProcessing_LSBMSB.Size = New System.Drawing.Size(301, 22)
+        Me.tsmiProcessing_LSBMSB.Text = "LSB-MSB swap"
+        '
+        'tsmiProcessing_Specials
+        '
+        Me.tsmiProcessing_Specials.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiProcessing_Specials_NINAFix})
+        Me.tsmiProcessing_Specials.Name = "tsmiProcessing_Specials"
+        Me.tsmiProcessing_Specials.Size = New System.Drawing.Size(301, 22)
+        Me.tsmiProcessing_Specials.Text = "Specials"
+        '
+        'tsmiProcessing_Specials_NINAFix
+        '
+        Me.tsmiProcessing_Specials_NINAFix.Name = "tsmiProcessing_Specials_NINAFix"
+        Me.tsmiProcessing_Specials_NINAFix.Size = New System.Drawing.Size(128, 22)
+        Me.tsmiProcessing_Specials_NINAFix.Text = "NINA fix 1"
         '
         'tsmiTest
         '
@@ -722,6 +745,23 @@ Partial Class MainForm
         Me.tspbMain.Size = New System.Drawing.Size(100, 16)
         Me.tspbMain.Style = System.Windows.Forms.ProgressBarStyle.Continuous
         '
+        'ToolStripStatusLabel1
+        '
+        Me.ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
+        Me.ToolStripStatusLabel1.Size = New System.Drawing.Size(10, 17)
+        Me.ToolStripStatusLabel1.Text = "|"
+        '
+        'tspbMultiFile
+        '
+        Me.tspbMultiFile.Name = "tspbMultiFile"
+        Me.tspbMultiFile.Size = New System.Drawing.Size(100, 16)
+        '
+        'tsslMultiFile
+        '
+        Me.tsslMultiFile.Name = "tsslMultiFile"
+        Me.tsslMultiFile.Size = New System.Drawing.Size(22, 17)
+        Me.tsslMultiFile.Text = "---"
+        '
         'pgMain
         '
         Me.pgMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
@@ -823,22 +863,11 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'ToolStripStatusLabel1
+        'tsmiAnalysis_XvsYPlot
         '
-        Me.ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
-        Me.ToolStripStatusLabel1.Size = New System.Drawing.Size(10, 17)
-        Me.ToolStripStatusLabel1.Text = "|"
-        '
-        'tspbMultiFile
-        '
-        Me.tspbMultiFile.Name = "tspbMultiFile"
-        Me.tspbMultiFile.Size = New System.Drawing.Size(100, 16)
-        '
-        'tsslMultiFile
-        '
-        Me.tsslMultiFile.Name = "tsslMultiFile"
-        Me.tsslMultiFile.Size = New System.Drawing.Size(22, 17)
-        Me.tsslMultiFile.Text = "---"
+        Me.tsmiAnalysis_XvsYPlot.Name = "tsmiAnalysis_XvsYPlot"
+        Me.tsmiAnalysis_XvsYPlot.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
         '
         'MainForm
         '
@@ -901,11 +930,11 @@ Partial Class MainForm
     Friend WithEvents pgMain As PropertyGrid
     Friend WithEvents tsmiAnalysis_Plot As ToolStripMenuItem
     Friend WithEvents AfiineTranslateToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents tsmiSaveLastStatXLS As ToolStripMenuItem
+    Friend WithEvents tsmiFile_SaveLastStat As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem3 As ToolStripSeparator
     Friend WithEvents ResetStackingToolStripMenuItem1 As ToolStripMenuItem
     Friend WithEvents tsmiProcessing As ToolStripMenuItem
-    Friend WithEvents tsmiAdjustRGB As ToolStripMenuItem
+    Friend WithEvents tsmiProcessing_AdjustRGB As ToolStripMenuItem
     Friend WithEvents tsmiSaveImageData As ToolStripMenuItem
     Friend WithEvents sfdMain As SaveFileDialog
     Friend WithEvents tsmiStretch As ToolStripMenuItem
@@ -981,4 +1010,8 @@ Partial Class MainForm
     Friend WithEvents ToolStripStatusLabel1 As ToolStripStatusLabel
     Friend WithEvents tspbMultiFile As ToolStripProgressBar
     Friend WithEvents tsslMultiFile As ToolStripStatusLabel
+    Friend WithEvents tsmiProcessing_LSBMSB As ToolStripMenuItem
+    Friend WithEvents tsmiProcessing_Specials As ToolStripMenuItem
+    Friend WithEvents tsmiProcessing_Specials_NINAFix As ToolStripMenuItem
+    Friend WithEvents tsmiAnalysis_XvsYPlot As ToolStripMenuItem
 End Class

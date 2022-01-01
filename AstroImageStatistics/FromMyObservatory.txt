@@ -25,16 +25,16 @@
         Dim FocusPeakX As Integer = -1 : Dim FocusPeakY As Integer = -1
 
         'Run exposure (not in background worker)
-        With DB.ASCOM_Camera_PWI
-            If DB.ASCOM_Camera_PWI.Connected = True Then
+        With AIS.DB.ASCOM_Camera_PWI
+            If AIS.DB.ASCOM_Camera_PWI.Connected = True Then
 
                 'ROI all
                 .StartX = 0
                 .StartY = 0
                 .NumX = .CameraXSize - 1
                 .NumY = .CameraYSize - 1
-                DB.ASCOM_Camera_PWI.AbortExposure()
-                DB.ASCOM_Camera_PWI.StopExposure()
+                AIS.DB.ASCOM_Camera_PWI.AbortExposure()
+                AIS.DB.ASCOM_Camera_PWI.StopExposure()
 
                 'Prepare all camera settings
                 .Gain = CType(tbCamPWI_Gain.Text, Short)
@@ -42,7 +42,7 @@
                 Dim ExposeTime As Double = Val(tbCamPWI_ExpTime.Text.Replace(",", "."))
 
                 'Prepare storage process
-                Dim StorageRoot As String = DB.INI.Get("Storage", "RawCapture", String.Empty)
+                Dim StorageRoot As String = AIS.DB.INI.Get("Storage", "RawCapture", String.Empty)
                 Dim DatePath As String = Format(Now, "yyyy_MM_dd")
                 Dim TimePath As String = Format(Now, "HH_mm_ss")
                 Dim ImageBaseName As String = tbObservingName.Text
@@ -60,19 +60,19 @@
                     'If this is the first frame, the parallel capture and read did not start, to init the first capture
                     If Frame = 1 Then
                         ExpStopWatch.Reset() : ExpStopWatch.Start()
-                        DB.ASCOM_Camera_PWI.StartExposure(ExposeTime, True)
+                        AIS.DB.ASCOM_Camera_PWI.StartExposure(ExposeTime, True)
                     End If
                     'Wait for the capture to end and notify the GUI
                     Do
                         Dim ElapedTime As Long = ExpStopWatch.ElapsedMilliseconds
                         If ElapedTime <= tspbExpose.Maximum Then tspbExpose.Value = CInt(ElapedTime) Else tspbExpose.Value = tspbExpose.Maximum
                         'Do jobs as in the background worker
-                        DB.Val.Set(DB.eKey.Camera_PWI_Temp_Current, Format(DB.ASCOM_Camera_PWI.CCDTemperature, "#0.0").Replace(",", "."))
+                        AIS.DB.Val.Set(AIS.DB.eKey.Camera_PWI_Temp_Current, Format(AIS.DB.ASCOM_Camera_PWI.CCDTemperature, "#0.0").Replace(",", "."))
                         DE()
-                    Loop Until DB.ASCOM_Camera_PWI.ImageReady = True
+                    Loop Until AIS.DB.ASCOM_Camera_PWI.ImageReady = True
                     tspbExpose.Value = 0 : DE()
                     'Read data from the cam
-                    ImageDataInt32 = CType(DB.ASCOM_Camera_PWI.ImageArray, UInt32(,))
+                    ImageDataInt32 = CType(AIS.DB.ASCOM_Camera_PWI.ImageArray, UInt32(,))
                     'Calculate a sum image
                     If FrameCount > 1 Then
                         If Frame = 1 Then
@@ -94,17 +94,17 @@
                     'If this is not the last capture, init a new capture before processing the passed data
                     If Frame < FrameCount Then
                         ExpStopWatch.Reset() : ExpStopWatch.Start()
-                        DB.ASCOM_Camera_PWI.StartExposure(ExposeTime, True)
+                        AIS.DB.ASCOM_Camera_PWI.StartExposure(ExposeTime, True)
                     End If
 
                     'Precalc data
-                    Dim RecJ2000 As String = CStr(DB.Val(DB.eKey.Mount_RA_J2000))
-                    Dim DecJ2000 As Double = Ato.AstroCalc.ParseDeclination(CStr(DB.Val(DB.eKey.Mount_Dec_J2000)))
+                    Dim RecJ2000 As String = CStr(AIS.DB.Val(AIS.DB.eKey.Mount_RA_J2000))
+                    Dim DecJ2000 As Double = Ato.AstroCalc.ParseDeclination(CStr(AIS.DB.Val(AIS.DB.eKey.Mount_Dec_J2000)))
 
                     'Generate FITS header
                     Dim CustomHeaderElements As New List(Of String())
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.OBJECT, tbObservingName.Text)                                             'verbose object name (e.g. "M45")
-                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.OBSERVER, DB.INI.Get("ImageInfos", "Observer", "Martin Weiss"))           'observer
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.OBSERVER, AIS.DB.INI.Get("ImageInfos", "Observer", "Martin Weiss"))           'observer
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.TELESCOP, "PlaneWave CDK 12.5")                                           'observing instrument
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.INSTRUME, "ZWO ASI094MC Pro")                                             'observing camera
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.TELFOC, "2541")
@@ -113,10 +113,10 @@
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.RA, RecJ2000)
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.DEC, DecJ2000.ToString.Trim.Replace(",", "."))
                     AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.EXPTIME, CStr(ExposeTime.ToString.Trim.Replace(",", ".")))                'exposure time
-                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.GAIN, CStr(DB.ASCOM_Camera_PWI.Gain.ToString.Trim.Replace(",", ".")))     'GAIN is not a standard FITS header keyword ...
-                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.FOCUS, CStr(DB.Val(DB.eKey.FocusPWI_Position)))                           'focuser position
-                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.SETTEMP, CStr(DB.Val(DB.eKey.Camera_PWI_Temp_Target)))                    'CCD temperature set
-                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.CCDTEMP, CStr(DB.Val(DB.eKey.Camera_PWI_Temp_Current)))                   'CCD temperature current
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.GAIN, CStr(AIS.DB.ASCOM_Camera_PWI.Gain.ToString.Trim.Replace(",", ".")))     'GAIN is not a standard FITS header keyword ...
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.FOCUS, CStr(AIS.DB.Val(AIS.DB.eKey.FocusPWI_Position)))                           'focuser position
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.SETTEMP, CStr(AIS.DB.Val(AIS.DB.eKey.Camera_PWI_Temp_Target)))                    'CCD temperature set
+                    AddFITSHeaderCard(CustomHeaderElements, eFITSKeywords.CCDTEMP, CStr(AIS.DB.Val(AIS.DB.eKey.Camera_PWI_Temp_Current)))                   'CCD temperature current
 
                     'Write captured data AS IS to file
                     If cbStoreAllCaptures.Checked = True Then
@@ -149,7 +149,7 @@
                     'ROI (only in focus mode)
                     If cbFocusMode.Checked = True Then
                         If FocusPeakX <> -1 And FocusPeakY <> -1 And Frame = 1 Then
-                            SetROI(DB.ASCOM_Camera_PWI, FocusPeakX, FocusPeakY, FocusArea, FocusArea)
+                            SetROI(AIS.DB.ASCOM_Camera_PWI, FocusPeakX, FocusPeakY, FocusArea, FocusArea)
                         End If
                     End If
 
@@ -166,8 +166,8 @@
                         AddToLog("Starting plate solver ...")
                         With New cPlateSolve
 
-                            .RA = AstroParser.ParseRA(CStr(DB.Val(DB.eKey.Mount_RA_J2000))) * .GradToRad
-                            .Dec = AstroParser.ParseDeclination(CStr(DB.Val(DB.eKey.Mount_Dec_J2000))) * .GradToRad
+                            .RA = AstroParser.ParseRA(CStr(AIS.DB.Val(AIS.DB.eKey.Mount_RA_J2000))) * .GradToRad
+                            .Dec = AstroParser.ParseDeclination(CStr(AIS.DB.Val(AIS.DB.eKey.Mount_Dec_J2000))) * .GradToRad
                             .SetDimX(48.93)
                             .SetDimY(32.71)
                             .HoldOpenTime = 100
@@ -197,7 +197,7 @@
 
         'Display histogram data
         AddToLog("Calculating final image statistics ...")
-        Dim SingleStatCalc As New AstroNET.Statistics(DB.INI.Get("Storage", "IPPPath", String.Empty))
+        Dim SingleStatCalc As New AstroNET.Statistics(AIS.DB.INI.Get("Storage", "IPPPath", String.Empty))
         Dim SingleStat As AstroNET.Statistics.sStatistics
         If IsNothing(ImageDataInt32_SUM) = True Then
             SingleStatCalc.DataProcessor_UInt32.ImageData = ImageDataInt32
@@ -248,8 +248,8 @@
         Dim DecText As String() = {}
         If DataFromMount = True Then
             'Get RA and DEC from mount
-            RAText = CStr(DB.Val(DB.eKey.Mount_RA_J2000)).Split(":"c)
-            DecText = CStr(DB.Val(DB.eKey.Mount_Dec_J2000)).Split(":"c)
+            RAText = CStr(AIS.DB.Val(AIS.DB.eKey.Mount_RA_J2000)).Split(":"c)
+            DecText = CStr(AIS.DB.Val(AIS.DB.eKey.Mount_Dec_J2000)).Split(":"c)
 
         Else
             'Get the FITS header information
@@ -293,15 +293,15 @@
         Do
             Dim MyBGWorker As System.ComponentModel.BackgroundWorker = CType(sender, System.ComponentModel.BackgroundWorker)
             Dim NewConnectedName As String = String.Empty
-            If DB.ConnectToPWICamera(NewConnectedName) = True Then
+            If AIS.DB.ConnectToPWICamera(NewConnectedName) = True Then
                 'Process user inputs
-                DB.ASCOM_Camera_PWI.CoolerOn = DB.Val.GetTyped(DB.eKey.User_Camera_PWI_CoolerState, False)
-                Dim CCDTempRequested As Double = CDbl(DB.Val(DB.eKey.User_Camera_PWI_Temp_Target))
-                DB.ASCOM_Camera_PWI.SetCCDTemperature = CCDTempRequested
+                AIS.DB.ASCOM_Camera_PWI.CoolerOn = AIS.DB.Val.GetTyped(AIS.DB.eKey.User_Camera_PWI_CoolerState, False)
+                Dim CCDTempRequested As Double = CDbl(AIS.DB.Val(AIS.DB.eKey.User_Camera_PWI_Temp_Target))
+                AIS.DB.ASCOM_Camera_PWI.SetCCDTemperature = CCDTempRequested
                 With MyBGWorker
-                    .ReportProgress(BGW_DBUpdate, New DB.ProgressObject(DB.eKey.Camera_PWI_Temp_Current, Format(DB.ASCOM_Camera_PWI.CCDTemperature, "#0.0").Replace(",", ".")))
-                    .ReportProgress(BGW_DBUpdate, New DB.ProgressObject(DB.eKey.Camera_PWI_Temp_Target, Format(DB.ASCOM_Camera_PWI.SetCCDTemperature, "#0.0").Replace(",", ".")))
-                    .ReportProgress(BGW_DBUpdate, New DB.ProgressObject(DB.eKey.Camera_PWI_CoolerPower, DB.ASCOM_Camera_PWI.CoolerPower))
+                    .ReportProgress(BGW_DBUpdate, New AIS.DB.ProgressObject(AIS.DB.eKey.Camera_PWI_Temp_Current, Format(AIS.DB.ASCOM_Camera_PWI.CCDTemperature, "#0.0").Replace(",", ".")))
+                    .ReportProgress(BGW_DBUpdate, New AIS.DB.ProgressObject(AIS.DB.eKey.Camera_PWI_Temp_Target, Format(AIS.DB.ASCOM_Camera_PWI.SetCCDTemperature, "#0.0").Replace(",", ".")))
+                    .ReportProgress(BGW_DBUpdate, New AIS.DB.ProgressObject(AIS.DB.eKey.Camera_PWI_CoolerPower, AIS.DB.ASCOM_Camera_PWI.CoolerPower))
                     If .CancellationPending Then
                         e.Cancel = True
                         Exit Do

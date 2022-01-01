@@ -3,16 +3,10 @@ Option Strict On
 
 Public Class frmWorkflow
 
-    Private DB As cDB
     Private LogContent As New System.Text.StringBuilder
     Private WithEvents DD_Bias As Ato.DragDrop
 
     Dim ReportIndent As String = "  "
-
-    '''<summary>Set a link to the database to use.</summary>
-    Public Sub SetDB(ByRef DBToSet As cDB)
-        DB = DBToSet
-    End Sub
 
     Private Sub btnBias_Add_Click(sender As Object, e As EventArgs) Handles btnBias_Add.Click
         lbBiasFiles.Items.AddRange(System.IO.Directory.GetFiles(tbBias_Root.Text, tbBias_Filter.Text))
@@ -40,25 +34,25 @@ Public Class frmWorkflow
 
             'Read content
             Dim FITSReader As New cFITSReader
-            Dim Container As New AstroNET.Statistics(DB.IPP)
+            Dim Container As New AstroNET.Statistics(AIS.DB.IPP)
             Container.ResetAllProcessors()
-            Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileName, DB.UseIPP, DB.ForceDirect)
+            Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileName, AIS.DB.UseIPP, AIS.DB.ForceDirect)
 
             'Sum up all data and get total MAX and total MIN
-            DB.IPP.Convert(Container.DataProcessor_UInt16.ImageData(0).Data, DataAsUInt32)
-            DB.IPP.Add(DataAsUInt32, TotalSum)
+            AIS.DB.IPP.Convert(Container.DataProcessor_UInt16.ImageData(0).Data, DataAsUInt32)
+            AIS.DB.IPP.Add(DataAsUInt32, TotalSum)
             If Idx = 0 Then
-                DB.IPP.Copy(DataAsUInt32, MaxEvery)
-                DB.IPP.Copy(DataAsUInt32, MinEvery)
+                AIS.DB.IPP.Copy(DataAsUInt32, MaxEvery)
+                AIS.DB.IPP.Copy(DataAsUInt32, MinEvery)
             Else
-                DB.IPP.MaxEvery(DataAsUInt32, MaxEvery)
-                DB.IPP.MinEvery(DataAsUInt32, MinEvery)
+                AIS.DB.IPP.MaxEvery(DataAsUInt32, MaxEvery)
+                AIS.DB.IPP.MinEvery(DataAsUInt32, MinEvery)
             End If
 
             'Square sum - factor of 2 too much as we add Re^2 + Re^2
-            DB.IPP.Convert(DataAsUInt32, DataAsDouble)
-            DB.IPP.PowerSpectr(DataAsDouble, DataAsDouble, DataAsDouble)
-            DB.IPP.Add(DataAsDouble, PowerSum)
+            AIS.DB.IPP.Convert(DataAsUInt32, DataAsDouble)
+            AIS.DB.IPP.PowerSpectr(DataAsDouble, DataAsDouble, DataAsDouble)
+            AIS.DB.IPP.Add(DataAsDouble, PowerSum)
 
             'Fast single file statistics
             ReportMaxMin(DataAsUInt32)
@@ -72,14 +66,14 @@ Public Class frmWorkflow
         Dim Norm As Double = lbBiasFiles.Items.Count
         Dim Sigma(,) As Double = {}
         Dim SumSum(,) As Double = {}
-        DB.IPP.DivC(PowerSum, 2)            'normiert
-        Sigma = DB.IPP.Copy(PowerSum)       'E[X^2]
-        DB.IPP.Convert(TotalSum, SumSum)    'E[X]
-        DB.IPP.Mul(SumSum, SumSum)          'E^2[X]
-        DB.IPP.DivC(SumSum, Norm)           'E^2[X]/count
-        DB.IPP.Sub(SumSum, PowerSum)        'PowerSum = E[X^2] - E^2[x]
-        DB.IPP.DivC(PowerSum, Norm - 1)
-        DB.IPP.Sqrt(PowerSum)
+        AIS.DB.IPP.DivC(PowerSum, 2)            'normiert
+        Sigma = AIS.DB.IPP.Copy(PowerSum)       'E[X^2]
+        AIS.DB.IPP.Convert(TotalSum, SumSum)    'E[X]
+        AIS.DB.IPP.Mul(SumSum, SumSum)          'E^2[X]
+        AIS.DB.IPP.DivC(SumSum, Norm)           'E^2[X]/count
+        AIS.DB.IPP.Sub(SumSum, PowerSum)        'PowerSum = E[X^2] - E^2[x]
+        AIS.DB.IPP.DivC(PowerSum, Norm - 1)
+        AIS.DB.IPP.Sqrt(PowerSum)
 
         'Find peak positions in MaxEvery
         Log("Statistics MaxEvery:")
@@ -97,13 +91,13 @@ Public Class frmWorkflow
         Dim MaxMin(,) As UInt32 = {}
         Dim MaxMin_min As UInt32 = UInt32.MaxValue
         Dim MaxMin_max As UInt32 = UInt32.MinValue
-        DB.IPP.Copy(MaxEvery, MaxMin)
-        DB.IPP.Sub(MinEvery, MaxMin)
-        DB.IPP.MinMax(MaxMin, MaxMin_min, MaxMin_max)
+        AIS.DB.IPP.Copy(MaxEvery, MaxMin)
+        AIS.DB.IPP.Sub(MinEvery, MaxMin)
+        AIS.DB.IPP.MinMax(MaxMin, MaxMin_min, MaxMin_max)
 
         'Calculate statistics for this MAX-MIN range
         Dim Stat_MaxMin As AstroNET.Statistics.sStatistics = Nothing
-        Using Container_MaxMin As New AstroNET.Statistics(DB.IPP)
+        Using Container_MaxMin As New AstroNET.Statistics(AIS.DB.IPP)
             Container_MaxMin.ResetAllProcessors()
             Container_MaxMin.DataProcessor_UInt16.LoadImageData(MaxMin)
             Stat_MaxMin = Container_MaxMin.ImageStatistics()
@@ -119,7 +113,7 @@ Public Class frmWorkflow
     Private Sub ReportMaxMin(ByRef Vector(,) As UInt32)
         Dim MaxVal As UInt32 : Dim MinVal As UInt32
         Dim MaxPos As Integer : Dim MinPos As Integer
-        DB.IPP.MinMaxIndx(Vector, MinVal, MinPos, MaxVal, MaxPos)
+        AIS.DB.IPP.MinMaxIndx(Vector, MinVal, MinPos, MaxVal, MaxPos)
         Log(ReportIndent, "MIN: " & MinVal.ValRegIndep & " @ " & cIntelIPP.Index2D(Vector, MinPos).ValRegIndep)
         Log(ReportIndent, "MAX: " & MaxVal.ValRegIndep & " @ " & cIntelIPP.Index2D(Vector, MaxPos).ValRegIndep)
     End Sub

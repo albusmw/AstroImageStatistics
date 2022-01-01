@@ -15,7 +15,7 @@ Public Class frmManualAdjust
 
     Private Sub GetOpenHistos()
         cbSelectedHisto.Items.Clear()
-        For Each OpenForm As cZEDGraphForm In MyDB.AllPlots
+        For Each OpenForm As cZEDGraphForm In AIS.DB.AllPlots
             cbSelectedHisto.Items.Add(OpenForm.Text)
         Next OpenForm
         If cbSelectedHisto.Items.Count = 1 Then
@@ -52,7 +52,7 @@ Public Class frmManualAdjust
     End Sub
 
     Private Sub cbSelectedHisto_SelectedIndexChanged(sender As Object, e As EventArgs) Handles cbSelectedHisto.SelectedIndexChanged
-        For Each OpenForm As cZEDGraphForm In MyDB.AllPlots
+        For Each OpenForm As cZEDGraphForm In AIS.DB.AllPlots
             If OpenForm.Text = cbSelectedHisto.SelectedItem.ToString.Trim Then
                 SelectedForm = OpenForm
                 Exit For

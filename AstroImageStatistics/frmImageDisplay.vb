@@ -42,6 +42,9 @@ Public Class frmImageDisplay
     '''<summary>Selected ROI for zoom.</summary>
     Private ROICoord As Rectangle
 
+    '''<summary>Floating-point coordinated of the mouse within the picture.</summary>
+    Private FloatCenter As Drawing.PointF
+
     Private Sub frmImageDisplay_Shown(sender As Object, e As EventArgs) Handles Me.Shown
         Me.Text = "Image <" & FileToDisplay & ">"
     End Sub
@@ -58,15 +61,15 @@ Public Class frmImageDisplay
         pbMain.SizeMode = PictureBoxSizeMode.Zoom
         pbMain.BackColor = Color.Purple
 
-        'Load custom controls - scale image (must be done due to 64-bit IDE limitation)
+        'Load custom controls - scale display (must be done due to 64-bit IDE limitation)
         pbMainScale = New PictureBoxEx
         scImageAndScale.Panel2.Controls.Add(pbMainScale)
         pbMainScale.Dock = DockStyle.Fill
         pbMainScale.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
-        pbMainScale.SizeMode = PictureBoxSizeMode.Zoom
-        pbMainScale.BackColor = Color.Purple
+        pbMainScale.SizeMode = PictureBoxSizeMode.StretchImage
+        pbMainScale.BackColor = Color.LightGray
 
-        'Load custom controls - zoomed image (must be done due to 64-bit IDE limitation)
+        'Load custom controls - zoomed-in image (must be done due to 64-bit IDE limitation)
         pbZoomed = New PictureBoxEx
         scDetails.Panel2.Controls.Add(pbZoomed)
         pbZoomed.Dock = DockStyle.Fill
@@ -174,7 +177,8 @@ Public Class frmImageDisplay
         Next Entry
 
         'Generate LUT image
-        ScaleImage = New cLockBitmap32Bit(CInt(Data_Max - Data_Min + 1), 20)
+        'Dim ScaleDisplay_Width As Integer = CInt(Data_Max - Data_Min + 1)
+        ScaleImage = New cLockBitmap32Bit(800, 20)
         ScaleImage.LockBits(False)
         Dim CopyPtr As Integer = 0
         For Y As Integer = 0 To ScaleImage.Height - 1
@@ -260,30 +264,110 @@ Public Class frmImageDisplay
         Else
             Props.ZoomSize += 2
         End If
-        UpdateZoomCenter()
+        CalculateZoomParameters()
         ShowDetails()
     End Sub
 
     '''<summary>Moving the mouse changed the point to zoom in.</summary>
     Private Sub pbMain_MouseMove(sender As Object, e As MouseEventArgs) Handles pbMain.MouseMove
-        UpdateZoomCenter()
+        FloatCenter = pbMain.ScreenCoordinatesToImageCoordinates
+        CalculateZoomParameters()
         ShowDetails()
     End Sub
 
     Private Sub frmImageDisplay_KeyDown(sender As Object, e As KeyEventArgs) Handles Me.KeyDown
-        'Copy zoomed to clipboard
-        If e.KeyCode = Keys.C And e.Control = True Then
-            Clipboard.Clear()
-            Clipboard.SetImage(pbZoomed.Image)
-            e.Handled = True
+        e.Handled = False
+        If e.Control = True Then
+            Select Case e.KeyCode
+                'ZOOM IMAGE OPERATIONS
+                Case Keys.C
+                    'Copy zoomed to clipboard
+                    Clipboard.Clear()
+                    Clipboard.SetImage(pbZoomed.Image)
+                    e.Handled = True : tsslInfo1.Text = "Zoomed image copied to clipboard."
+                Case Keys.D
+                    'Get zoom-in data
+                    Dim PadSize As Integer = CInt(IIf(Props.BinPatternInZoomData, 16, 5))
+                    Dim ClipContent_AsIs As New List(Of String)
+                    Dim ClipContent_Binary As New List(Of String)
+                    For Idx1 As Integer = 0 To ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data.GetUpperBound(0)
+                        Dim Line As String = "#" & Format(Idx1, "00").Trim & ":"
+                        Dim ClipLine_AsIs As New List(Of String)
+                        Dim ClipLine_Binary As New List(Of String)
+                        For Idx2 As Integer = 0 To ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data.GetUpperBound(1)
+                            Dim Value As UInt16 = ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data(Idx1, Idx2)
+                            ClipLine_AsIs.Add(Value.ValRegIndep.PadLeft(PadSize))
+                            ClipLine_Binary.Add(GetBits(Value))
+                        Next Idx2
+                        ClipContent_AsIs.Add(Line & Join(ClipLine_AsIs.ToArray, ";"))
+                        If Props.BinPatternInZoomData Then ClipContent_Binary.Add(Line & Join(ClipLine_Binary.ToArray, ";"))
+                    Next Idx1
+                    ClipContent_AsIs.AddRange(ClipContent_Binary)
+                    Clipboard.Clear() : Clipboard.SetText(Join(ClipContent_AsIs.ToArray, System.Environment.NewLine))
+                    e.Handled = True : tsslInfo1.Text = "Image pixel values copied to clipboard."
+                'MOVE ROI
+                Case Keys.A
+                    FloatCenter = New PointF(FloatCenter.X - 1, FloatCenter.Y)
+                    CalculateZoomParameters()
+                    ShowDetails()
+                    e.Handled = True
+                    tsslInfo1.Text = "Center is now <" & FloatCenter.X.ValRegIndep & "," & FloatCenter.Y.ValRegIndep & ">"
+                Case Keys.S
+                    FloatCenter = New PointF(FloatCenter.X + 1, FloatCenter.Y)
+                    CalculateZoomParameters()
+                    ShowDetails()
+                    e.Handled = True
+                    tsslInfo1.Text = "Center is now <" & FloatCenter.X.ValRegIndep & "," & FloatCenter.Y.ValRegIndep & ">"
+                Case Keys.W
+                    FloatCenter = New PointF(FloatCenter.X, FloatCenter.Y + 1)
+                    CalculateZoomParameters()
+                    ShowDetails()
+                    e.Handled = True
+                    tsslInfo1.Text = "Center is now <" & FloatCenter.X.ValRegIndep & "," & FloatCenter.Y.ValRegIndep & ">"
+                Case Keys.Y
+                    FloatCenter = New PointF(FloatCenter.X, FloatCenter.Y - 1)
+                    CalculateZoomParameters()
+                    ShowDetails()
+                    e.Handled = True
+                    tsslInfo1.Text = "Center is now <" & FloatCenter.X.ValRegIndep & "," & FloatCenter.Y.ValRegIndep & ">"
+            End Select
         End If
-        If e.Handled = True Then GenerateDisplayImage()
+        ' e.Handled = True Then GenerateDisplayImage()
     End Sub
 
-    '''<summary>Calculate the ROI from the zoom.</summary>
-    Private Sub UpdateZoomCenter()
+    Private Function GetBits(ByVal Value As UInt16) As String
+        Dim RetVal As String = String.Empty
+        Dim HexVal As String = Hex(Value).PadLeft(4, "0"c)
+        For HexIdx As Integer = 0 To HexVal.Length - 1
+            RetVal &= BitsOfHex(HexVal.Substring(HexIdx, 1))
+        Next HexIdx
+        Return RetVal
+    End Function
 
-        Dim FloatCenter As Drawing.PointF = pbMain.ScreenCoordinatesToImageCoordinates
+    Private Function BitsOfHex(ByVal HexVal As String) As String
+        Select Case HexVal
+            Case "0" : Return "0000"
+            Case "1" : Return "0001"
+            Case "2" : Return "0010"
+            Case "3" : Return "0011"
+            Case "4" : Return "0100"
+            Case "5" : Return "0101"
+            Case "6" : Return "0110"
+            Case "7" : Return "0111"
+            Case "8" : Return "1000"
+            Case "9" : Return "1001"
+            Case "A" : Return "1010"
+            Case "B" : Return "1011"
+            Case "C" : Return "1100"
+            Case "D" : Return "1101"
+            Case "E" : Return "1110"
+            Case "F" : Return "1111"
+            Case Else : Return "    "
+        End Select
+    End Function
+
+    '''<summary>Calculate the ROI from the zoom.</summary>
+    Private Sub CalculateZoomParameters()
 
         'Calculate the zoom area
         Dim X_left As Integer : Dim X_right As Integer : Dim Y_up As Integer : Dim Y_down As Integer
@@ -291,9 +375,6 @@ Public Class frmImageDisplay
 
         'Set ROI rectangle coordinates
         ROICoord = New Rectangle(X_left, Y_up, X_right - X_left + 1, Y_down - Y_up + 1)
-        Props.Zoom_X = ROICenter.X
-        Props.Zoom_Y = ROICenter.Y
-        pgMain.SelectedObject = Props
 
     End Sub
 
@@ -307,14 +388,16 @@ Public Class frmImageDisplay
         'Calculate statistics
         ZoomStatistics = ZoomStatCalc.ImageStatistics()
         Dim Report As New List(Of String)
-        Report.Add("ROI X  : " & ROICoord.Left.ValRegIndep & " ... [" & ROICenter.X.ValRegIndep & "] ... " & (ROICoord.Left + ROICoord.Width).ValRegIndep)
-        Report.Add("ROI Y  : " & ROICoord.Top.ValRegIndep & " ... [" & ROICenter.Y.ValRegIndep & "] ... " & (ROICoord.Top + ROICoord.Height).ValRegIndep)
-        Report.Add("Min    : " & ZoomStatistics.MonoStatistics_Int.Min.Key.ValRegIndep)
-        Report.Add("Max    : " & ZoomStatistics.MonoStatistics_Int.Max.Key.ValRegIndep)
-        Report.Add("Mean   : " & ZoomStatistics.MonoStatistics_Int.Mean.ValRegIndep("0.0"))
-        Report.Add("Median : " & ZoomStatistics.MonoStatistics_Int.Median.ValRegIndep)
-        Report.Add("1%-PCT : " & ZoomStatistics.MonoStatistics_Int.GetPercentile(1).ValRegIndep)
-        Report.Add("99%-PCT: " & ZoomStatistics.MonoStatistics_Int.GetPercentile(99).ValRegIndep)
+        Report.Add("ROI       : " & ROICoord.Width.ValRegIndep & "x" & ROICoord.Height.ValRegIndep)
+        Report.Add("ROI - X   : " & ROICoord.Left.ValRegIndep & "...[" & ROICenter.X.ValRegIndep & "]..." & (ROICoord.Left + ROICoord.Width).ValRegIndep)
+        Report.Add("ROI - Y   : " & ROICoord.Top.ValRegIndep & "...[" & ROICenter.Y.ValRegIndep & "]..." & (ROICoord.Top + ROICoord.Height).ValRegIndep)
+        Report.Add("Min       : " & ZoomStatistics.MonoStatistics_Int.Min.Key.ValRegIndep)
+        Report.Add("Max       : " & ZoomStatistics.MonoStatistics_Int.Max.Key.ValRegIndep)
+        Report.Add("Mean      : " & ZoomStatistics.MonoStatistics_Int.Mean.ValRegIndep("0.0"))
+        Report.Add("Median    : " & ZoomStatistics.MonoStatistics_Int.Median.ValRegIndep)
+        Report.Add("1%-PCT    : " & ZoomStatistics.MonoStatistics_Int.GetPercentile(1).ValRegIndep)
+        Report.Add("99%-PCT   : " & ZoomStatistics.MonoStatistics_Int.GetPercentile(99).ValRegIndep)
+        Report.Add("ADU Values: " & ZoomStatistics.MonoStatistics_Int.DifferentADUValues.ValRegIndep)
         tbDetails.Text = String.Join(System.Environment.NewLine, Report)
 
         'Get the magnified version
@@ -381,6 +464,7 @@ Public Class cImageDisplayProp
     Const Cat_Range As String = "1.) Range limitation"
     Const Cat_Color As String = "2.) Color conversion"
     Const Cat_Detail As String = "3.) Zoomed details"
+    Const Cat_Analysis As String = "4.) Analysis configuration"
 
     '''<summary>Values below this percentage value are special colored.</summary>
     <ComponentModel.Category(Cat_Range)>
@@ -420,12 +504,14 @@ Public Class cImageDisplayProp
     <ComponentModel.Category(Cat_Range)>
     <ComponentModel.DisplayName("1.3) Upper cut-off color")>
     <ComponentModel.Description("Color for values above this percentage value")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     Public Property MaxCutOff_color As Color = Color.Red
 
     '''<summary>Color to use if value is above display range.</summary>
     <ComponentModel.Category(Cat_Range)>
     <ComponentModel.DisplayName("1.4) Use special cut-off color")>
     <ComponentModel.Description("TRUE to use special colors for cut-off, FALSE to use limit color")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(False)>
     Public Property CutOffSpecialColor As Boolean = False
 
@@ -433,6 +519,7 @@ Public Class cImageDisplayProp
     <ComponentModel.Category(Cat_Range)>
     <ComponentModel.DisplayName("1.5) Full range between cut-offs")>
     <ComponentModel.Description("True to use full color range within the cut-off range")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property MinMaxPctRescale As Boolean = True
 
@@ -469,6 +556,7 @@ Public Class cImageDisplayProp
     <ComponentModel.Category(Cat_Color)>
     <ComponentModel.DisplayName("b) Uni-color mode")>
     <ComponentModel.Description("Within range, display all values in Uni-color")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(False)>
     Public Property ColorUniMode As Boolean = False
 
@@ -481,39 +569,35 @@ Public Class cImageDisplayProp
 
     '==========================================================================================================
 
-    '''<summary>Center of zoom - X.</summary>
-    <ComponentModel.Category(Cat_Detail)>
-    <ComponentModel.DisplayName("a) Center - X")>
-    <ComponentModel.Description("Center of zoom - X")>
-    <ComponentModel.DefaultValue(0)>
-    Public Property Zoom_X As Integer = 0
-
-    '''<summary>Center of zoom - Y.</summary>
-    <ComponentModel.Category(Cat_Detail)>
-    <ComponentModel.DisplayName("b) Center - Y")>
-    <ComponentModel.Description("Center of zoom - Y")>
-    <ComponentModel.DefaultValue(0)>
-    Public Property Zoom_Y As Integer = 0
-
     '''<summary>Color to use if value is below display range.</summary>
     <ComponentModel.Category(Cat_Detail)>
-    <ComponentModel.DisplayName("c) Zoom size [pixel]")>
+    <ComponentModel.DisplayName("a) Zoom size [pixel]")>
     <ComponentModel.Description("Size of the zoomed area")>
     <ComponentModel.DefaultValue(20)>
     Public Property ZoomSize As Integer = 20
 
     '''<summary>Color to use if value is below display range.</summary>
     <ComponentModel.Category(Cat_Detail)>
-    <ComponentModel.DisplayName("d) Pixel per real pixel")>
+    <ComponentModel.DisplayName("b) Pixel per real pixel")>
     <ComponentModel.Description("Size of the zoomed area")>
     <ComponentModel.DefaultValue(1)>
     Public Property PixelPerRealPixel As Integer = 1
 
     '''<summary>Color to use if value is below display range.</summary>
     <ComponentModel.Category(Cat_Detail)>
-    <ComponentModel.DisplayName("e) Zoom interpolation")>
+    <ComponentModel.DisplayName("c) Zoom interpolation")>
     <ComponentModel.Description("Interpolation mode of the zoomed area")>
     <ComponentModel.DefaultValue(4)>
     Public Property ZoomInterpolation As Drawing.Drawing2D.InterpolationMode = Drawing.Drawing2D.InterpolationMode.NearestNeighbor
+
+    '==========================================================================================================
+
+    '''<summary>Color to use if value is below display range.</summary>
+    <ComponentModel.Category(Cat_Analysis)>
+    <ComponentModel.DisplayName("a) Bit pattern output")>
+    <ComponentModel.Description("When storing the data of the zoomed image, also store the bit pattern of the numbers in parallel")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
+    <ComponentModel.DefaultValue(False)>
+    Public Property BinPatternInZoomData As Boolean = False
 
 End Class

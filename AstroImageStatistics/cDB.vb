@@ -1,7 +1,39 @@
 ﻿Option Explicit On
 Option Strict On
 
+Public Class AIS
+    Public Shared DB As New cDB
+End Class
+
 Public Class cDB
+
+    '''<summary>All open plots.</summary>
+    Public AllPlots As New List(Of cZEDGraphForm)
+
+    '''<summary>Last file opened.</summary>
+    Public LastFile_Name As String = String.Empty
+    '''<summary>Last file opened -  FITS header.</summary>
+    Public LastFile_FITSHeader As cFITSHeaderParser
+    '''<summary>Last file opened - statistics processor.</summary>
+    Public LastFile_Data As AstroNET.Statistics
+    '''<summary>Last file opened - statistics.</summary>
+    Public LastFile_Statistics As AstroNET.Statistics.sStatistics
+    '''<summary>Last file opened - detailed evaluation reults.</summary>
+    Public LastFile_EvalResults As sFileEvalResults
+
+    '''<summary>Detailed evaluation reults.</summary>
+    Public Structure sFileEvalResults
+        '''<summary>Statistics for pixel with identical Y value.</summary>
+        Dim StatPerRow() As Ato.cSingleValueStatistics
+        '''<summary>Statistics for pixel with identical X value.</summary>
+        Dim StatPerCol() As Ato.cSingleValueStatistics
+        '''<summary>Raw vignette.</summary>
+        Public Vig_RawData As Dictionary(Of Double, Double)
+        '''<summary>Reduced and binned vignette.</summary>
+        Public Vig_BinUsedData As Dictionary(Of Double, Double)
+        '''<summary>Fitted vignette.</summary>
+        Public Vig_Fitting() As Double
+    End Structure
 
     '''<summary>Handle to Intel IPP functions.</summary>
     Public IPP As cIntelIPP
@@ -25,12 +57,14 @@ Public Class cDB
     <ComponentModel.Category(Cat_load)>
     <ComponentModel.DisplayName("a) Use IPP?")>
     <ComponentModel.Description("Use the Intel IPP for loading and other steps (recommended - speed-up)")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property UseIPP As Boolean = True
 
     <ComponentModel.Category(Cat_load)>
     <ComponentModel.DisplayName("b) Force direct read-in")>
     <ComponentModel.Description("Do not apply BZERO or BSCALE - this may help on problems with incorrect scaling coefficients")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(False)>
     Public Property ForceDirect As Boolean = False
 
@@ -45,17 +79,20 @@ Public Class cDB
     <ComponentModel.Category(Cat_analysis)>
     <ComponentModel.DisplayName("a) Mono statistics")>
     <ComponentModel.Description("Calculate the mono statistics (can be of interest if e.g. color balance is applied to a mono image which would be wrong ...)")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property CalcStat_Mono As Boolean = True
 
     <ComponentModel.Category(Cat_analysis)>
     <ComponentModel.DisplayName("b) Bayer statistics")>
     <ComponentModel.Description("Calculate the bayer statistics (can be of interest if e.g. color balance is applied to a mono image which would be wrong ...)")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property CalcStat_Bayer As Boolean = True
 
     <ComponentModel.Category(Cat_analysis)>
     <ComponentModel.DisplayName("c) Stacking")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(False)>
     Public Property Stacking As Boolean = False
 
@@ -73,6 +110,7 @@ Public Class cDB
 
     <ComponentModel.Category(Cat_plot)>
     <ComponentModel.DisplayName("a) Auto-open graph")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property AutoOpenStatGraph As Boolean = True
 
@@ -83,6 +121,7 @@ Public Class cDB
     <ComponentModel.Category(Cat_plot)>
     <ComponentModel.DisplayName("c) Stack graphs below form")>
     <ComponentModel.Description("Position graphs below the main window (exact overlay of different graph windows)")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(False)>
     Public Property StackGraphs As Boolean = False
 
@@ -116,6 +155,7 @@ Public Class cDB
 
     <ComponentModel.Category(Cat_log)>
     <ComponentModel.DisplayName("a) Clean log on any analysis?")>
+    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property AutoClearLog As Boolean = True
 
@@ -142,7 +182,7 @@ Public Class cDB
             Return MyIPPPath
         End Get
     End Property
-    Public MyIPPPath As String = String.Empty
+    Public Shared MyIPPPath As String = String.Empty
 
     '''<summary>Get all (existing) files last loaded.</summary>
     Public Function GetRecentFiles() As List(Of String)
