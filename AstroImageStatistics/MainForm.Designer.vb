@@ -77,6 +77,7 @@ Partial Class MainForm
         Me.tsmiAnalysis_MultiFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysis_MultiFile_Open = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysis_MultiFile_LoadAbove = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiAnalysis_XvsYPlot = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing_AdjustRGB = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiStretch = New System.Windows.Forms.ToolStripMenuItem()
@@ -130,7 +131,7 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.tsmiAnalysis_XvsYPlot = New System.Windows.Forms.ToolStripMenuItem()
+        Me.frmTest_HistoInteractive = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -483,6 +484,12 @@ Partial Class MainForm
         Me.tsmiAnalysis_MultiFile_LoadAbove.Size = New System.Drawing.Size(195, 22)
         Me.tsmiAnalysis_MultiFile_LoadAbove.Text = "Load certain pixel ..."
         '
+        'tsmiAnalysis_XvsYPlot
+        '
+        Me.tsmiAnalysis_XvsYPlot.Name = "tsmiAnalysis_XvsYPlot"
+        Me.tsmiAnalysis_XvsYPlot.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
+        '
         'tsmiProcessing
         '
         Me.tsmiProcessing.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiProcessing_AdjustRGB, Me.tsmiStretch, Me.tsmiPlateSolve, Me.tsmiSetPixelToValue, Me.tsmiProcessing_MedianFilter, Me.SubtractMedianToolStripMenuItem, Me.tsmiProcessing_LSBMSB, Me.tsmiProcessing_Specials})
@@ -547,7 +554,7 @@ Partial Class MainForm
         '
         'tsmiTest
         '
-        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTest_WriteTestData, Me.AfiineTranslateToolStripMenuItem, Me.tsmiTest_ASCOMDyn, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery})
+        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTest_WriteTestData, Me.AfiineTranslateToolStripMenuItem, Me.tsmiTest_ASCOMDyn, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive})
         Me.tsmiTest.Name = "tsmiTest"
         Me.tsmiTest.Size = New System.Drawing.Size(68, 22)
         Me.tsmiTest.Text = "Test code"
@@ -863,11 +870,11 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'tsmiAnalysis_XvsYPlot
+        'frmTest_HistoInteractive
         '
-        Me.tsmiAnalysis_XvsYPlot.Name = "tsmiAnalysis_XvsYPlot"
-        Me.tsmiAnalysis_XvsYPlot.Size = New System.Drawing.Size(261, 22)
-        Me.tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
+        Me.frmTest_HistoInteractive.Name = "frmTest_HistoInteractive"
+        Me.frmTest_HistoInteractive.Size = New System.Drawing.Size(274, 22)
+        Me.frmTest_HistoInteractive.Text = "Interactive Histogram"
         '
         'MainForm
         '
@@ -1014,4 +1021,5 @@ Partial Class MainForm
     Friend WithEvents tsmiProcessing_Specials As ToolStripMenuItem
     Friend WithEvents tsmiProcessing_Specials_NINAFix As ToolStripMenuItem
     Friend WithEvents tsmiAnalysis_XvsYPlot As ToolStripMenuItem
+    Friend WithEvents frmTest_HistoInteractive As ToolStripMenuItem
 End Class

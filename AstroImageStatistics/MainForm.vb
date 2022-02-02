@@ -919,6 +919,7 @@ Public Class MainForm
     Private Sub tsmiTest_Focus_Click(sender As Object, e As EventArgs) Handles tsmiTest_Focus.Click
 
         'Focus analysis test code
+        'Test files: \\192.168.100.10\astro\2021_02_12 (Focus)\Small
 
         Dim StatFocusPoint As New Dictionary(Of Integer, Dictionary(Of Long, ULong))
 
@@ -2142,6 +2143,11 @@ Public Class MainForm
     Private Sub tsmiAnalysis_XvsYPlot_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_XvsYPlot.Click
         Dim XvsYPlot As New frmXvsYPlot
         XvsYPlot.Show()
+    End Sub
+
+    Private Sub frmTest_HistoInteractive_Click(sender As Object, e As EventArgs) Handles frmTest_HistoInteractive.Click
+        Dim X As New frmHistogram
+        X.Show()
     End Sub
 
 End Class
