@@ -16,4 +16,4 @@ AIS displays the histogram of FITS files in "full resolution", means that e.g. a
 
 ## Screenshots
 
-![MainWindow](screenshots\MainWindow.png)
+![MainWindow](screenshots/MainWindow.png)
