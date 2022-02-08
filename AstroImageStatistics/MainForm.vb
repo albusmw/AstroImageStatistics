@@ -373,7 +373,7 @@ Public Class MainForm
         Disp.HostForm.Width = Me.Width
     End Sub
 
-    Private Sub PlotStatistics(ByVal FileName As String, ByRef Stats As Dictionary(Of Double, AstroImageStatistics.AstroNET.Statistics.sSingleChannelStatistics_Int))
+    Private Sub PlotStatistics(ByVal FileName As String, ByRef Stats As Dictionary(Of Double, AstroImageStatistics.AstroNET.Statistics.cSingleChannelStatistics_Int))
         Dim Disp As New cZEDGraphForm
         Disp.PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
         'Plot data
@@ -981,7 +981,7 @@ Public Class MainForm
 
                 WorkSheet_Sum.Cell(ExcelRow, 1).Value = FocusPos
                 WorkSheet_Sum.Cell(ExcelRow, 2).Value = AstroNET.Statistics.TotalEnergy(StatFocusPoint(FocusPos))
-                Dim Results As AstroNET.Statistics.sSingleChannelStatistics_Int = AstroNET.Statistics.CalcStatValuesFromHisto(StatFocusPoint(FocusPos))
+                Dim Results As AstroNET.Statistics.cSingleChannelStatistics_Int = AstroNET.Statistics.CalcStatValuesFromHisto(StatFocusPoint(FocusPos))
                 WorkSheet_Sum.Cell(ExcelRow, 3).Value = Results.Percentile(95)
                 WorkSheet_Sum.Cell(ExcelRow, 4).Value = Results.Modus
                 WorkSheet_Sum.Cell(ExcelRow, 5).Value = FocusQualityIndicator(StatFocusPoint(FocusPos), 5.0)

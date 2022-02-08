@@ -1,6 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
 
+'''<summary>Grep FITS file headers.</summary>
 Public Class cFITSGrepper
 
     Public Property Progress() As sProgress
@@ -176,35 +177,47 @@ Public Class cFITSGrepper
 
     End Function
 
+    '''<summary>Get all column headers.</summary>
+    Public Function GetTableColumns() As Dictionary(Of String, Type)
+        Dim RetVal As New Dictionary(Of String, Type)
+        RetVal.Add("FileName", GetType(String))
+        For Each Keyword As eFITSKeywords In AllFoundKeywordValues.Keys
+            If (AllFoundKeywordValues(Keyword).Count > 1) Or (NotInAllFiles.Contains(Keyword)) Then     'if there is more than 1 entry or entries are missing, add
+                Dim KeywordString As String = FITSKeyword.KeywordString(Keyword)
+                RetVal.Add(KeywordString, GetKeywordsDataType(AllFoundKeywordValues(Keyword)))          'todo: not all header entries are string ...
+            End If
+        Next Keyword
+        Return RetVal
+    End Function
+
     '''<summary>Build a datatable from the dictionary created.</summary>
     Public Function GetDataTable() As DataTable
 
         Dim RetVal As New DataTable
-        Dim ColumnsToDisplay As New Dictionary(Of eFITSKeywords, Integer)
-        Dim ColPtr As Integer = 1                                                                           'we start with 1 as column 0 is the complete file name
+        Dim KeywordColumnIndex As New Dictionary(Of String, Integer)
+        Dim ColPtr As Integer = 0
 
         'Check conditions
         If IsNothing(AllFoundKeywordValues) Then Return Nothing
 
-        RetVal.Columns.Add("FileName", GetType(String))
-        For Each Keyword As eFITSKeywords In AllFoundKeywordValues.Keys
-            If AllFoundKeywordValues(Keyword).Count > 1 Or NotInAllFiles.Contains(Keyword) Then             'if there is more than 1 entry or entries are missing, add
-                Dim KeywordString As String = FITSKeyword.KeywordString(Keyword)
-                RetVal.Columns.Add(KeywordString, GetKeywordsDataType(AllFoundKeywordValues(Keyword)))      'todo: not all header entries are string ...
-                ColumnsToDisplay.Add(Keyword, ColPtr)
-                ColPtr += 1
-            End If
+        'Build all columns
+        Dim AllUsedKeywords As Dictionary(Of String, Type) = GetTableColumns()
+        For Each Keyword As String In AllUsedKeywords.Keys
+            RetVal.Columns.Add(Keyword, AllUsedKeywords(Keyword))
+            KeywordColumnIndex.Add(Keyword, ColPtr)
+            ColPtr += 1
         Next Keyword
 
         'Generate all rows (files)
         Dim Ptr As Integer = -1
         For Each FileName As String In AllFileHeaders.Keys
-            Dim NewRow(ColumnsToDisplay.Count) As Object
+            Dim NewRow(KeywordColumnIndex.Count - 1) As Object
             Ptr += 1
             NewRow(0) = FileName
             For Each Keyword As eFITSKeywords In AllFileHeaders(FileName).Keys
-                If ColumnsToDisplay.ContainsKey(Keyword) = True Then
-                    Dim ColIdx As Integer = ColumnsToDisplay(Keyword)
+                Dim KeywordString As String = FITSKeyword.KeywordString(Keyword)
+                If KeywordColumnIndex.ContainsKey(KeywordString) = True Then
+                    Dim ColIdx As Integer = KeywordColumnIndex(KeywordString)
                     If AllFileHeaders(FileName).ContainsKey(Keyword) Then
                         NewRow(ColIdx) = AllFileHeaders(FileName)(Keyword)
                     Else

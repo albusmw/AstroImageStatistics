@@ -269,6 +269,14 @@
     <Compile Include="..\..\src\atomics\ZEDGraphUtil.vb">
       <Link>ZEDGraphUtil.vb</Link>
     </Compile>
+    <Compile Include="..\..\src\Forms\frmFITSGrep.designer.vb">
+      <Link>frmFITSGrep.designer.vb</Link>
+      <DependentUpon>frmFITSGrep.vb</DependentUpon>
+    </Compile>
+    <Compile Include="..\..\src\Forms\frmFITSGrep.vb">
+      <Link>frmFITSGrep.vb</Link>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="..\..\src\GUIElements\PictureBoxEx.vb">
       <Link>PictureBoxEx.vb</Link>
       <SubType>Component</SubType>
@@ -320,12 +328,6 @@
       <DependentUpon>MainForm.vb</DependentUpon>
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmFITSGrep.Designer.vb">
-      <DependentUpon>frmFITSGrep.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmFITSGrep.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="frmImageDisplay.Designer.vb">
       <DependentUpon>frmImageDisplay.vb</DependentUpon>
     </Compile>
@@ -368,6 +370,10 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\..\src\Forms\frmFITSGrep.resx">
+      <Link>frmFITSGrep.resx</Link>
+      <DependentUpon>frmFITSGrep.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmAstroBinSearch.resx">
       <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
     </EmbeddedResource>
@@ -388,9 +394,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="MainForm.resx">
       <DependentUpon>MainForm.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmFITSGrep.resx">
-      <DependentUpon>frmFITSGrep.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmImageDisplay.resx">
       <DependentUpon>frmImageDisplay.vb</DependentUpon>
