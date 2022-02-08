@@ -179,10 +179,9 @@ Public Class cDB
     <ComponentModel.DisplayName("b) Used IPP path")>
     Public ReadOnly Property IPPPath As String
         Get
-            Return MyIPPPath
+            Return IPP.IPPPath
         End Get
     End Property
-    Public Shared MyIPPPath As String = String.Empty
 
     '''<summary>Get all (existing) files last loaded.</summary>
     Public Function GetRecentFiles() As List(Of String)

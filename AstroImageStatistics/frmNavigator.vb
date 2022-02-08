@@ -187,7 +187,7 @@ Public Class frmNavigator
     Private Sub frmNavigator_Load(sender As Object, e As EventArgs) Handles Me.Load
         cbColorModes.SelectedIndex = 2
         clbDropHandler = New Ato.DragDrop(clbFiles)
-        clbDropHandler.FillList = False
+        clbDropHandler.FillControl = False
     End Sub
 
     Private Sub clbDropHandler_DropOccured(Files() As String) Handles clbDropHandler.DropOccured
