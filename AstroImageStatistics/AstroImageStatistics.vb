@@ -1,12 +1,19 @@
 ﻿Option Explicit On
 Option Strict On
 
+'''<summary>Function for astro imaging,</summary>
 Public Class AstroImageStatistics_Fun
 
-    Public Shared Function PlateSolve(ByVal FileToRun As String, ByVal PlateSolve2Path As String, ByVal PlateSolve2HoldOpen As Integer) As String()
+    '''<summary>Plate solve the passed file,</summary>
+    '''<returns>Error code; empty string on no error.</returns>
+    Public Shared Function PlateSolve(ByVal FileToRun As String, ByVal PlateSolve2Path As String, ByVal PlateSolve2HoldOpen As Integer, ByRef SolverLog As String()) As String
 
         Dim Solver As New cPlateSolve
         Dim Binning As Integer = 1
+
+        'Preconditions
+        If System.IO.File.Exists(FileToRun) = False Then Return "Input file <" & FileToRun & "> not found."
+        If System.IO.File.Exists(PlateSolve2Path) = False Then Return "PlateSolve2 executable <" & PlateSolve2Path & "> not found."
 
         'Get the FITS header information
         Dim DataStartPos As Integer = -1
@@ -23,9 +30,7 @@ Public Class AstroImageStatistics_Fun
         Next Entry
 
         'Exit on no data
-        If IsNothing(File_RA_JNow) Or IsNothing(File_Dec_JNow) Then
-            Return New String() {"NO RA OR DEC SPECIFIED!"}
-        End If
+        If IsNothing(File_RA_JNow) Or IsNothing(File_Dec_JNow) Then Return "No RA and/or DEC specified in input file."
 
         'Data from QHYCapture (10Micron) are in JNow, so convert to J2000 for PlateSolve
         Dim File_RA_J2000 As Double = Double.NaN
@@ -64,7 +69,7 @@ Public Class AstroImageStatistics_Fun
         Output.Add(" <Pixel>        :  RA <" & Solver.PixelErrorRA.ValRegIndep & " pixel>, DEC < " & Solver.PixelErrorDec.ValRegIndep & " pixel>")
         Output.Add("Angle           : <" & Solver.RotationAngle.ValRegIndep & ">")
 
-        Return Output.ToArray
+        SolverLog = Output.ToArray
 
         '----------------------------------------------------------------------------------------------------
         'Code taken from ASCOM_CamTest
@@ -115,6 +120,8 @@ Public Class AstroImageStatistics_Fun
         '    Changer.ChangeHeader(File, File & "_SOLVED.fits", FITSHeader.GetCardsAsDictionary)
 
         'Next File
+
+        Return String.Empty
 
     End Function
 

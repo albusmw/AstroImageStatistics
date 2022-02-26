@@ -890,7 +890,13 @@ Public Class MainForm
     End Sub
 
     Private Sub tsmiPlateSolve_Click(sender As Object, e As EventArgs) Handles tsmiPlateSolve.Click
-        Log("PLATE SOLVE: > ", AstroImageStatistics_Fun.PlateSolve(AIS.DB.LastFile_Name, AIS.DB.PlateSolve2Path, AIS.DB.PlateSolve2HoldOpen))
+        Dim SolverLog As String() = {}
+        Dim ErrorCode As String = AstroImageStatistics_Fun.PlateSolve(AIS.DB.LastFile_Name, AIS.DB.PlateSolve2Path, AIS.DB.PlateSolve2HoldOpen, SolverLog)
+        If String.IsNullOrEmpty(ErrorCode) = True Then
+            Log("Plate solve results: > ", SolverLog)
+        Else
+            Log("Plate solve FAILED: <" & ErrorCode & ">")
+        End If
     End Sub
 
 
