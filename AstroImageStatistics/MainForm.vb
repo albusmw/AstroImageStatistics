@@ -1,42 +1,8 @@
 ﻿Option Explicit On
 Option Strict On
+Imports AstroImageStatistics.cLibRaw
 
 Public Class MainForm
-
-    Public Shared BitReverseTable As Byte() = {
-    &H0, &H80, &H40, &HC0, &H20, &HA0, &H60, &HE0,
-    &H10, &H90, &H50, &HD0, &H30, &HB0, &H70, &HF0,
-    &H8, &H88, &H48, &HC8, &H28, &HA8, &H68, &HE8,
-    &H18, &H98, &H58, &HD8, &H38, &HB8, &H78, &HF8,
-    &H4, &H84, &H44, &HC4, &H24, &HA4, &H64, &HE4,
-    &H14, &H94, &H54, &HD4, &H34, &HB4, &H74, &HF4,
-    &HC, &H8C, &H4C, &HCC, &H2C, &HAC, &H6C, &HEC,
-    &H1C, &H9C, &H5C, &HDC, &H3C, &HBC, &H7C, &HFC,
-    &H2, &H82, &H42, &HC2, &H22, &HA2, &H62, &HE2,
-    &H12, &H92, &H52, &HD2, &H32, &HB2, &H72, &HF2,
-    &HA, &H8A, &H4A, &HCA, &H2A, &HAA, &H6A, &HEA,
-    &H1A, &H9A, &H5A, &HDA, &H3A, &HBA, &H7A, &HFA,
-    &H6, &H86, &H46, &HC6, &H26, &HA6, &H66, &HE6,
-    &H16, &H96, &H56, &HD6, &H36, &HB6, &H76, &HF6,
-    &HE, &H8E, &H4E, &HCE, &H2E, &HAE, &H6E, &HEE,
-    &H1E, &H9E, &H5E, &HDE, &H3E, &HBE, &H7E, &HFE,
-    &H1, &H81, &H41, &HC1, &H21, &HA1, &H61, &HE1,
-    &H11, &H91, &H51, &HD1, &H31, &HB1, &H71, &HF1,
-    &H9, &H89, &H49, &HC9, &H29, &HA9, &H69, &HE9,
-    &H19, &H99, &H59, &HD9, &H39, &HB9, &H79, &HF9,
-    &H5, &H85, &H45, &HC5, &H25, &HA5, &H65, &HE5,
-    &H15, &H95, &H55, &HD5, &H35, &HB5, &H75, &HF5,
-    &HD, &H8D, &H4D, &HCD, &H2D, &HAD, &H6D, &HED,
-    &H1D, &H9D, &H5D, &HDD, &H3D, &HBD, &H7D, &HFD,
-    &H3, &H83, &H43, &HC3, &H23, &HA3, &H63, &HE3,
-    &H13, &H93, &H53, &HD3, &H33, &HB3, &H73, &HF3,
-    &HB, &H8B, &H4B, &HCB, &H2B, &HAB, &H6B, &HEB,
-    &H1B, &H9B, &H5B, &HDB, &H3B, &HBB, &H7B, &HFB,
-    &H7, &H87, &H47, &HC7, &H27, &HA7, &H67, &HE7,
-    &H17, &H97, &H57, &HD7, &H37, &HB7, &H77, &HF7,
-    &HF, &H8F, &H4F, &HCF, &H2F, &HAF, &H6F, &HEF,
-    &H1F, &H9F, &H5F, &HDF, &H3F, &HBF, &H7F, &HFF
-}
 
     Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByVal pDst As IntPtr,
                                                                  ByVal pSrc As IntPtr,
@@ -53,13 +19,13 @@ Public Class MainForm
     '''<summary>Drag-and-drop handler.</summary>
     Private WithEvents DD As Ato.DragDrop
 
-
-
     '''<summary>Storage for a simple stack processing.</summary>
     Private StackingStatistics(,) As Ato.cSingleValueStatistics
 
     '''<summary>Statistics of all processed files.</summary>
     Private AllFilesEverRead As New Dictionary(Of String, sFileEvalOut)
+
+    Private MyStreamDeck As StreamDeckSharp.IStreamDeckBoard
 
     '''<summary>Evaluation results for 1 file (FITS header and statistics).</summary>
     Private Structure sFileEvalOut
@@ -509,18 +475,6 @@ Public Class MainForm
         OpenAllFiles(AllFiles)
     End Sub
 
-    Private Sub tsmiTest_WriteTestData_Click(sender As Object, e As EventArgs) Handles tsmiTest_WriteTestData.Click
-        cFITSWriter.WriteTestFile_Int8(System.IO.Path.Combine(AIS.DB.MyPath, "FITS_BitPix8.FITS"))
-        cFITSWriter.WriteTestFile_Int16(System.IO.Path.Combine(AIS.DB.MyPath, "FITS_BitPix16.FITS"))
-        cFITSWriter.WriteTestFile_Int32(System.IO.Path.Combine(AIS.DB.MyPath, "FITS_BitPix32.FITS"))
-        cFITSWriter.WriteTestFile_Float32(System.IO.Path.Combine(AIS.DB.MyPath, "FITS_BitPix32f.FITS"))
-        cFITSWriter.WriteTestFile_Float64(System.IO.Path.Combine(AIS.DB.MyPath, "FITS_BitPix64f.FITS"))
-        cFITSWriter.WriteTestFile_UInt16_Cross(System.IO.Path.Combine(AIS.DB.MyPath, "UInt16_Cross_mono.fits"))
-        cFITSWriter.WriteTestFile_UInt16_Cross_RGB(System.IO.Path.Combine(AIS.DB.MyPath, "UInt16_Cross_rgb.fits"))
-        cFITSWriter.WriteTestFile_UInt16_XYIdent(System.IO.Path.Combine(AIS.DB.MyPath, "UInt16_XYIdent.fits"))
-        MsgBox("OK")
-    End Sub
-
     Private Sub tsmiFile_OpenLastFile_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenLastFile.Click
         If System.IO.File.Exists(AIS.DB.LastFile_Name) = True Then
             Try
@@ -899,23 +853,8 @@ Public Class MainForm
         End If
     End Sub
 
-
-
     Private Sub tsmiFile_FITSGrep_Click(sender As Object, e As EventArgs) Handles tsmiFile_FITSGrep.Click
         Dim X As New frmFITSGrep : X.Show()
-    End Sub
-
-    Private Sub tsmiTest_ASCOMDyn_Click(sender As Object, e As EventArgs) Handles tsmiTest_ASCOMDyn.Click
-        'Working but NOVAS31 does not ...
-        Dim Astrometry As Object = System.Reflection.Assembly.Load("ASCOM.Astrometry").CreateInstance("ASCOM.Astrometry.Transform.Transform")
-        Dim dynamicType As Type = Astrometry.GetType
-        Dim dynamicObject As Object = Activator.CreateInstance(dynamicType)
-        Dim NOVAS31 As Object = System.Reflection.Assembly.Load("ASCOM.Astrometry").CreateInstance("ASCOM.Astrometry.NOVAS.NOVAS31")
-        Dim JulianDate As Double = CDbl(dynamicType.InvokeMember("JulianDate", Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or Reflection.BindingFlags.InvokeMethod, Type.DefaultBinder, NOVAS31, New Object() {CShort(Now.Year), CShort(Now.Month), CShort(Now.Day), Now.Hour}))
-        'dynamicType.InvokeMember("JulianDateUTC", Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or Reflection.BindingFlags.SetProperty, Type.DefaultBinder, Astrometry, New Object() {(New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(Now.Year), CShort(Now.Month), CShort(Now.Day), Now.Hour)})
-        dynamicType.InvokeMember("SetApparent", Reflection.BindingFlags.Public Or Reflection.BindingFlags.Instance Or Reflection.BindingFlags.InvokeMethod, Type.DefaultBinder, Astrometry, New Object() {CDbl(1.0), CDbl(2.0)})
-        Dim J2000RA As Double = CDbl(dynamicType.GetProperty("RAJ2000").GetValue(Astrometry))
-        Dim DecJ2000 As Double = CDbl(dynamicType.GetProperty("DecJ2000").GetValue(Astrometry))
     End Sub
 
     Private Sub tsmiFile_ClearStatMem_Click(sender As Object, e As EventArgs) Handles tsmiFile_ClearStatMem.Click
@@ -971,7 +910,7 @@ Public Class MainForm
 
                 'Calculate total energy
                 WorkSheet_Single.Cell(ExcelRow, 3).Value = AstroNET.Statistics.TotalEnergy(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int)
-                WorkSheet_Single.Cell(ExcelRow, 4).Value = FocusQualityIndicator(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int, 5.0)
+                WorkSheet_Single.Cell(ExcelRow, 4).Value = AstroNET.Statistics.FocusQualityIndicator(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int, 5.0)
 
                 ExcelRow += 1
 
@@ -990,7 +929,7 @@ Public Class MainForm
                 Dim Results As AstroNET.Statistics.cSingleChannelStatistics_Int = AstroNET.Statistics.CalcStatValuesFromHisto(StatFocusPoint(FocusPos))
                 WorkSheet_Sum.Cell(ExcelRow, 3).Value = Results.Percentile(95)
                 WorkSheet_Sum.Cell(ExcelRow, 4).Value = Results.Modus
-                WorkSheet_Sum.Cell(ExcelRow, 5).Value = FocusQualityIndicator(StatFocusPoint(FocusPos), 5.0)
+                WorkSheet_Sum.Cell(ExcelRow, 5).Value = AstroNET.Statistics.FocusQualityIndicator(StatFocusPoint(FocusPos), 5.0)
                 ExcelRow += 1
 
             Next FocusPos
@@ -1031,20 +970,7 @@ Public Class MainForm
         Return CInt(FileNameOnly.Split("_"c)(0))
     End Function
 
-    Private Function FocusQualityIndicator(ByRef Histo As Dictionary(Of Int64, UInt64), ByVal EnergyPercentage As Double) As Double
-        Dim TEnery As Long = AstroNET.Statistics.TotalEnergy(Histo)
-        Dim TopDown As Dictionary(Of Long, ULong) = Histo.SortDictionaryInverse
-        Dim HistSumEnergy As Long = 0
-        Dim CalcFocPredictor As Int64 = Int64.MinValue
-        For Each Bin As Int64 In TopDown.Keys
-            HistSumEnergy += CLng(Bin * TopDown(Bin))
-            If HistSumEnergy >= TEnery * (EnergyPercentage / 100) Then
-                CalcFocPredictor = Bin
-                Exit For
-            End If
-        Next Bin
-        Return CalcFocPredictor
-    End Function
+
 
     '''<summary>Focus analysis based on maximum enery in N percent of the pixel.</summary>
     Private Function FocusAnalysis(ByVal Hist As Dictionary(Of Long, ULong), ByRef Plot_X As List(Of Double), ByRef Plot_Y As List(Of Double)) As Boolean
@@ -1716,8 +1642,8 @@ Public Class MainForm
         ImageDisplay.SingleStatCalc = AIS.DB.LastFile_Data
         ImageDisplay.StatToUsed = AIS.DB.LastFile_Statistics
         ImageDisplay.MyIPP = AIS.DB.IPP
-        ImageDisplay.Props.MinCutOff_ADU = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Min.Key
-        ImageDisplay.Props.MaxCutOff_ADU = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key
+        ImageDisplay.ImageFromData.MinCutOff_ADU = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Min.Key
+        ImageDisplay.ImageFromData.MaxCutOff_ADU = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key
         ImageDisplay.GenerateDisplayImage()
     End Sub
 
@@ -2039,18 +1965,18 @@ Public Class MainForm
 
     Private Sub GrayPNGToFITSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrayPNGToFITSToolStripMenuItem.Click
 
-        Dim InputFile As String = "\\192.168.100.10\astro_misc\!Support und Probleme\Christian Zier (Sonnenraster)\Sonne_25.04.21-1-1_Frame34.png"
+        With ofdMain
+            .Filter = "PNG files (*.png)|*.png"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
         Dim PNG As Bitmap = Nothing
-        Using FileIn As New System.IO.FileStream(InputFile, IO.FileMode.Open)
+        Using FileIn As New System.IO.FileStream(ofdMain.FileName, IO.FileMode.Open)
             PNG = New Bitmap(Image.FromStream(FileIn))
         End Using
 
-        Dim OutputFile As String = "\\192.168.100.10\astro_misc\!Support und Probleme\Christian Zier (Sonnenraster)\Sonne_25.04.21-1-1_Frame34.fits"
-        Dim BitPix As Integer = cFITSWriter.eBitPix.Int16
-        Dim BaseOut As New System.IO.StreamWriter(OutputFile)
-        Dim BytesOut As New System.IO.BinaryWriter(BaseOut.BaseStream)
-
         'Create converted data
+        Dim BitPix As Integer = cFITSWriter.eBitPix.Int16
         Dim ImageData(PNG.Width - 1, PNG.Height - 1) As UInt16
         For Idx1 As Integer = 0 To ImageData.GetUpperBound(1)
             For Idx2 As Integer = 0 To ImageData.GetUpperBound(0)
@@ -2067,6 +1993,14 @@ Public Class MainForm
         Header.Add(eFITSKeywords.NAXIS2, ImageData.GetUpperBound(1) + 1)
         Header.Add(eFITSKeywords.BZERO, 32768)
         Header.Add(eFITSKeywords.BSCALE, 1)
+
+        With sfdMain
+            .Filter = "FITS file (*.fits)|*.FITS"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
+        Dim BaseOut As New System.IO.StreamWriter(sfdMain.FileName)
+        Dim BytesOut As New System.IO.BinaryWriter(BaseOut.BaseStream)
 
         'Write header
         BaseOut.Write(cFITSWriter.CreateFITSHeader(Header))
@@ -2123,7 +2057,7 @@ Public Class MainForm
                 With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
                     For Idx1 As Integer = 0 To .NAXIS1 - 1
                         For Idx2 As Integer = 0 To .NAXIS2 - 1
-                            .Data(Idx1, Idx2) = ByteReverse(.Data(Idx1, Idx2))
+                            .Data(Idx1, Idx2) = cBitByte.BitsReverse(.Data(Idx1, Idx2))
                         Next Idx2
                     Next Idx1
                 End With
@@ -2138,13 +2072,7 @@ Public Class MainForm
 
     End Sub
 
-    Private Function ByteReverse(ByVal Value As UShort) As UShort
-        Dim InBytes As Byte() = BitConverter.GetBytes(Value)
-        Dim OutBytes As Byte() = {0, 0}
-        OutBytes(0) = BitReverseTable(InBytes(1))
-        OutBytes(1) = BitReverseTable(InBytes(0))
-        Return BitConverter.ToUInt16(OutBytes, 0)
-    End Function
+
 
     Private Sub tsmiAnalysis_XvsYPlot_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_XvsYPlot.Click
         Dim XvsYPlot As New frmXvsYPlot
@@ -2154,6 +2082,59 @@ Public Class MainForm
     Private Sub frmTest_HistoInteractive_Click(sender As Object, e As EventArgs) Handles frmTest_HistoInteractive.Click
         Dim X As New frmHistogram
         X.Show()
+    End Sub
+
+    Private Sub tsmiFile_GenTestFile_Click(sender As Object, e As EventArgs) Handles tsmiFile_GenTestFile.Click
+        Dim X As New frmTestFileGenerator
+        X.Show()
+    End Sub
+
+    Private Sub tsmiTestCode_StreamDeck_Click(sender As Object, e As EventArgs) Handles tsmiTestCode_StreamDeck.Click
+
+        'Test code to set Stream Deck keys
+
+        'https://github.com/OpenMacroBoard/StreamDeckSharp
+
+        If IsNothing(MyStreamDeck) = True Then
+            MyStreamDeck = StreamDeckSharp.StreamDeck.OpenDevice
+            AddHandler MyStreamDeck.KeyStateChanged, AddressOf StreamDeckHandler
+        End If
+        MyStreamDeck.SetBrightness(100)
+        MyStreamDeck.SetKeyBitmap(0, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Red)))
+        MyStreamDeck.SetKeyBitmap(1, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Green)))
+        MyStreamDeck.SetKeyBitmap(2, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Blue)))
+        MyStreamDeck.SetKeyBitmap(3, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Cyan)))
+        MyStreamDeck.SetKeyBitmap(4, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Magenta)))
+        MyStreamDeck.SetKeyBitmap(5, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Yellow)))
+
+    End Sub
+
+    Private Function GetUniColorKey(ByVal Value As Color) As Byte()
+        Dim RawByteSize As Integer = 72 * 72 * 3
+        Dim RawBitmapData(RawByteSize - 1) As Byte
+        For Idx As Integer = 0 To RawBitmapData.GetUpperBound(0) Step 3
+            RawBitmapData(Idx + 2) = Value.R
+            RawBitmapData(Idx + 1) = Value.G
+            RawBitmapData(Idx) = Value.B
+        Next Idx
+        Return RawBitmapData
+    End Function
+
+    Private Sub StreamDeckHandler(sender As Object, e As OpenMacroBoard.SDK.KeyEventArgs)
+        MsgBox("Press <" & e.Key.ToString.Trim & "> " & CStr(IIf(e.IsDown = True, "DOWN", "UP")))
+    End Sub
+
+    Private Sub tsTest_LibRaw_Click(sender As Object, e As EventArgs) Handles tsTest_LibRaw.Click
+        'https://github.com/laheller/SharpLibraw/blob/master/LibRAWDemo/Program.cs
+        Dim TestImage As String = "C:\!Work\Testbilder\FujiX100s.RAF"
+        Dim DLLPtr As IntPtr = cLibRaw.libraw_init(cLibRaw.LibRaw_init_flags.LIBRAW_OPTIONS_NONE)
+        MsgBox(System.Runtime.InteropServices.Marshal.PtrToStringAnsi(cLibRaw.libraw_version))
+        Dim AllCam As List(Of String) = cLibRaw.GetAllSupportedCameras
+        Dim OpenError As cLibRaw.LibRaw_errors = cLibRaw.libraw_open_file(DLLPtr, TestImage)
+        MsgBox(Join(cLibRaw.DisplayCommonInfo(DLLPtr).ToArray, System.Environment.NewLine))
+        Dim param As cLibRaw.libraw_iparams_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_iparams_t)(cLibRaw.libraw_get_iparams(DLLPtr))
+        Dim paramEx As cLibRaw.libraw_imgother_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_imgother_t)(cLibRaw.libraw_get_imgother(DLLPtr))
+        cLibRaw.libraw_close(DLLPtr)
     End Sub
 
 End Class
