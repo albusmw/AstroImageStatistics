@@ -15,19 +15,12 @@ Public Class frmTestFileGenerator
             Case 0
                 cFITSWriter.WriteTestFile_Int8(TestFileName, DimX, DimY)
             Case 1
-                cFITSWriter.WriteTestFile_Int16(TestFileName, DimX, DimY)
+                cFITSWriter.WriteTestFile_UInt16(TestFileName, DimX, DimY, CType(tbInt16StartValue.Text, UInt16), CType(tbInt16StopValue.Text, UInt16))
             Case 2
                 ImageFileFormatSpecific.SaveTIFF_Format8bppGrayScale(TestFileName, GetTestImageData_Byte)
             Case 3
                 ImageFileFormatSpecific.SaveTIFF_Format16bppGrayScale(TestFileName, GetTestImageData_UInt16)
         End Select
-
-        'cFITSWriter.WriteTestFile_Int32(WriteToEXEFolder("FITS_BitPix32.FITS"))
-        'cFITSWriter.WriteTestFile_Float32(WriteToEXEFolder("FITS_BitPix32f.FITS"))
-        'cFITSWriter.WriteTestFile_Float64(WriteToEXEFolder("FITS_BitPix64f.FITS"))
-        'cFITSWriter.WriteTestFile_UInt16_Cross(WriteToEXEFolder("UInt16_Cross_mono.fits"))
-        'cFITSWriter.WriteTestFile_UInt16_Cross_RGB(WriteToEXEFolder("UInt16_Cross_rgb.fits"))
-        'cFITSWriter.WriteTestFile_UInt16_XYIdent(WriteToEXEFolder("UInt16_XYIdent.fits"))
 
         If cbOpenAfterWrite.Checked Then Ato.Utils.StartWithItsEXE(TestFileName)
 
@@ -81,5 +74,18 @@ Public Class frmTestFileGenerator
     Private Sub btnOpenExplorer_Click(sender As Object, e As EventArgs) Handles btnOpenExplorer.Click
         Process.Start(AIS.DB.MyPath)
     End Sub
+
+    Private Sub btnWriteAllTestFiles_Click(sender As Object, e As EventArgs) Handles btnWriteAllTestFiles.Click
+        cFITSWriter.WriteTestFile_Int32(WriteToEXEFolder("FITS_BitPix32.FITS"))
+        cFITSWriter.WriteTestFile_Float32(WriteToEXEFolder("FITS_BitPix32f.FITS"))
+        cFITSWriter.WriteTestFile_Float64(WriteToEXEFolder("FITS_BitPix64f.FITS"))
+        cFITSWriter.WriteTestFile_UInt16_Cross(WriteToEXEFolder("UInt16_Cross_mono.fits"))
+        cFITSWriter.WriteTestFile_UInt16_Cross_RGB(WriteToEXEFolder("UInt16_Cross_rgb.fits"))
+        cFITSWriter.WriteTestFile_UInt16_XYIdent(WriteToEXEFolder("UInt16_XYIdent.fits"))
+    End Sub
+
+    Private Function WriteToEXEFolder(ByVal FileName As String) As String
+        Return System.IO.Path.Combine(AIS.DB.MyPath, FileName)
+    End Function
 
 End Class

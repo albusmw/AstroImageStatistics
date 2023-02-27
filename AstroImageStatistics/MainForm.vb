@@ -2072,8 +2072,6 @@ Public Class MainForm
 
     End Sub
 
-
-
     Private Sub tsmiAnalysis_XvsYPlot_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_XvsYPlot.Click
         Dim XvsYPlot As New frmXvsYPlot
         XvsYPlot.Show()

@@ -74,6 +74,9 @@
     <Reference Include="FastMember, Version=1.5.0.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\FastMember.1.5.0\lib\net461\FastMember.dll</HintPath>
     </Reference>
+    <Reference Include="HidSharp, Version=2.1.0.0, Culture=neutral, PublicKeyToken=0867af7205b1c8cf, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamDeckSharp.3.2.0\lib\netstandard2.0\HidSharp.dll</HintPath>
+    </Reference>
     <Reference Include="Microsoft.Bcl.HashCode, Version=1.0.0.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.Bcl.HashCode.1.1.1\lib\net461\Microsoft.Bcl.HashCode.dll</HintPath>
     </Reference>
@@ -84,15 +87,19 @@
     <Reference Include="OpenCvSharp, Version=1.0.0.0, Culture=neutral, PublicKeyToken=6adad1e807fea099, processorArchitecture=MSIL">
       <HintPath>..\packages\OpenCvSharp4.4.5.5.20211231\lib\net48\OpenCvSharp.dll</HintPath>
     </Reference>
+    <Reference Include="OpenMacroBoard.SDK, Version=3.0.0.0, Culture=neutral, PublicKeyToken=be9f0b07fc09366f, processorArchitecture=MSIL">
+      <HintPath>..\packages\OpenMacroBoard.SDK.3.0.0\lib\netstandard2.0\OpenMacroBoard.SDK.dll</HintPath>
+    </Reference>
     <Reference Include="PresentationCore" />
     <Reference Include="PresentationFramework" />
+    <Reference Include="StreamDeckSharp, Version=3.2.0.0, Culture=neutral, PublicKeyToken=e3da2f522ff1f75c, processorArchitecture=MSIL">
+      <HintPath>..\packages\StreamDeckSharp.3.2.0\lib\netstandard2.0\StreamDeckSharp.dll</HintPath>
+    </Reference>
     <Reference Include="System" />
     <Reference Include="System.Buffers, Version=4.0.3.0, Culture=neutral, PublicKeyToken=cc7b13ffcd2ddd51, processorArchitecture=MSIL">
       <HintPath>..\packages\System.Buffers.4.5.1\lib\net461\System.Buffers.dll</HintPath>
     </Reference>
-    <Reference Include="System.Collections.NonGeneric, Version=4.0.2.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
-      <HintPath>..\packages\System.Collections.NonGeneric.4.3.0\lib\net46\System.Collections.NonGeneric.dll</HintPath>
-      <Private>True</Private>
+    <Reference Include="System.Collections.NonGeneric, Version=4.0.3.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
       <Private>True</Private>
     </Reference>
     <Reference Include="System.ComponentModel.Annotations, Version=4.2.1.0, Culture=neutral, PublicKeyToken=b03f5f7f11d50a3a, processorArchitecture=MSIL">
@@ -196,102 +203,114 @@
     <Compile Include="..\..\AstroSoftware\FITSGrep\DBCommands.vb">
       <Link>DBCommands.vb</Link>
     </Compile>
+    <Compile Include="..\..\src\atomics\AstroCalc.vb">
+      <Link>common\AstroCalc.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\AstroStatistics.vb">
+      <Link>common\AstroStatistics.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\BayerFunctions.vb">
+      <Link>common\BayerFunctions.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cAstroParser.vb">
+      <Link>common\cAstroParser.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cBitByte.vb">
+      <Link>common\cBitByte.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cColorMaps.vb">
+      <Link>common\cColorMaps.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cDLLDynCall.vb">
+      <Link>common\cDLLDynCall.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSHeaderChanger.vb">
+      <Link>common\cFITSHeaderChanger.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSHeaderKeywords.vb">
+      <Link>common\cFITSHeaderKeywords.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSHeaderParser.vb">
+      <Link>common\cFITSHeaderParser.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSReader.vb">
+      <Link>common\cFITSReader.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSWriter.vb">
+      <Link>common\cFITSWriter.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cImageFromData.vb">
+      <Link>common\cImageFromData.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cIntelIPP.vb">
+      <Link>common\cIntelIPP.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cLibRaw.vb">
+      <Link>common\cLibRaw.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cLockBitmap.vb">
+      <Link>common\cLockBitmap.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cNEFReader.vb">
+      <Link>common\cNEFReader.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ComponentModelConverter.vb">
+      <Link>common\ComponentModelConverter.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cOpenCvSharp.vb">
+      <Link>common\cOpenCvSharp.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cPlateSolve.vb">
+      <Link>common\cPlateSolve.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cSingleValueStatistics.vb">
+      <Link>common\cSingleValueStatistics.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cStatMultiThread.vb">
+      <Link>common\cStatMultiThread.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cStopper.vb">
+      <Link>common\cStopper.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\DragDrop.vb">
+      <Link>common\DragDrop.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Everything.vb">
+      <Link>common\Everything.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Extensions.vb">
+      <Link>common\Extensions.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Generics.vb">
+      <Link>common\Generics.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\ImageFileFormatSpecific.vb">
+      <Link>common\ImageFileFormatSpecific.vb</Link>
+    </Compile>
     <Compile Include="..\..\src\atomics\ImgArrayFunctions.vb">
       <Link>ImgArrayFunctions.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\cPlateSolve.vb">
-      <Link>cPlateSolve.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\AstroCalc.vb">
-      <Link>AstroCalc.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\AstroStatistics.vb">
-      <Link>AstroStatistics.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\BayerFunctions.vb">
-      <Link>BayerFunctions.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cAstroParser.vb">
-      <Link>cAstroParser.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cColorMaps.vb">
-      <Link>cColorMaps.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cDLLDynCall.vb">
-      <Link>cDLLDynCall.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cFITSHeaderChanger.vb">
-      <Link>cFITSHeaderChanger.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cFITSHeaderKeywords.vb">
-      <Link>cFITSHeaderKeywords.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cFITSHeaderParser.vb">
-      <Link>cFITSHeaderParser.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cFITSReader.vb">
-      <Link>cFITSReader.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cFITSWriter.vb">
-      <Link>cFITSWriter.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\cImgForm.vb">
       <Link>cImgForm.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cIntelIPP.vb">
-      <Link>cIntelIPP.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cLockBitmap.vb">
-      <Link>cLockBitmap.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cLogTextBox.vb">
       <Link>cLogTextBox.vb</Link>
       <SubType>Component</SubType>
     </Compile>
-    <Compile Include="..\..\src\atomics\cNEFReader.vb">
-      <Link>cNEFReader.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\ComponentModelConverter.vb">
-      <Link>ComponentModelConverter.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cOpenCvSharp.vb">
-      <Link>cOpenCvSharp.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cSingleValueStatistics.vb">
-      <Link>cSingleValueStatistics.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cStatMultiThread.vb">
-      <Link>cStatMultiThread.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cStopper.vb">
-      <Link>cStopper.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\DragDrop.vb">
-      <Link>DragDrop.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\Everything.vb">
-      <Link>Everything.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\Extensions.vb">
-      <Link>Extensions.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\Generics.vb">
-      <Link>Generics.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\ImageFileFormatSpecific.vb">
-      <Link>ImageFileFormatSpecific.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\ImageProcessing.vb">
       <Link>ImageProcessing.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\RecursiveDirScan.vb">
-      <Link>RecursiveDirScan.vb</Link>
+      <Link>common\RecursiveDirScan.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\RTFTextBox.vb">
       <Link>RTFTextBox.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\SignalProcessing.vb">
-      <Link>SignalProcessing.vb</Link>
+      <Link>common\SignalProcessing.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\Utils.vb">
+      <Link>Utils.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>
@@ -340,6 +359,12 @@
       <DependentUpon>frmSinglePixelStat.vb</DependentUpon>
     </Compile>
     <Compile Include="frmSinglePixelStat.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmTestFileGenerator.Designer.vb">
+      <DependentUpon>frmTestFileGenerator.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmTestFileGenerator.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmWorkflow.Designer.vb">
@@ -419,6 +444,9 @@
     <EmbeddedResource Include="frmSinglePixelStat.resx">
       <DependentUpon>frmSinglePixelStat.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmTestFileGenerator.resx">
+      <DependentUpon>frmTestFileGenerator.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmWorkflow.resx">
       <DependentUpon>frmWorkflow.vb</DependentUpon>
     </EmbeddedResource>
@@ -465,6 +493,10 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="BuildDate.txt" />
+    <Content Include="..\..\src\3rdParty\LibRaw\libraw.dll">
+      <Link>libraw.dll</Link>
+      <CopyToOutputDirectory>Always</CopyToOutputDirectory>
+    </Content>
     <Content Include="..\..\src\bin\Everything64.dll">
       <Link>Everything64.dll</Link>
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>

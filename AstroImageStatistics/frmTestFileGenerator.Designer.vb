@@ -32,12 +32,17 @@ Partial Class frmTestFileGenerator
         Me.cbOpenAfterWrite = New System.Windows.Forms.CheckBox()
         Me.cbTestFileType = New System.Windows.Forms.ComboBox()
         Me.btnOpenExplorer = New System.Windows.Forms.Button()
+        Me.Label4 = New System.Windows.Forms.Label()
+        Me.tbInt16StartValue = New System.Windows.Forms.TextBox()
+        Me.Label5 = New System.Windows.Forms.Label()
+        Me.tbInt16StopValue = New System.Windows.Forms.TextBox()
+        Me.btnWriteAllTestFiles = New System.Windows.Forms.Button()
         Me.SuspendLayout()
         '
         'btnWriteTestFile
         '
         Me.btnWriteTestFile.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnWriteTestFile.Location = New System.Drawing.Point(347, 289)
+        Me.btnWriteTestFile.Location = New System.Drawing.Point(353, 250)
         Me.btnWriteTestFile.Name = "btnWriteTestFile"
         Me.btnWriteTestFile.Size = New System.Drawing.Size(117, 33)
         Me.btnWriteTestFile.TabIndex = 0
@@ -93,7 +98,7 @@ Partial Class frmTestFileGenerator
         '
         Me.tbTestFileName.Location = New System.Drawing.Point(125, 64)
         Me.tbTestFileName.Name = "tbTestFileName"
-        Me.tbTestFileName.Size = New System.Drawing.Size(100, 20)
+        Me.tbTestFileName.Size = New System.Drawing.Size(222, 20)
         Me.tbTestFileName.TabIndex = 6
         Me.tbTestFileName.Text = "AsImStatTestImage"
         '
@@ -102,7 +107,7 @@ Partial Class frmTestFileGenerator
         Me.cbOpenAfterWrite.AutoSize = True
         Me.cbOpenAfterWrite.Checked = True
         Me.cbOpenAfterWrite.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbOpenAfterWrite.Location = New System.Drawing.Point(231, 67)
+        Me.cbOpenAfterWrite.Location = New System.Drawing.Point(353, 66)
         Me.cbOpenAfterWrite.Name = "cbOpenAfterWrite"
         Me.cbOpenAfterWrite.Size = New System.Drawing.Size(101, 17)
         Me.cbOpenAfterWrite.TabIndex = 7
@@ -115,24 +120,75 @@ Partial Class frmTestFileGenerator
         Me.cbTestFileType.FormattingEnabled = True
         Me.cbTestFileType.Location = New System.Drawing.Point(125, 90)
         Me.cbTestFileType.Name = "cbTestFileType"
-        Me.cbTestFileType.Size = New System.Drawing.Size(121, 21)
+        Me.cbTestFileType.Size = New System.Drawing.Size(222, 21)
         Me.cbTestFileType.TabIndex = 8
         '
         'btnOpenExplorer
         '
         Me.btnOpenExplorer.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnOpenExplorer.Location = New System.Drawing.Point(224, 289)
+        Me.btnOpenExplorer.Location = New System.Drawing.Point(230, 250)
         Me.btnOpenExplorer.Name = "btnOpenExplorer"
         Me.btnOpenExplorer.Size = New System.Drawing.Size(117, 33)
         Me.btnOpenExplorer.TabIndex = 9
         Me.btnOpenExplorer.Text = "Open explorer"
         Me.btnOpenExplorer.UseVisualStyleBackColor = True
         '
+        'Label4
+        '
+        Me.Label4.AutoSize = True
+        Me.Label4.Location = New System.Drawing.Point(12, 128)
+        Me.Label4.Name = "Label4"
+        Me.Label4.Size = New System.Drawing.Size(83, 13)
+        Me.Label4.TabIndex = 10
+        Me.Label4.Text = "Int16 start value"
+        '
+        'tbInt16StartValue
+        '
+        Me.tbInt16StartValue.Location = New System.Drawing.Point(125, 125)
+        Me.tbInt16StartValue.Name = "tbInt16StartValue"
+        Me.tbInt16StartValue.Size = New System.Drawing.Size(62, 20)
+        Me.tbInt16StartValue.TabIndex = 11
+        Me.tbInt16StartValue.Text = "0"
+        Me.tbInt16StartValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'Label5
+        '
+        Me.Label5.AutoSize = True
+        Me.Label5.Location = New System.Drawing.Point(12, 154)
+        Me.Label5.Name = "Label5"
+        Me.Label5.Size = New System.Drawing.Size(83, 13)
+        Me.Label5.TabIndex = 12
+        Me.Label5.Text = "Int16 stop value"
+        '
+        'tbInt16StopValue
+        '
+        Me.tbInt16StopValue.Location = New System.Drawing.Point(125, 151)
+        Me.tbInt16StopValue.Name = "tbInt16StopValue"
+        Me.tbInt16StopValue.Size = New System.Drawing.Size(62, 20)
+        Me.tbInt16StopValue.TabIndex = 13
+        Me.tbInt16StopValue.Text = "65535"
+        Me.tbInt16StopValue.TextAlign = System.Windows.Forms.HorizontalAlignment.Right
+        '
+        'btnWriteAllTestFiles
+        '
+        Me.btnWriteAllTestFiles.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
+        Me.btnWriteAllTestFiles.Location = New System.Drawing.Point(15, 250)
+        Me.btnWriteAllTestFiles.Name = "btnWriteAllTestFiles"
+        Me.btnWriteAllTestFiles.Size = New System.Drawing.Size(117, 33)
+        Me.btnWriteAllTestFiles.TabIndex = 14
+        Me.btnWriteAllTestFiles.Text = "Write all test file"
+        Me.btnWriteAllTestFiles.UseVisualStyleBackColor = True
+        '
         'frmTestFileGenerator
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(476, 334)
+        Me.ClientSize = New System.Drawing.Size(482, 295)
+        Me.Controls.Add(Me.btnWriteAllTestFiles)
+        Me.Controls.Add(Me.tbInt16StopValue)
+        Me.Controls.Add(Me.Label5)
+        Me.Controls.Add(Me.tbInt16StartValue)
+        Me.Controls.Add(Me.Label4)
         Me.Controls.Add(Me.btnOpenExplorer)
         Me.Controls.Add(Me.cbTestFileType)
         Me.Controls.Add(Me.cbOpenAfterWrite)
@@ -160,4 +216,9 @@ Partial Class frmTestFileGenerator
     Friend WithEvents cbOpenAfterWrite As CheckBox
     Friend WithEvents cbTestFileType As ComboBox
     Friend WithEvents btnOpenExplorer As Button
+    Friend WithEvents Label4 As Label
+    Friend WithEvents tbInt16StartValue As TextBox
+    Friend WithEvents Label5 As Label
+    Friend WithEvents tbInt16StopValue As TextBox
+    Friend WithEvents btnWriteAllTestFiles As Button
 End Class
