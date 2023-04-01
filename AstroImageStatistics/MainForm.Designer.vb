@@ -47,8 +47,6 @@ Partial Class MainForm
         Me.MaxImageToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiSaveImageData = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem14 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiFile_GenTestFile = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsmiFile_ClearStatMem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
         Me.OpenEXELocationToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -91,7 +89,6 @@ Partial Class MainForm
         Me.tsmiProcessing_Specials = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing_Specials_NINAFix = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTest = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiTest_WriteTestData = New System.Windows.Forms.ToolStripMenuItem()
         Me.AfiineTranslateToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem6 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsmiTest_Focus = New System.Windows.Forms.ToolStripMenuItem()
@@ -106,11 +103,12 @@ Partial Class MainForm
         Me.tsmiTest_AstrometryQuery = New System.Windows.Forms.ToolStripMenuItem()
         Me.frmTest_HistoInteractive = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTestCode_StreamDeck = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsTest_LibRaw = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ALADINCoords = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ChangeHeader = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_RemoveOverscan = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SpecialTestFileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiTools_TestFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckROICutoutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WorkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiWorkflow_Runner = New System.Windows.Forms.ToolStripMenuItem()
@@ -134,7 +132,6 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.tsTest_LibRaw = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -162,7 +159,7 @@ Partial Class MainForm
         '
         'tsmiFile
         '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_Open, Me.tsmiFile_OpenRecent, Me.tsmiFile_OpenLastFile, Me.ToolStripMenuItem8, Me.tsmiFile_FITSGrep, Me.tsmiFile_AstroBinSearch, Me.ToolStripMenuItem11, Me.tsmiFile_Compress2nd, Me.ToolStripMenuItem2, Me.tsmiFile_SaveLastStat, Me.tsmiSaveAllFilesStat, Me.tsmiSaveFITSAndStats, Me.StoreStackingResultToolStripMenuItem, Me.tsmiSaveImageData, Me.ToolStripMenuItem14, Me.tsmiFile_GenTestFile, Me.ToolStripMenuItem4, Me.tsmiFile_ClearStatMem, Me.ToolStripMenuItem1, Me.OpenEXELocationToolStripMenuItem, Me.ToolStripMenuItem5, Me.ExitToolStripMenuItem})
+        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_Open, Me.tsmiFile_OpenRecent, Me.tsmiFile_OpenLastFile, Me.ToolStripMenuItem8, Me.tsmiFile_FITSGrep, Me.tsmiFile_AstroBinSearch, Me.ToolStripMenuItem11, Me.tsmiFile_Compress2nd, Me.ToolStripMenuItem2, Me.tsmiFile_SaveLastStat, Me.tsmiSaveAllFilesStat, Me.tsmiSaveFITSAndStats, Me.StoreStackingResultToolStripMenuItem, Me.tsmiSaveImageData, Me.ToolStripMenuItem14, Me.tsmiFile_ClearStatMem, Me.ToolStripMenuItem1, Me.OpenEXELocationToolStripMenuItem, Me.ToolStripMenuItem5, Me.ExitToolStripMenuItem})
         Me.tsmiFile.Name = "tsmiFile"
         Me.tsmiFile.Size = New System.Drawing.Size(37, 22)
         Me.tsmiFile.Text = "File"
@@ -302,17 +299,6 @@ Partial Class MainForm
         '
         Me.ToolStripMenuItem14.Name = "ToolStripMenuItem14"
         Me.ToolStripMenuItem14.Size = New System.Drawing.Size(365, 6)
-        '
-        'tsmiFile_GenTestFile
-        '
-        Me.tsmiFile_GenTestFile.Name = "tsmiFile_GenTestFile"
-        Me.tsmiFile_GenTestFile.Size = New System.Drawing.Size(368, 22)
-        Me.tsmiFile_GenTestFile.Text = "Generate test file"
-        '
-        'ToolStripMenuItem4
-        '
-        Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(365, 6)
         '
         'tsmiFile_ClearStatMem
         '
@@ -568,16 +554,10 @@ Partial Class MainForm
         '
         'tsmiTest
         '
-        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTest_WriteTestData, Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw})
+        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw})
         Me.tsmiTest.Name = "tsmiTest"
         Me.tsmiTest.Size = New System.Drawing.Size(68, 22)
         Me.tsmiTest.Text = "Test code"
-        '
-        'tsmiTest_WriteTestData
-        '
-        Me.tsmiTest_WriteTestData.Name = "tsmiTest_WriteTestData"
-        Me.tsmiTest_WriteTestData.Size = New System.Drawing.Size(274, 22)
-        Me.tsmiTest_WriteTestData.Text = "Write test data"
         '
         'AfiineTranslateToolStripMenuItem
         '
@@ -660,9 +640,15 @@ Partial Class MainForm
         Me.tsmiTestCode_StreamDeck.Size = New System.Drawing.Size(274, 22)
         Me.tsmiTestCode_StreamDeck.Text = "StreamDeck"
         '
+        'tsTest_LibRaw
+        '
+        Me.tsTest_LibRaw.Name = "tsTest_LibRaw"
+        Me.tsTest_LibRaw.Size = New System.Drawing.Size(274, 22)
+        Me.tsTest_LibRaw.Text = "LibRaw access"
+        '
         'tsmiTools
         '
-        Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTools_ALADINCoords, Me.tsmiTools_ChangeHeader, Me.tsmiTools_RemoveOverscan, Me.SpecialTestFileToolStripMenuItem, Me.CheckROICutoutToolStripMenuItem})
+        Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTools_ALADINCoords, Me.tsmiTools_ChangeHeader, Me.tsmiTools_RemoveOverscan, Me.tsmiTools_TestFile, Me.CheckROICutoutToolStripMenuItem})
         Me.tsmiTools.Name = "tsmiTools"
         Me.tsmiTools.Size = New System.Drawing.Size(46, 22)
         Me.tsmiTools.Text = "Tools"
@@ -685,11 +671,11 @@ Partial Class MainForm
         Me.tsmiTools_RemoveOverscan.Size = New System.Drawing.Size(215, 22)
         Me.tsmiTools_RemoveOverscan.Text = "Remove QHY600 Overscan"
         '
-        'SpecialTestFileToolStripMenuItem
+        'tsmiTools_TestFile
         '
-        Me.SpecialTestFileToolStripMenuItem.Name = "SpecialTestFileToolStripMenuItem"
-        Me.SpecialTestFileToolStripMenuItem.Size = New System.Drawing.Size(215, 22)
-        Me.SpecialTestFileToolStripMenuItem.Text = "Special test file"
+        Me.tsmiTools_TestFile.Name = "tsmiTools_TestFile"
+        Me.tsmiTools_TestFile.Size = New System.Drawing.Size(215, 22)
+        Me.tsmiTools_TestFile.Text = "Special test file"
         '
         'CheckROICutoutToolStripMenuItem
         '
@@ -890,12 +876,6 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'tsTest_LibRaw
-        '
-        Me.tsTest_LibRaw.Name = "tsTest_LibRaw"
-        Me.tsTest_LibRaw.Size = New System.Drawing.Size(274, 22)
-        Me.tsTest_LibRaw.Text = "LibRaw access"
-        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -945,7 +925,6 @@ Partial Class MainForm
     Friend WithEvents tsmiTest As ToolStripMenuItem
     Friend WithEvents ExitToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents OpenEXELocationToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents tsmiTest_WriteTestData As ToolStripMenuItem
     Friend WithEvents StoreStackingResultToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsmiSaveMeanFile As ToolStripMenuItem
     Friend WithEvents StdDevImageToolStripMenuItem As ToolStripMenuItem
@@ -966,7 +945,6 @@ Partial Class MainForm
     Friend WithEvents sfdMain As SaveFileDialog
     Friend WithEvents tsmiStretch As ToolStripMenuItem
     Friend WithEvents tsslRunning As ToolStripStatusLabel
-    Friend WithEvents ToolStripMenuItem4 As ToolStripSeparator
     Friend WithEvents tsmiPlateSolve As ToolStripMenuItem
     Friend WithEvents tsmiFile_FITSGrep As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem5 As ToolStripSeparator
@@ -1021,7 +999,7 @@ Partial Class MainForm
     Friend WithEvents CloudWatcherCombinerToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsmiTools_ChangeHeader As ToolStripMenuItem
     Friend WithEvents tsmiTools_RemoveOverscan As ToolStripMenuItem
-    Friend WithEvents SpecialTestFileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiTools_TestFile As ToolStripMenuItem
     Friend WithEvents CheckROICutoutToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents WorkflowToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsmiWorkflow_Runner As ToolStripMenuItem
@@ -1042,7 +1020,6 @@ Partial Class MainForm
     Friend WithEvents tsmiAnalysis_XvsYPlot As ToolStripMenuItem
     Friend WithEvents frmTest_HistoInteractive As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem14 As ToolStripSeparator
-    Friend WithEvents tsmiFile_GenTestFile As ToolStripMenuItem
     Friend WithEvents tsmiTestCode_StreamDeck As ToolStripMenuItem
     Friend WithEvents tsTest_LibRaw As ToolStripMenuItem
 End Class

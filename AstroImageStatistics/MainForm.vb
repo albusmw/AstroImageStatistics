@@ -8,8 +8,6 @@ Public Class MainForm
                                                                  ByVal pSrc As IntPtr,
                                                                  ByVal ByteLen As Long)
 
-    Private LastOpenedFiles As New frmLastOpenedFiles
-
     Const UInt32One As UInt32 = 1
 
     Private LogContent As New System.Text.StringBuilder
@@ -1065,14 +1063,10 @@ Public Class MainForm
     End Sub
 
     Private Sub tsmiFile_OpenRecent_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenRecent.Click
-        With LastOpenedFiles
-            .Files.Clear()
-            For Each File As String In AIS.DB.GetRecentFiles
-                .Files.Add(File)
-            Next File
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-            OpenAllFiles(New List(Of String)({ .SelectedFile}))
-        End With
+        Using LastOpenedFiles As New frmLastOpenedFiles(AIS.DB.GetRecentFiles)
+            If LastOpenedFiles.ShowDialog <> DialogResult.OK Then Exit Sub
+            OpenAllFiles(New List(Of String)({LastOpenedFiles.SelectedFile}))
+        End Using
     End Sub
 
     Private Sub MaxImageToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MaxImageToolStripMenuItem.Click
@@ -1854,11 +1848,6 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub SpecialTestFileToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SpecialTestFileToolStripMenuItem.Click
-        cFITSWriter.WriteTestFile_UInt16_XYCoded(System.IO.Path.Combine(AIS.DB.MyPath, "UInt16_XYCoded.fits"))
-        Process.Start(AIS.DB.MyPath)
-    End Sub
-
     Private Sub CheckROICutoutToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles CheckROICutoutToolStripMenuItem.Click
 
         Dim W As Integer = 100
@@ -2082,11 +2071,6 @@ Public Class MainForm
         X.Show()
     End Sub
 
-    Private Sub tsmiFile_GenTestFile_Click(sender As Object, e As EventArgs) Handles tsmiFile_GenTestFile.Click
-        Dim X As New frmTestFileGenerator
-        X.Show()
-    End Sub
-
     Private Sub tsmiTestCode_StreamDeck_Click(sender As Object, e As EventArgs) Handles tsmiTestCode_StreamDeck.Click
 
         'Test code to set Stream Deck keys
@@ -2133,6 +2117,11 @@ Public Class MainForm
         Dim param As cLibRaw.libraw_iparams_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_iparams_t)(cLibRaw.libraw_get_iparams(DLLPtr))
         Dim paramEx As cLibRaw.libraw_imgother_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_imgother_t)(cLibRaw.libraw_get_imgother(DLLPtr))
         cLibRaw.libraw_close(DLLPtr)
+    End Sub
+
+    Private Sub tsmiTools_TestFile_Click(sender As Object, e As EventArgs) Handles tsmiTools_TestFile.Click
+        Dim TestFileGenerator As New frmTestFileGenerator
+        TestFileGenerator.Show()
     End Sub
 
 End Class

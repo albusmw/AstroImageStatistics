@@ -216,34 +216,37 @@
       <Link>common\cAstroParser.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cBitByte.vb">
-      <Link>common\cBitByte.vb</Link>
+      <Link>atomics\cBitByte.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cColorMaps.vb">
-      <Link>common\cColorMaps.vb</Link>
+      <Link>atomics\cColorMaps.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cDLLDynCall.vb">
-      <Link>common\cDLLDynCall.vb</Link>
+      <Link>DLL access\cDLLDynCall.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\cFITSGrepper.vb">
+      <Link>FITS\cFITSGrepper.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cFITSHeaderChanger.vb">
-      <Link>common\cFITSHeaderChanger.vb</Link>
+      <Link>FITS\cFITSHeaderChanger.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cFITSHeaderKeywords.vb">
-      <Link>common\cFITSHeaderKeywords.vb</Link>
+      <Link>FITS\cFITSHeaderKeywords.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cFITSHeaderParser.vb">
-      <Link>common\cFITSHeaderParser.vb</Link>
+      <Link>FITS\cFITSHeaderParser.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cFITSReader.vb">
-      <Link>common\cFITSReader.vb</Link>
+      <Link>FITS\cFITSReader.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cFITSWriter.vb">
-      <Link>common\cFITSWriter.vb</Link>
+      <Link>FITS\cFITSWriter.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cImageFromData.vb">
       <Link>common\cImageFromData.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cIntelIPP.vb">
-      <Link>common\cIntelIPP.vb</Link>
+      <Link>DLL access\cIntelIPP.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cLibRaw.vb">
       <Link>common\cLibRaw.vb</Link>
@@ -273,13 +276,13 @@
       <Link>common\cStopper.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\DragDrop.vb">
-      <Link>common\DragDrop.vb</Link>
+      <Link>atomics\DragDrop.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Everything.vb">
       <Link>common\Everything.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Extensions.vb">
-      <Link>common\Extensions.vb</Link>
+      <Link>atomics\Extensions.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Generics.vb">
       <Link>common\Generics.vb</Link>
@@ -301,13 +304,16 @@
       <Link>ImageProcessing.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\RecursiveDirScan.vb">
-      <Link>common\RecursiveDirScan.vb</Link>
+      <Link>atomics\RecursiveDirScan.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\RTFTextBox.vb">
       <Link>RTFTextBox.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\SignalProcessing.vb">
-      <Link>common\SignalProcessing.vb</Link>
+      <Link>atomics\SignalProcessing.vb</Link>
+    </Compile>
+    <Compile Include="..\..\src\atomics\SQLT.vb">
+      <Link>atomics\SQLT.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Utils.vb">
       <Link>Utils.vb</Link>
@@ -335,7 +341,6 @@
     </Compile>
     <Compile Include="AstroImageStatistics.vb" />
     <Compile Include="cDB.vb" />
-    <Compile Include="cFITSGrepper.vb" />
     <Compile Include="cIntelIPP_NewCode.vb" />
     <Compile Include="frmAstroBinSearch.Designer.vb">
       <DependentUpon>frmAstroBinSearch.vb</DependentUpon>

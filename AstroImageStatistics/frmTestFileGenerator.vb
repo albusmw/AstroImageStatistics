@@ -3,13 +3,24 @@ Option Strict On
 
 Public Class frmTestFileGenerator
 
+    Public ReadOnly Property DimX As Integer
+        Get
+            Return CInt(tbDimX.Text)
+        End Get
+    End Property
+
+    Public ReadOnly Property DimY As Integer
+        Get
+            Return CInt(tbDimY.Text)
+        End Get
+    End Property
+
     Private Sub btnWriteTestFile_Click(sender As Object, e As EventArgs) Handles btnWriteTestFile.Click
 
         CType(sender, Button).Enabled = False : System.Windows.Forms.Application.DoEvents()
 
         Dim TestFileName As String = System.IO.Path.Combine(AIS.DB.MyPath, tbTestFileName.Text & "." & GetExtension())
-        Dim DimX As Integer = CInt(tbDimX.Text)
-        Dim DimY As Integer = CInt(tbDimY.Text)
+
 
         Select Case cbTestFileType.SelectedIndex
             Case 0
@@ -80,7 +91,7 @@ Public Class frmTestFileGenerator
         cFITSWriter.WriteTestFile_Float32(WriteToEXEFolder("FITS_BitPix32f.FITS"))
         cFITSWriter.WriteTestFile_Float64(WriteToEXEFolder("FITS_BitPix64f.FITS"))
         cFITSWriter.WriteTestFile_UInt16_Cross(WriteToEXEFolder("UInt16_Cross_mono.fits"))
-        cFITSWriter.WriteTestFile_UInt16_Cross_RGB(WriteToEXEFolder("UInt16_Cross_rgb.fits"))
+        cFITSWriter.WriteTestFile_UInt16_Cross_RGB(WriteToEXEFolder("UInt16_Cross_rgb.fits"), DimX, DimY)
         cFITSWriter.WriteTestFile_UInt16_XYIdent(WriteToEXEFolder("UInt16_XYIdent.fits"))
     End Sub
 

@@ -26,8 +26,8 @@ Public Class IntelIPP_NewCode
 
         'Prepare call
         Dim SizeSource As New cIntelIPP.IppiSize(ImageData.GetUpperBound(0) + 1, ImageData.GetUpperBound(1) + 1)
-        Dim SizeDest As New cIntelIPP.IppiSize(SizeSource.Width, SizeSource.Height)
-        Dim DataType As cIntelIPP.IppDataType = cIntelIPP.IppDataType.ipp8u
+        Dim SizeDest As New cIntelIPP.IppiSize(SizeSource.Width * 2, SizeSource.Height * 2)
+        Dim DataType As cIntelIPP.IppDataType = cIntelIPP.IppDataType.ipp16u
         Dim Interpolation As cIntelIPP.IppiInterpolationType = cIntelIPP.IppiInterpolationType.ippLinear
         Dim Direction As cIntelIPP.IppiWarpDirection = cIntelIPP.IppiWarpDirection.ippWarpForward
         Dim BorderType As cIntelIPP.IppiBorderType = cIntelIPP.IppiBorderType.ippBorderConst
