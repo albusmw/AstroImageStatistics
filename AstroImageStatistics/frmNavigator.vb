@@ -16,7 +16,7 @@ Public Class frmNavigator
     '''<summary>Mosaik statistics.</summary>
     Private MosaikStatistics As AstroNET.Statistics.sStatistics
     '''<summary>Form showing the mosaik.</summary>
-    Private MosaikForm As New cImgForm
+    Private MosaikForm As New frmImageForm
 
     Private WithEvents clbDropHandler As Ato.DragDrop
     '''<summary>Flag to block updating when a selection change is running.</summary>
@@ -107,19 +107,19 @@ Public Class frmNavigator
         tsslStatus.BackColor = Color.Red
     End Sub
 
-    Private Sub ShowDataForm(ByRef FormToShow As cImgForm, ByRef Data(,) As UInt16, ByVal Min As Long, ByVal Max As Long)
+    Private Sub ShowDataForm(ByRef FormToShow As frmImageForm, ByRef Data(,) As UInt16, ByVal Min As Long, ByVal Max As Long)
 
         Dim NewWindowRequired As Boolean = False
         If IsNothing(FormToShow) = True Then
             NewWindowRequired = True
         Else
-            If FormToShow.Hoster.IsDisposed = True Then NewWindowRequired = True
+            If FormToShow.IsDisposed = True Then NewWindowRequired = True
         End If
         If NewWindowRequired = True Then
-            FormToShow = New cImgForm
+            FormToShow = New frmImageForm
         End If
         FormToShow.Show()
-        FormToShow.Hoster.Text = "MosaikForm <" & tbRootFile.Text & ">"
+        FormToShow.Text = "MosaikForm <" & tbRootFile.Text & ">"
         FormToShow.ColorMap = CType(cbColorModes.SelectedIndex, cColorMaps.eMaps)
         FormToShow.ShowData(Data, Min, Max)
 

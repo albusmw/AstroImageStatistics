@@ -203,6 +203,13 @@
     <Compile Include="..\..\AstroSoftware\FITSGrep\DBCommands.vb">
       <Link>DBCommands.vb</Link>
     </Compile>
+    <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.Designer.vb">
+      <Link>frmImageForm.Designer.vb</Link>
+    </Compile>
+    <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.vb">
+      <Link>frmImageForm.vb</Link>
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="..\..\src\atomics\AstroCalc.vb">
       <Link>common\AstroCalc.vb</Link>
     </Compile>
@@ -433,6 +440,9 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\..\QHYCapture\QHYCapture\frmImageForm.resx">
+      <Link>frmImageForm.resx</Link>
+    </EmbeddedResource>
     <EmbeddedResource Include="..\..\src\Forms\frmFITSGrep.resx">
       <Link>frmFITSGrep.resx</Link>
       <DependentUpon>frmFITSGrep.vb</DependentUpon>
