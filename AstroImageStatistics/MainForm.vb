@@ -1,6 +1,9 @@
 ﻿Option Explicit On
 Option Strict On
+Imports AstroImageStatistics.AstroNET.Statistics
 Imports AstroImageStatistics.cLibRaw
+Imports DocumentFormat.OpenXml.Drawing
+Imports MS.Internal.IO.Packaging
 
 Public Class MainForm
 
@@ -1025,9 +1028,12 @@ Public Class MainForm
         Dim TopValues As Double = 99.99
 
         'Get top 1 percent of the pixel
-        Dim SpecialPixels As Dictionary(Of UInt16, List(Of Point)) = Nothing
+        Dim SpecialPixels As Dictionary(Of UInt16, List(Of Drawing.Point)) = Nothing
         Try
-            SpecialPixels = AIS.DB.LastFile_Data.DataProcessor_UInt16.GetAbove(CUShort(AIS.DB.LastFile_Statistics.MonochromHistogram_PctFract(TopValues)))
+            If IsNothing(AIS.DB.LastFile_Data) = False Then
+                Dim ValueLimit As UShort = CUShort(AIS.DB.LastFile_Statistics.MonochromHistogram_PctFract(TopValues))
+                SpecialPixels = AIS.DB.LastFile_Data.DataProcessor_UInt16.GetAbove(ValueLimit)
+            End If
         Catch ex As Exception
             'Do nothing
         End Try
@@ -1049,7 +1055,7 @@ Public Class MainForm
         If IsNothing(SpecialPixels) = False Then
             If SpecialPixels.Count > 0 Then
                 For Each PixelValue As UShort In SpecialPixels.Keys
-                    For Each Pixel As Point In SpecialPixels(PixelValue)
+                    For Each Pixel As System.Drawing.Point In SpecialPixels(PixelValue)
                         Navigator.lbSpecialPixel.Items.Add(Pixel.X.ToString.Trim & ":" & Pixel.Y.ToString.Trim & ":value=" & PixelValue.ValRegIndep)
                     Next Pixel
                 Next PixelValue

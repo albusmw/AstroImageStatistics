@@ -168,14 +168,14 @@ Partial Class MainForm
         '
         Me.tsmiFile_Open.Name = "tsmiFile_Open"
         Me.tsmiFile_Open.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
-        Me.tsmiFile_Open.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_Open.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_Open.Text = "Open file(s) to analyse"
         Me.tsmiFile_Open.ToolTipText = "Open one or more files for analysis"
         '
         'tsmiFile_OpenRecent
         '
         Me.tsmiFile_OpenRecent.Name = "tsmiFile_OpenRecent"
-        Me.tsmiFile_OpenRecent.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_OpenRecent.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_OpenRecent.Text = "Open recent files ..."
         Me.tsmiFile_OpenRecent.ToolTipText = "Open recent used files"
         '
@@ -183,7 +183,7 @@ Partial Class MainForm
         '
         Me.tsmiFile_OpenLastFile.Name = "tsmiFile_OpenLastFile"
         Me.tsmiFile_OpenLastFile.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.R), System.Windows.Forms.Keys)
-        Me.tsmiFile_OpenLastFile.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_OpenLastFile.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_OpenLastFile.Text = "Open last file processed in assoociated software"
         Me.tsmiFile_OpenLastFile.ToolTipText = "Use the standard configured viewer to open the last opened file (e.g. with FITSWo" &
     "rk)"
@@ -191,60 +191,60 @@ Partial Class MainForm
         'ToolStripMenuItem8
         '
         Me.ToolStripMenuItem8.Name = "ToolStripMenuItem8"
-        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(365, 6)
+        Me.ToolStripMenuItem8.Size = New System.Drawing.Size(363, 6)
         '
         'tsmiFile_FITSGrep
         '
         Me.tsmiFile_FITSGrep.Name = "tsmiFile_FITSGrep"
-        Me.tsmiFile_FITSGrep.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_FITSGrep.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_FITSGrep.Text = "FITS Grep"
         '
         'tsmiFile_AstroBinSearch
         '
         Me.tsmiFile_AstroBinSearch.Name = "tsmiFile_AstroBinSearch"
-        Me.tsmiFile_AstroBinSearch.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_AstroBinSearch.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_AstroBinSearch.Text = "AstroBin search"
         '
         'ToolStripMenuItem11
         '
         Me.ToolStripMenuItem11.Name = "ToolStripMenuItem11"
-        Me.ToolStripMenuItem11.Size = New System.Drawing.Size(365, 6)
+        Me.ToolStripMenuItem11.Size = New System.Drawing.Size(363, 6)
         '
         'tsmiFile_Compress2nd
         '
         Me.tsmiFile_Compress2nd.Name = "tsmiFile_Compress2nd"
-        Me.tsmiFile_Compress2nd.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_Compress2nd.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_Compress2nd.Text = "Compress 2nd file"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(365, 6)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(363, 6)
         '
         'tsmiFile_SaveLastStat
         '
         Me.tsmiFile_SaveLastStat.Name = "tsmiFile_SaveLastStat"
         Me.tsmiFile_SaveLastStat.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.E), System.Windows.Forms.Keys)
-        Me.tsmiFile_SaveLastStat.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_SaveLastStat.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_SaveLastStat.Text = "Save last image statistics (EXCEL)"
         '
         'tsmiSaveAllFilesStat
         '
         Me.tsmiSaveAllFilesStat.Name = "tsmiSaveAllFilesStat"
-        Me.tsmiSaveAllFilesStat.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiSaveAllFilesStat.Size = New System.Drawing.Size(366, 22)
         Me.tsmiSaveAllFilesStat.Text = "Save all-files statistics"
         '
         'tsmiSaveFITSAndStats
         '
         Me.tsmiSaveFITSAndStats.Name = "tsmiSaveFITSAndStats"
-        Me.tsmiSaveFITSAndStats.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiSaveFITSAndStats.Size = New System.Drawing.Size(366, 22)
         Me.tsmiSaveFITSAndStats.Text = "Save FITS and statistics summary"
         '
         'StoreStackingResultToolStripMenuItem
         '
         Me.StoreStackingResultToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiSaveMeanFile, Me.SumImageDoubleToolStripMenuItem, Me.StdDevImageToolStripMenuItem, Me.MaxMinInt32ToolStripMenuItem, Me.ToolStripMenuItem3, Me.ResetStackingToolStripMenuItem1, Me.MaxImageToolStripMenuItem})
         Me.StoreStackingResultToolStripMenuItem.Name = "StoreStackingResultToolStripMenuItem"
-        Me.StoreStackingResultToolStripMenuItem.Size = New System.Drawing.Size(368, 22)
+        Me.StoreStackingResultToolStripMenuItem.Size = New System.Drawing.Size(366, 22)
         Me.StoreStackingResultToolStripMenuItem.Text = "Save stacking image"
         '
         'tsmiSaveMeanFile
@@ -292,41 +292,41 @@ Partial Class MainForm
         '
         Me.tsmiSaveImageData.Name = "tsmiSaveImageData"
         Me.tsmiSaveImageData.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.S), System.Windows.Forms.Keys)
-        Me.tsmiSaveImageData.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiSaveImageData.Size = New System.Drawing.Size(366, 22)
         Me.tsmiSaveImageData.Text = "Save current image"
         '
         'ToolStripMenuItem14
         '
         Me.ToolStripMenuItem14.Name = "ToolStripMenuItem14"
-        Me.ToolStripMenuItem14.Size = New System.Drawing.Size(365, 6)
+        Me.ToolStripMenuItem14.Size = New System.Drawing.Size(363, 6)
         '
         'tsmiFile_ClearStatMem
         '
         Me.tsmiFile_ClearStatMem.Name = "tsmiFile_ClearStatMem"
-        Me.tsmiFile_ClearStatMem.Size = New System.Drawing.Size(368, 22)
+        Me.tsmiFile_ClearStatMem.Size = New System.Drawing.Size(366, 22)
         Me.tsmiFile_ClearStatMem.Text = "Clear statistics memory"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(365, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(363, 6)
         '
         'OpenEXELocationToolStripMenuItem
         '
         Me.OpenEXELocationToolStripMenuItem.Name = "OpenEXELocationToolStripMenuItem"
-        Me.OpenEXELocationToolStripMenuItem.Size = New System.Drawing.Size(368, 22)
+        Me.OpenEXELocationToolStripMenuItem.Size = New System.Drawing.Size(366, 22)
         Me.OpenEXELocationToolStripMenuItem.Text = "Open EXE location"
         '
         'ToolStripMenuItem5
         '
         Me.ToolStripMenuItem5.Name = "ToolStripMenuItem5"
-        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(365, 6)
+        Me.ToolStripMenuItem5.Size = New System.Drawing.Size(363, 6)
         '
         'ExitToolStripMenuItem
         '
         Me.ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
         Me.ExitToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.X), System.Windows.Forms.Keys)
-        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(368, 22)
+        Me.ExitToolStripMenuItem.Size = New System.Drawing.Size(366, 22)
         Me.ExitToolStripMenuItem.Text = "Exit"
         '
         'tsmiAnalysis
