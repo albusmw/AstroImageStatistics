@@ -2,6 +2,7 @@
 - On 16bit fixed: If BZero and BScale project data outside value range, use "force direct" to avoid overflow
 - Move over Histo stürzt ab bei Float
 - ASCOM dynamisch einbinden
+- Nach color balance histogram nochmal anzeigbar machen
 
 Solver testing:
 	QHY600_H_alpha_60_40_50_001_001_Photographic.fits

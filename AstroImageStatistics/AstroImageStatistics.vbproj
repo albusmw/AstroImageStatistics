@@ -348,12 +348,20 @@
       <SubType>Component</SubType>
     </Compile>
     <Compile Include="AstroImageStatistics.vb" />
+    <Compile Include="atomics\cCollimation.vb" />
     <Compile Include="cDB.vb" />
     <Compile Include="cIntelIPP_NewCode.vb" />
+    <Compile Include="cLog.vb" />
     <Compile Include="frmAstroBinSearch.Designer.vb">
       <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
     </Compile>
     <Compile Include="frmAstroBinSearch.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmCollimation.Designer.vb">
+      <DependentUpon>frmCollimation.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmCollimation.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmHeaderAsIs.Designer.vb">
@@ -368,10 +376,22 @@
     <Compile Include="frmHistogram.vb">
       <SubType>Form</SubType>
     </Compile>
+    <Compile Include="frmMultiFileAction.Designer.vb">
+      <DependentUpon>frmMultiFileAction.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmMultiFileAction.vb">
+      <SubType>Form</SubType>
+    </Compile>
     <Compile Include="frmSinglePixelStat.Designer.vb">
       <DependentUpon>frmSinglePixelStat.vb</DependentUpon>
     </Compile>
     <Compile Include="frmSinglePixelStat.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmStacking.Designer.vb">
+      <DependentUpon>frmStacking.vb</DependentUpon>
+    </Compile>
+    <Compile Include="frmStacking.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmTestFileGenerator.Designer.vb">
@@ -439,6 +459,7 @@
       <DependentUpon>Settings.settings</DependentUpon>
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
+    <Compile Include="Processing.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\QHYCapture\QHYCapture\frmImageForm.resx">
@@ -452,14 +473,23 @@
     <EmbeddedResource Include="frmAstroBinSearch.resx">
       <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmCollimation.resx">
+      <DependentUpon>frmCollimation.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmHeaderAsIs.resx">
       <DependentUpon>frmHeaderAsIs.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmHistogram.resx">
       <DependentUpon>frmHistogram.vb</DependentUpon>
     </EmbeddedResource>
+    <EmbeddedResource Include="frmMultiFileAction.resx">
+      <DependentUpon>frmMultiFileAction.vb</DependentUpon>
+    </EmbeddedResource>
     <EmbeddedResource Include="frmSinglePixelStat.resx">
       <DependentUpon>frmSinglePixelStat.vb</DependentUpon>
+    </EmbeddedResource>
+    <EmbeddedResource Include="frmStacking.resx">
+      <DependentUpon>frmStacking.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="frmTestFileGenerator.resx">
       <DependentUpon>frmTestFileGenerator.vb</DependentUpon>

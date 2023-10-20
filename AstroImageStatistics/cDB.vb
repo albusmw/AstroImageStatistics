@@ -21,6 +21,21 @@ Public Class cDB
     '''<summary>Last file opened - detailed evaluation reults.</summary>
     Public LastFile_EvalResults As sFileEvalResults
 
+    Public Structure sSpecialPoint
+        Public Coord As System.Drawing.Point
+        Public Value1 As Double
+        Public Value2 As Double
+        Public Sub New(ByVal X As Integer, ByVal Y As Integer, ByVal NewValue1 As Double, ByVal NewValue2 As Double)
+            Coord.X = X
+            Coord.Y = Y
+            Value1 = NewValue1
+            Value2 = NewValue2
+        End Sub
+    End Structure
+
+    Public Stars As New List(Of sSpecialPoint)
+
+
     '''<summary>Detailed evaluation reults.</summary>
     Public Structure sFileEvalResults
         '''<summary>Statistics for pixel with identical Y value.</summary>
@@ -91,18 +106,12 @@ Public Class cDB
     Public Property CalcStat_Bayer As Boolean = True
 
     <ComponentModel.Category(Cat_analysis)>
-    <ComponentModel.DisplayName("c) Stacking")>
-    <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
-    <ComponentModel.DefaultValue(False)>
-    Public Property Stacking As Boolean = False
-
-    <ComponentModel.Category(Cat_analysis)>
-    <ComponentModel.DisplayName("d) PlateSolve2 Path")>
+    <ComponentModel.DisplayName("c) PlateSolve2 Path")>
     <ComponentModel.DefaultValue("C:\Bin\PlateSolve2\PlateSolve2.exe")>
     Public Property PlateSolve2Path As String = "C:\Bin\PlateSolve2\PlateSolve2.exe"
 
     <ComponentModel.Category(Cat_analysis)>
-    <ComponentModel.DisplayName("e) PlateSolve2 hold open time")>
+    <ComponentModel.DisplayName("d) PlateSolve2 hold open time")>
     <ComponentModel.DefaultValue(0)>
     Public Property PlateSolve2HoldOpen As Integer = 0
 

@@ -1,6 +1,9 @@
 ﻿Option Explicit On
 Option Strict On
 
+'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
+'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!! Content should go to frmMultiFileAction
+'!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!!
 Public Class frmWorkflow
 
     Private LogContent As New System.Text.StringBuilder
@@ -22,24 +25,25 @@ Public Class frmWorkflow
         Dim MinEvery(,) As UInt32 = {}
         Dim StatCheck As New Ato.cSingleValueStatistics(True)
 
+        'Process each file
         For Idx As Integer = 0 To lbBiasFiles.Items.Count - 1
 
-            Dim FileName As String = CStr(lbBiasFiles.Items.Item(Idx))
-            Log("Reading file " & (Idx + 1).ValRegIndep & "/" & lbBiasFiles.Items.Count.ValRegIndep & ":  <" & FileName.Replace(tbBias_Root.Text, String.Empty) & ">")
+            'Dim FileName As String = CStr(lbBiasFiles.Items.Item(Idx))
+            'Log("Reading file " & (Idx + 1).ValRegIndep & "/" & lbBiasFiles.Items.Count.ValRegIndep & ":  <" & FileName.Replace(tbBias_Root.Text, String.Empty) & ">")
 
             'Read the FITS header
-            Dim DataStartPos As Integer = 0
-            Dim FITSHeader As New cFITSHeaderParser(cFITSHeaderChanger.ParseHeader(FileName, DataStartPos))
-            Dim FITSHeaderDict As Dictionary(Of eFITSKeywords, Object) = FITSHeader.GetCardsAsDictionary
+            'Dim DataStartPos As Integer = 0
+            'Dim FITSHeader As New cFITSHeaderParser(cFITSHeaderChanger.ParseHeader(FileName, DataStartPos))
+            'Dim FITSHeaderDict As Dictionary(Of eFITSKeywords, Object) = FITSHeader.GetCardsAsDictionary
 
             'Read content
-            Dim FITSReader As New cFITSReader
-            Dim Container As New AstroNET.Statistics(AIS.DB.IPP)
-            Container.ResetAllProcessors()
-            Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileName, AIS.DB.UseIPP, AIS.DB.ForceDirect)
+            'Dim FITSReader As New cFITSReader
+            'Dim Container As New AstroNET.Statistics(AIS.DB.IPP)
+            'Container.ResetAllProcessors()
+            'Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileName, AIS.DB.UseIPP, AIS.DB.ForceDirect)
 
             'Sum up all data and get total MAX and total MIN
-            AIS.DB.IPP.Convert(Container.DataProcessor_UInt16.ImageData(0).Data, DataAsUInt32)
+            'AIS.DB.IPP.Convert(Container.DataProcessor_UInt16.ImageData(0).Data, DataAsUInt32)
             AIS.DB.IPP.Add(DataAsUInt32, TotalSum)
             If Idx = 0 Then
                 AIS.DB.IPP.Copy(DataAsUInt32, MaxEvery)
@@ -58,22 +62,22 @@ Public Class frmWorkflow
             ReportMaxMin(DataAsUInt32)
 
             'Total stat
-            StatCheck.AddValue(Container.DataProcessor_UInt16.ImageData(0).Data(0, 0))
+            'StatCheck.AddValue(Container.DataProcessor_UInt16.ImageData(0).Data(0, 0))                     ????????????????????????????
 
         Next Idx
 
         'Get sigma of each pixel
-        Dim Norm As Double = lbBiasFiles.Items.Count
-        Dim Sigma(,) As Double = {}
-        Dim SumSum(,) As Double = {}
-        AIS.DB.IPP.DivC(PowerSum, 2)            'normiert
-        Sigma = AIS.DB.IPP.Copy(PowerSum)       'E[X^2]
-        AIS.DB.IPP.Convert(TotalSum, SumSum)    'E[X]
-        AIS.DB.IPP.Mul(SumSum, SumSum)          'E^2[X]
-        AIS.DB.IPP.DivC(SumSum, Norm)           'E^2[X]/count
-        AIS.DB.IPP.Sub(SumSum, PowerSum)        'PowerSum = E[X^2] - E^2[x]
-        AIS.DB.IPP.DivC(PowerSum, Norm - 1)
-        AIS.DB.IPP.Sqrt(PowerSum)
+        'Dim Norm As Double = lbBiasFiles.Items.Count
+        'Dim Sigma(,) As Double = {}
+        'Dim SumSum(,) As Double = {}
+        'AIS.DB.IPP.DivC(PowerSum, 2)            'correct Square sum by a factor of 2
+        'Sigma = AIS.DB.IPP.Copy(PowerSum)       'E[X^2]
+        'AIS.DB.IPP.Convert(TotalSum, SumSum)    'E[X]
+        'AIS.DB.IPP.Mul(SumSum, SumSum)          'E^2[X]
+        'AIS.DB.IPP.DivC(SumSum, Norm)           'E^2[X]/count
+        'AIS.DB.IPP.Sub(SumSum, PowerSum)        'PowerSum = E[X^2] - E^2[x]
+        'AIS.DB.IPP.DivC(PowerSum, Norm - 1)
+        'AIS.DB.IPP.Sqrt(PowerSum)
 
         'Find peak positions in MaxEvery
         Log("Statistics MaxEvery:")
@@ -174,6 +178,8 @@ Public Class frmWorkflow
     Private Sub DE()
         System.Windows.Forms.Application.DoEvents()
     End Sub
+
+    '==============================================================================================
 
     Private Sub lbBiasFiles_KeyUp(sender As Object, e As KeyEventArgs) Handles lbBiasFiles.KeyUp
         If e.KeyCode = Keys.Delete Then

@@ -176,7 +176,8 @@ Public Class AstroImageStatistics_Fun
     '''<seealso cref="https://ascom-standards.org/Help/Developer/html/T_ASCOM_Astrometry_Transform_Transform.htm"/>
     Public Shared Sub JNowToJ2000(ByVal JNowRA As Double, ByVal JNowDec As Double, ByRef J2000RA As Double, ByRef J2000Dec As Double)
         Dim X As New ASCOM.Astrometry.Transform.Transform
-        X.JulianDateUTC = (New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(Now.Year), CShort(Now.Month), CShort(Now.Day), Now.Hour)
+        Dim NowUTC As DateTime = Now.ToUniversalTime
+        X.JulianDateUTC = (New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(NowUTC.Year), CShort(NowUTC.Month), CShort(NowUTC.Day), NowUTC.Hour)
         X.SetApparent(JNowRA, JNowDec)
         J2000RA = X.RAJ2000
         J2000Dec = X.DecJ2000
@@ -186,7 +187,8 @@ Public Class AstroImageStatistics_Fun
     '''<seealso cref="https://ascom-standards.org/Help/Developer/html/T_ASCOM_Astrometry_Transform_Transform.htm"/>
     Public Shared Sub J2000ToJNow(ByVal J2000RA As Double, ByVal J2000Dec As Double, ByRef JNowRA As Double, ByRef JNowDec As Double)
         Dim X As New ASCOM.Astrometry.Transform.Transform
-        X.JulianDateUTC = (New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(Now.Year), CShort(Now.Month), CShort(Now.Day), Now.Hour)
+        Dim NowUTC As DateTime = Now.ToUniversalTime
+        X.JulianDateUTC = (New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(NowUTC.Year), CShort(NowUTC.Month), CShort(NowUTC.Day), NowUTC.Hour)
         X.SetJ2000(J2000RA, J2000Dec)
         JNowRA = X.RAApparent
         JNowDec = X.DECApparent
