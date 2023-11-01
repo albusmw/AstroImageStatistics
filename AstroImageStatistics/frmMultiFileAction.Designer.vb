@@ -1,9 +1,9 @@
-﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()> _
+﻿<Global.Microsoft.VisualBasic.CompilerServices.DesignerGenerated()>
 Partial Class frmMultiFileAction
     Inherits System.Windows.Forms.Form
 
     'Form overrides dispose to clean up the component list.
-    <System.Diagnostics.DebuggerNonUserCode()> _
+    <System.Diagnostics.DebuggerNonUserCode()>
     Protected Overrides Sub Dispose(ByVal disposing As Boolean)
         Try
             If disposing AndAlso components IsNot Nothing Then
@@ -20,22 +20,26 @@ Partial Class frmMultiFileAction
     'NOTE: The following procedure is required by the Windows Form Designer
     'It can be modified using the Windows Form Designer.  
     'Do not modify it using the code editor.
-    <System.Diagnostics.DebuggerStepThrough()> _
+    <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
         Me.adgvMain = New Zuby.ADGV.AdvancedDataGridView()
         Me.scMain = New System.Windows.Forms.SplitContainer()
         Me.scButtom = New System.Windows.Forms.SplitContainer()
         Me.tcMain = New System.Windows.Forms.TabControl()
-        Me.tbCombine = New System.Windows.Forms.TabPage()
-        Me.cbSaveMax = New System.Windows.Forms.CheckBox()
-        Me.cbSaveMin = New System.Windows.Forms.CheckBox()
-        Me.cbSaveSigma = New System.Windows.Forms.CheckBox()
-        Me.cbSaveMean = New System.Windows.Forms.CheckBox()
-        Me.cbCalcHisto = New System.Windows.Forms.CheckBox()
-        Me.btnRun = New System.Windows.Forms.Button()
         Me.TabPage2 = New System.Windows.Forms.TabPage()
+        Me.pgMain = New System.Windows.Forms.PropertyGrid()
+        Me.btnStackCorr = New System.Windows.Forms.Button()
+        Me.btnRun = New System.Windows.Forms.Button()
         Me.btnClearLog = New System.Windows.Forms.Button()
         Me.tbLog = New System.Windows.Forms.TextBox()
+        Me.MenuStrip1 = New System.Windows.Forms.MenuStrip()
+        Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.AddFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiFile_OpenStackDir = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsmiFile_Exit = New System.Windows.Forms.ToolStripMenuItem()
+        Me.FileListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ClearListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.adgvMain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.scMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.scMain.Panel1.SuspendLayout()
@@ -46,7 +50,8 @@ Partial Class frmMultiFileAction
         Me.scButtom.Panel2.SuspendLayout()
         Me.scButtom.SuspendLayout()
         Me.tcMain.SuspendLayout()
-        Me.tbCombine.SuspendLayout()
+        Me.TabPage2.SuspendLayout()
+        Me.MenuStrip1.SuspendLayout()
         Me.SuspendLayout()
         '
         'adgvMain
@@ -58,8 +63,10 @@ Partial Class frmMultiFileAction
         Me.adgvMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.adgvMain.AutoSizeRowsMode = System.Windows.Forms.DataGridViewAutoSizeRowsMode.AllCells
         Me.adgvMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
         Me.adgvMain.FilterAndSortEnabled = True
+        Me.adgvMain.FilterStringChangedInvokeBeforeDatasourceUpdate = True
         Me.adgvMain.Location = New System.Drawing.Point(7, 3)
         Me.adgvMain.Name = "adgvMain"
         Me.adgvMain.ReadOnly = True
@@ -67,7 +74,8 @@ Partial Class frmMultiFileAction
         Me.adgvMain.RowHeadersVisible = False
         Me.adgvMain.ShowEditingIcon = False
         Me.adgvMain.ShowRowErrors = False
-        Me.adgvMain.Size = New System.Drawing.Size(1319, 326)
+        Me.adgvMain.Size = New System.Drawing.Size(1323, 325)
+        Me.adgvMain.SortStringChangedInvokeBeforeDatasourceUpdate = True
         Me.adgvMain.TabIndex = 1
         '
         'scMain
@@ -75,7 +83,7 @@ Partial Class frmMultiFileAction
         Me.scMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
             Or System.Windows.Forms.AnchorStyles.Left) _
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.scMain.Location = New System.Drawing.Point(12, 12)
+        Me.scMain.Location = New System.Drawing.Point(12, 27)
         Me.scMain.Name = "scMain"
         Me.scMain.Orientation = System.Windows.Forms.Orientation.Horizontal
         '
@@ -86,8 +94,8 @@ Partial Class frmMultiFileAction
         'scMain.Panel2
         '
         Me.scMain.Panel2.Controls.Add(Me.scButtom)
-        Me.scMain.Size = New System.Drawing.Size(1329, 955)
-        Me.scMain.SplitterDistance = 332
+        Me.scMain.Size = New System.Drawing.Size(1333, 956)
+        Me.scMain.SplitterDistance = 331
         Me.scMain.TabIndex = 2
         '
         'scButtom
@@ -104,123 +112,69 @@ Partial Class frmMultiFileAction
         '
         'scButtom.Panel2
         '
+        Me.scButtom.Panel2.Controls.Add(Me.btnStackCorr)
+        Me.scButtom.Panel2.Controls.Add(Me.btnRun)
         Me.scButtom.Panel2.Controls.Add(Me.btnClearLog)
         Me.scButtom.Panel2.Controls.Add(Me.tbLog)
-        Me.scButtom.Size = New System.Drawing.Size(1326, 616)
-        Me.scButtom.SplitterDistance = 442
+        Me.scButtom.Size = New System.Drawing.Size(1330, 618)
+        Me.scButtom.SplitterDistance = 399
         Me.scButtom.TabIndex = 1
         '
         'tcMain
         '
-        Me.tcMain.Controls.Add(Me.tbCombine)
         Me.tcMain.Controls.Add(Me.TabPage2)
         Me.tcMain.Dock = System.Windows.Forms.DockStyle.Fill
         Me.tcMain.Location = New System.Drawing.Point(0, 0)
         Me.tcMain.Name = "tcMain"
         Me.tcMain.SelectedIndex = 0
-        Me.tcMain.Size = New System.Drawing.Size(442, 616)
+        Me.tcMain.Size = New System.Drawing.Size(399, 618)
         Me.tcMain.TabIndex = 0
         '
-        'tbCombine
+        'TabPage2
         '
-        Me.tbCombine.BackColor = System.Drawing.SystemColors.Control
-        Me.tbCombine.Controls.Add(Me.cbSaveMax)
-        Me.tbCombine.Controls.Add(Me.cbSaveMin)
-        Me.tbCombine.Controls.Add(Me.cbSaveSigma)
-        Me.tbCombine.Controls.Add(Me.cbSaveMean)
-        Me.tbCombine.Controls.Add(Me.cbCalcHisto)
-        Me.tbCombine.Controls.Add(Me.btnRun)
-        Me.tbCombine.Location = New System.Drawing.Point(4, 22)
-        Me.tbCombine.Name = "tbCombine"
-        Me.tbCombine.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbCombine.Size = New System.Drawing.Size(434, 590)
-        Me.tbCombine.TabIndex = 0
-        Me.tbCombine.Text = "Combine"
+        Me.TabPage2.Controls.Add(Me.pgMain)
+        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
+        Me.TabPage2.Name = "TabPage2"
+        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
+        Me.TabPage2.Size = New System.Drawing.Size(391, 592)
+        Me.TabPage2.TabIndex = 1
+        Me.TabPage2.Text = "Configure"
+        Me.TabPage2.UseVisualStyleBackColor = True
         '
-        'cbSaveMax
+        'pgMain
         '
-        Me.cbSaveMax.AutoSize = True
-        Me.cbSaveMax.Checked = True
-        Me.cbSaveMax.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbSaveMax.Location = New System.Drawing.Point(17, 109)
-        Me.cbSaveMax.Name = "cbSaveMax"
-        Me.cbSaveMax.Size = New System.Drawing.Size(46, 17)
-        Me.cbSaveMax.TabIndex = 5
-        Me.cbSaveMax.Text = "Max"
-        Me.cbSaveMax.UseVisualStyleBackColor = True
+        Me.pgMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pgMain.Location = New System.Drawing.Point(6, 6)
+        Me.pgMain.Name = "pgMain"
+        Me.pgMain.Size = New System.Drawing.Size(379, 580)
+        Me.pgMain.TabIndex = 0
         '
-        'cbSaveMin
+        'btnStackCorr
         '
-        Me.cbSaveMin.AutoSize = True
-        Me.cbSaveMin.Checked = True
-        Me.cbSaveMin.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbSaveMin.Location = New System.Drawing.Point(17, 86)
-        Me.cbSaveMin.Name = "cbSaveMin"
-        Me.cbSaveMin.Size = New System.Drawing.Size(43, 17)
-        Me.cbSaveMin.TabIndex = 4
-        Me.cbSaveMin.Text = "Min"
-        Me.cbSaveMin.UseVisualStyleBackColor = True
-        '
-        'cbSaveSigma
-        '
-        Me.cbSaveSigma.AutoSize = True
-        Me.cbSaveSigma.Checked = True
-        Me.cbSaveSigma.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbSaveSigma.Location = New System.Drawing.Point(17, 63)
-        Me.cbSaveSigma.Name = "cbSaveSigma"
-        Me.cbSaveSigma.Size = New System.Drawing.Size(55, 17)
-        Me.cbSaveSigma.TabIndex = 3
-        Me.cbSaveSigma.Text = "Sigma"
-        Me.cbSaveSigma.UseVisualStyleBackColor = True
-        '
-        'cbSaveMean
-        '
-        Me.cbSaveMean.AutoSize = True
-        Me.cbSaveMean.Checked = True
-        Me.cbSaveMean.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbSaveMean.Location = New System.Drawing.Point(17, 40)
-        Me.cbSaveMean.Name = "cbSaveMean"
-        Me.cbSaveMean.Size = New System.Drawing.Size(53, 17)
-        Me.cbSaveMean.TabIndex = 2
-        Me.cbSaveMean.Text = "Mean"
-        Me.cbSaveMean.UseVisualStyleBackColor = True
-        '
-        'cbCalcHisto
-        '
-        Me.cbCalcHisto.AutoSize = True
-        Me.cbCalcHisto.Checked = True
-        Me.cbCalcHisto.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbCalcHisto.Location = New System.Drawing.Point(17, 17)
-        Me.cbCalcHisto.Name = "cbCalcHisto"
-        Me.cbCalcHisto.Size = New System.Drawing.Size(118, 17)
-        Me.cbCalcHisto.TabIndex = 1
-        Me.cbCalcHisto.Text = "Calculate histogram"
-        Me.cbCalcHisto.UseVisualStyleBackColor = True
+        Me.btnStackCorr.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.btnStackCorr.Location = New System.Drawing.Point(96, 587)
+        Me.btnStackCorr.Name = "btnStackCorr"
+        Me.btnStackCorr.Size = New System.Drawing.Size(108, 23)
+        Me.btnStackCorr.TabIndex = 2
+        Me.btnStackCorr.Text = "Correlate and stack"
+        Me.btnStackCorr.UseVisualStyleBackColor = True
         '
         'btnRun
         '
         Me.btnRun.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnRun.Location = New System.Drawing.Point(353, 561)
+        Me.btnRun.Location = New System.Drawing.Point(15, 587)
         Me.btnRun.Name = "btnRun"
         Me.btnRun.Size = New System.Drawing.Size(75, 23)
         Me.btnRun.TabIndex = 0
-        Me.btnRun.Text = "Run"
+        Me.btnRun.Text = "Just stack"
         Me.btnRun.UseVisualStyleBackColor = True
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(434, 590)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "TabPage2"
-        Me.TabPage2.UseVisualStyleBackColor = True
         '
         'btnClearLog
         '
         Me.btnClearLog.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnClearLog.Location = New System.Drawing.Point(802, 583)
+        Me.btnClearLog.Location = New System.Drawing.Point(849, 585)
         Me.btnClearLog.Name = "btnClearLog"
         Me.btnClearLog.Size = New System.Drawing.Size(75, 23)
         Me.btnClearLog.TabIndex = 1
@@ -237,16 +191,70 @@ Partial Class frmMultiFileAction
         Me.tbLog.Multiline = True
         Me.tbLog.Name = "tbLog"
         Me.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.tbLog.Size = New System.Drawing.Size(874, 557)
+        Me.tbLog.Size = New System.Drawing.Size(921, 559)
         Me.tbLog.TabIndex = 0
         Me.tbLog.WordWrap = False
+        '
+        'MenuStrip1
+        '
+        Me.MenuStrip1.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.FileToolStripMenuItem, Me.FileListToolStripMenuItem})
+        Me.MenuStrip1.Location = New System.Drawing.Point(0, 0)
+        Me.MenuStrip1.Name = "MenuStrip1"
+        Me.MenuStrip1.Size = New System.Drawing.Size(1357, 24)
+        Me.MenuStrip1.TabIndex = 3
+        Me.MenuStrip1.Text = "MenuStrip1"
+        '
+        'FileToolStripMenuItem
+        '
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddFilesToolStripMenuItem, Me.tsmiFile_OpenStackDir, Me.ToolStripMenuItem1, Me.tsmiFile_Exit})
+        Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
+        Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
+        Me.FileToolStripMenuItem.Text = "File"
+        '
+        'AddFilesToolStripMenuItem
+        '
+        Me.AddFilesToolStripMenuItem.Name = "AddFilesToolStripMenuItem"
+        Me.AddFilesToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.AddFilesToolStripMenuItem.Text = "Add file(s)"
+        '
+        'tsmiFile_OpenStackDir
+        '
+        Me.tsmiFile_OpenStackDir.Name = "tsmiFile_OpenStackDir"
+        Me.tsmiFile_OpenStackDir.Size = New System.Drawing.Size(200, 22)
+        Me.tsmiFile_OpenStackDir.Text = "Open stacking directory"
+        '
+        'ToolStripMenuItem1
+        '
+        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(197, 6)
+        '
+        'tsmiFile_Exit
+        '
+        Me.tsmiFile_Exit.Name = "tsmiFile_Exit"
+        Me.tsmiFile_Exit.Size = New System.Drawing.Size(200, 22)
+        Me.tsmiFile_Exit.Text = "Exit"
+        '
+        'FileListToolStripMenuItem
+        '
+        Me.FileListToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.ClearListToolStripMenuItem})
+        Me.FileListToolStripMenuItem.Name = "FileListToolStripMenuItem"
+        Me.FileListToolStripMenuItem.Size = New System.Drawing.Size(55, 20)
+        Me.FileListToolStripMenuItem.Text = "File list"
+        '
+        'ClearListToolStripMenuItem
+        '
+        Me.ClearListToolStripMenuItem.Name = "ClearListToolStripMenuItem"
+        Me.ClearListToolStripMenuItem.Size = New System.Drawing.Size(119, 22)
+        Me.ClearListToolStripMenuItem.Text = "Clear list"
         '
         'frmMultiFileAction
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
         Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1353, 979)
+        Me.ClientSize = New System.Drawing.Size(1357, 995)
         Me.Controls.Add(Me.scMain)
+        Me.Controls.Add(Me.MenuStrip1)
+        Me.MainMenuStrip = Me.MenuStrip1
         Me.Name = "frmMultiFileAction"
         Me.Text = "Multi-file action"
         CType(Me.adgvMain, System.ComponentModel.ISupportInitialize).EndInit()
@@ -260,9 +268,11 @@ Partial Class frmMultiFileAction
         CType(Me.scButtom, System.ComponentModel.ISupportInitialize).EndInit()
         Me.scButtom.ResumeLayout(False)
         Me.tcMain.ResumeLayout(False)
-        Me.tbCombine.ResumeLayout(False)
-        Me.tbCombine.PerformLayout()
+        Me.TabPage2.ResumeLayout(False)
+        Me.MenuStrip1.ResumeLayout(False)
+        Me.MenuStrip1.PerformLayout()
         Me.ResumeLayout(False)
+        Me.PerformLayout()
 
     End Sub
 
@@ -270,14 +280,18 @@ Partial Class frmMultiFileAction
     Friend WithEvents scMain As SplitContainer
     Friend WithEvents scButtom As SplitContainer
     Friend WithEvents tcMain As TabControl
-    Friend WithEvents tbCombine As TabPage
     Friend WithEvents TabPage2 As TabPage
     Friend WithEvents tbLog As TextBox
     Friend WithEvents btnRun As Button
     Friend WithEvents btnClearLog As Button
-    Friend WithEvents cbCalcHisto As CheckBox
-    Friend WithEvents cbSaveMean As CheckBox
-    Friend WithEvents cbSaveSigma As CheckBox
-    Friend WithEvents cbSaveMax As CheckBox
-    Friend WithEvents cbSaveMin As CheckBox
+    Friend WithEvents MenuStrip1 As MenuStrip
+    Friend WithEvents FileToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents AddFilesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem1 As ToolStripSeparator
+    Friend WithEvents tsmiFile_Exit As ToolStripMenuItem
+    Friend WithEvents pgMain As PropertyGrid
+    Friend WithEvents btnStackCorr As Button
+    Friend WithEvents FileListToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents ClearListToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiFile_OpenStackDir As ToolStripMenuItem
 End Class

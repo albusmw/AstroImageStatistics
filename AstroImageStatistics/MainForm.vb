@@ -1,5 +1,8 @@
 ﻿Option Explicit On
 Option Strict On
+
+Imports System.Data.Entity
+Imports System.Runtime.CompilerServices
 Imports System.Windows.Navigation
 Imports AstroImageStatistics.AstroNET.Statistics
 Imports AstroImageStatistics.Ato
@@ -9,8 +12,10 @@ Imports DocumentFormat.OpenXml.Drawing
 Imports DocumentFormat.OpenXml.Drawing.Charts
 Imports DocumentFormat.OpenXml.Drawing.Diagrams
 Imports DocumentFormat.OpenXml.Office2013.Drawing
+Imports FxResources.System
 Imports MS.Internal.IO.Packaging
 Imports OpenCvSharp.LineIterator
+Imports SixLabors.Fonts.Tables.General
 
 Public Class MainForm
 
@@ -28,7 +33,7 @@ Public Class MainForm
     '''<summary>Statistics of all processed files.</summary>
     Private AllFilesEverRead As New Dictionary(Of String, cFileEvalOut)
 
-    Private MyStreamDeck As StreamDeckSharp.IStreamDeckBoard
+    Private MyStreamDeck As OpenMacroBoard.SDK.IMacroBoard
 
     '''<summary>Evaluation results for 1 file (FITS header and statistics).</summary>
     Private Class cFileEvalOut
@@ -588,62 +593,16 @@ Public Class MainForm
     End Sub
 
     Private Sub tsmiSaveImageData_Click(sender As Object, e As EventArgs) Handles tsmiSaveImageData.Click
-        'TODO: Save also non-UInt16 data
-        With sfdMain
-            .Filter = "FITS 16-bit fixed|*.fits|FITS 32-bit fixed|*.fits|FITS 32-bit float|*.fits|TIFF 16-bit|*.tif|JPG|*.jpg|PNG|*.png"
-            If .ShowDialog = DialogResult.OK Then
-                Running()
-                With AIS.DB.LastFile_Data.DataProcessor_UInt16
-                    Select Case sfdMain.FilterIndex
-                        Case 1
-                            'FITS 16 bit fixed
-                            cFITSWriter.Write(sfdMain.FileName, .ImageData(0).Data, cFITSWriter.eBitPix.Int16, AIS.DB.LastFile_FITSHeader.GetCardsAsList)
-                        Case 2
-                            'FITS 32 bit fixed
-                            cFITSWriter.Write(sfdMain.FileName, .ImageData(0).Data, cFITSWriter.eBitPix.Int32, AIS.DB.LastFile_FITSHeader.GetCardsAsList)
-                        Case 3
-                            'FITS 32 bit float
-                            cFITSWriter.Write(sfdMain.FileName, .ImageData(0).Data, cFITSWriter.eBitPix.Single, AIS.DB.LastFile_FITSHeader.GetCardsAsList)
-                        Case 4
-                            'TIFF
-                            If .ImageData.Count = 1 Then
-                                ImageFileFormatSpecific.SaveTIFF_Format16bppGrayScale(sfdMain.FileName, .ImageData(0).Data)
-                            Else
-                                ImageFileFormatSpecific.SaveTIFF_Format48bppColor(sfdMain.FileName, .ImageData)
-                            End If
-                        Case 5
-                            'JPG
-                            Dim myEncoderParameters As New System.Drawing.Imaging.EncoderParameters(1)
-                            myEncoderParameters.Param(0) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, AIS.DB.ImageQuality)
-                            cLockBitmap.GetGrayscaleImage(.ImageData(0).Data, AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key).BitmapToProcess.Save(sfdMain.FileName, GetEncoderInfo("image/jpeg"), myEncoderParameters)
-                        Case 6
-                            'PNG - try to do 8bit but only get a palett with 256 values but still 24-bit ...
-                            Dim myEncoderParameters As New System.Drawing.Imaging.EncoderParameters(2)
-                            myEncoderParameters.Param(0) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, AIS.DB.ImageQuality)
-                            myEncoderParameters.Param(1) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8)
-                            cLockBitmap.GetGrayscaleImage(.ImageData(0).Data, AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key).BitmapToProcess.Save(sfdMain.FileName, GetEncoderInfo("image/png"), myEncoderParameters)
-
-                            Dim X As New System.Windows.Media.Imaging.PngBitmapEncoder
-
-                    End Select
-                End With
-                Idle()
-            End If
-        End With
+        Dim MyDialog As New frmSaveFile
+        Running()
+        Dim Result As DialogResult = MyDialog.ShowDialog()
+        If Result = DialogResult.OK Then
+            For Each entry As String In MyDialog.SavedFiles
+                Log.Log("Saved as <" & entry & ">")
+            Next entry
+        End If
+        Idle()
     End Sub
-
-    '''<summary>Get an encoder by its MIME name</summary>
-    '''<param name="mimeType"></param>
-    '''<returns></returns>
-    Private Function GetEncoderInfo(ByVal mimeType As String) As Imaging.ImageCodecInfo
-        Dim RetVal As Imaging.ImageCodecInfo = Nothing
-        Dim AllEncoder As New List(Of String)
-        For Each Encoder As Imaging.ImageCodecInfo In Imaging.ImageCodecInfo.GetImageEncoders
-            If Encoder.MimeType = mimeType Then RetVal = Encoder
-            AllEncoder.Add(Encoder.MimeType)
-        Next Encoder
-        Return RetVal
-    End Function
 
     Private Sub tsmiStretch_Click(sender As Object, e As EventArgs) Handles tsmiStretch.Click
         Running()
@@ -659,9 +618,34 @@ Public Class MainForm
         DE()
     End Sub
 
+    '''<summary>Processing running.</summary>
+    Private Function Running(ByVal RunningStep As String) As Stopwatch
+        tsslRunning.ForeColor = Drawing.Color.Red
+        Log.Log("Started <" & RunningStep & ">")
+        DE()
+        Dim RetVal As New Stopwatch
+        RetVal.Reset() : RetVal.Start()
+        Return RetVal
+    End Function
+
+    '''<summary>Processing running.</summary>
+    Private Sub Running(ByRef Stopper As Stopwatch)
+        tsslRunning.ForeColor = Drawing.Color.Red
+        DE()
+        Stopper.Restart() : Stopper.Start()
+    End Sub
+
     '''<summary>Processing idle.</summary>
     Private Sub Idle()
         tsslRunning.ForeColor = Drawing.Color.Silver
+        DE()
+    End Sub
+
+    '''<summary>Processing idle.</summary>
+    Private Sub Idle(ByRef Stopper As Stopwatch, ByVal Message As String)
+        Stopper.Stop()
+        tsslRunning.ForeColor = Drawing.Color.Silver
+        Log.Log("Finished <" & Message & ">, elapsed time: " & Stopper.ElapsedMilliseconds.ToString.Trim & " ms")
         DE()
     End Sub
 
@@ -768,7 +752,7 @@ Public Class MainForm
                 WorkSheet_Sum.Cell(ExcelRow, 2).Value = AstroNET.Statistics.TotalEnergy(StatFocusPoint(FocusPos))
                 Dim Results As AstroNET.Statistics.cSingleChannelStatistics_Int = AstroNET.Statistics.CalcStatValuesFromHisto(StatFocusPoint(FocusPos))
                 WorkSheet_Sum.Cell(ExcelRow, 3).Value = Results.Percentile(95)
-                WorkSheet_Sum.Cell(ExcelRow, 4).Value = Results.Modus
+                WorkSheet_Sum.Cell(ExcelRow, 4).Value = Results.Modus.Key
                 WorkSheet_Sum.Cell(ExcelRow, 5).Value = AstroNET.Statistics.FocusQualityIndicator(StatFocusPoint(FocusPos), 5.0)
                 ExcelRow += 1
 
@@ -1159,7 +1143,7 @@ Public Class MainForm
                     KeyIdx += 1
                     'Add the found entry or no entry
                     If AllFilesEverRead(FileName).Header.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).Value = AllFilesEverRead(FileName).Header(Key)
+                        worksheet.Cell(FileIdx, KeyIdx).Value = CType(AllFilesEverRead(FileName).Header(Key), ClosedXML.Excel.XLCellValue)
                     Else
                         worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
                     End If
@@ -1168,7 +1152,7 @@ Public Class MainForm
                 For Each Key As String In FoundStatParameters
                     KeyIdx += 1
                     If AllFilesEverRead(FileName).Statistics.MonoStatistics_Int.AllStats.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).Value = AllFilesEverRead(FileName).Statistics.MonoStatistics_Int.AllStats(Key)
+                        worksheet.Cell(FileIdx, KeyIdx).Value = CType(AllFilesEverRead(FileName).Statistics.MonoStatistics_Int.AllStats(Key), ClosedXML.Excel.XLCellValue)
                     Else
                         worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
                     End If
@@ -1932,13 +1916,14 @@ Public Class MainForm
             MyStreamDeck = StreamDeckSharp.StreamDeck.OpenDevice
             AddHandler MyStreamDeck.KeyStateChanged, AddressOf StreamDeckHandler
         End If
+        Dim KeyToAdd As OpenMacroBoard.SDK.KeyBitmap = Nothing '= OpenMacroBoard.SDK.KeyBitmap.Create.FromRgb(255, 0, 0)
         MyStreamDeck.SetBrightness(100)
-        MyStreamDeck.SetKeyBitmap(0, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Red)))
-        MyStreamDeck.SetKeyBitmap(1, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Green)))
-        MyStreamDeck.SetKeyBitmap(2, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Blue)))
-        MyStreamDeck.SetKeyBitmap(3, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Cyan)))
-        MyStreamDeck.SetKeyBitmap(4, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Magenta)))
-        MyStreamDeck.SetKeyBitmap(5, New OpenMacroBoard.SDK.KeyBitmap(72, 72, GetUniColorKey(Color.Yellow)))
+        MyStreamDeck.SetKeyBitmap(0, KeyToAdd)
+        MyStreamDeck.SetKeyBitmap(1, KeyToAdd)
+        MyStreamDeck.SetKeyBitmap(2, KeyToAdd)
+        MyStreamDeck.SetKeyBitmap(3, KeyToAdd)
+        MyStreamDeck.SetKeyBitmap(4, KeyToAdd)
+        MyStreamDeck.SetKeyBitmap(5, KeyToAdd)
 
     End Sub
 
@@ -1996,8 +1981,6 @@ Public Class MainForm
             ColForm.tbRadius.Text = "230"
             ColForm.Show()
         End If
-
-
 
     End Sub
 
@@ -2079,21 +2062,46 @@ Public Class MainForm
 
     Private Sub tsmiProc_Bin2MaxOut_Click(sender As Object, e As EventArgs) Handles tsmiProc_Bin2MaxOut.Click
 
+        Dim StepName As String = "BIN2, max removal"
+        Dim Stopper As Stopwatch = Running(StepName)
+        Dim Bin2_2(,) As UInt16 = AsImProc.Bin2MaxOut(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
+        Idle(Stopper, StepName)
+
+        'Load new image
+        AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(Bin2_2)
+
+    End Sub
+
+    Private Function TestMatrix(ByVal Rows As Integer, ByVal Cols As Integer) As UInt16(,)
+        Dim RetVal(Rows - 1, Cols - 1) As UInt16
+        Dim RndGen As New Random
+        For Idx1 As Integer = 0 To Rows - 1
+            For Idx2 As Integer = 0 To Cols - 1
+                RetVal(Idx1, Idx2) = CUShort(RndGen.Next(UInt16.MinValue, UInt16.MaxValue + 1))
+            Next Idx2
+        Next Idx1
+        Return RetVal
+    End Function
+
+    '''<summary>Bin2 with removal of the maximum value, additional statistics.</summary>
+    Private Sub RunBin2MaxOut()
+
         'We run a 2x2 bin and remove the maximum value
-        Dim Stopper As New Stopwatch : Stopper.Start()
+        Dim Stopper As New Stopwatch
         Running()
         Select Case AIS.DB.LastFile_Data.DataType
             Case AstroNET.Statistics.eDataType.UInt16
                 'Calculate the new image and remember the maximum spike value
                 Dim MaxSpike As Double = Double.NaN
                 Dim NewImage(,) As UInt16 = Nothing
+                Stopper.Start()
                 Bin2MaxOut(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0), MaxSpike, NewImage)
+                Stopper.Stop()
                 'Get the spike value distribution
                 Dim SpikeStat As Dictionary(Of UInt16, UInt32) = Bin2MaxOut(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0), MaxSpike, NewImage)
                 'Load new image
                 AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(NewImage)
                 'Finish
-                Stopper.Stop()
                 PlotStatistics("Spike Statistics", SpikeStat, UInt16.MaxValue / MaxSpike)
                 Log.Log("Bin2 with max removal executed.", Stopper.Elapsed)
             Case Else
@@ -2109,13 +2117,15 @@ Public Class MainForm
         Dim MaxSpikeFound As Double = Double.MinValue
         With OriginalData
             ReDim BinnedData((.NAXIS1 \ 2) - 1, (.NAXIS2 \ 2) - 1)
-            Dim BinPixel As New List(Of UInt32)
             Dim NewX As Integer = 0
+            Dim AllX As New List(Of Integer)
             For OrigX As Integer = 0 To .NAXIS1 - 1 Step 2
+                AllX.Add(OrigX)
+            Next OrigX
+            For Each OrigX As Integer In AllX
                 Dim NewY As Integer = 0
                 For OrigY As Integer = 0 To .NAXIS2 - 1 Step 2
-                    BinPixel.Clear()
-                    BinPixel.AddRange({ .Data(OrigX, OrigY), .Data(OrigX + 1, OrigY), .Data(OrigX, OrigY + 1), .Data(OrigX + 1, OrigY + 1)})
+                    Dim BinPixel As New List(Of UInt32)({ .Data(OrigX, OrigY), .Data(OrigX + 1, OrigY), .Data(OrigX, OrigY + 1), .Data(OrigX + 1, OrigY + 1)})
                     BinPixel.Sort()
                     Dim PixelSum As UInt32 = (BinPixel(0) + BinPixel(1) + BinPixel(2))
                     Dim Spike As Double = BinPixel(3) / (PixelSum / 3)
@@ -2208,5 +2218,28 @@ Public Class MainForm
         Next Idx1
         Return RetVal / Pixel
     End Function
+
+    Private Sub tsmiProc_Bin2OpenCV_Click(sender As Object, e As EventArgs) Handles tsmiProc_Bin2OpenCV.Click
+
+        Running()
+        Select Case AIS.DB.LastFile_Data.DataType
+            Case AstroNET.Statistics.eDataType.UInt16
+                With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
+                    Dim NewData(,) As UInt16 = {}
+                    cOpenCvSharp.pyrDown(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, NewData)
+                    AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(NewData)
+                End With
+                Log.Log("Bin2 with pyrDown executed.")
+            Case Else
+                MsgBox("Data type not supported!")
+        End Select
+        Idle()
+
+    End Sub
+
+    Private Sub tsmiTest_ippiXCorr_Click(sender As Object, e As EventArgs) Handles tsmiTest_ippiXCorr.Click
+        Dim MyForm As New frmXCorr
+        MyForm.Show()
+    End Sub
 
 End Class

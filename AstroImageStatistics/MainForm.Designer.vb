@@ -70,6 +70,7 @@ Partial Class MainForm
         Me.tsmiAnalysis_MultiFile_Open = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysis_MultiFile_LoadAbove = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysis_XvsYPlot = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiAnalysis_FindStars = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing_AdjustRGB = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiStretch = New System.Windows.Forms.ToolStripMenuItem()
@@ -82,6 +83,7 @@ Partial Class MainForm
         Me.tsmiProcessing_Specials_NINAFix = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProcessing_Stack = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiHotPixelFilter = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiProc_Bin2OpenCV = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProc_Bin2Median = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiProc_Bin2MaxOut = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTest = New System.Windows.Forms.ToolStripMenuItem()
@@ -90,6 +92,7 @@ Partial Class MainForm
         Me.tsmiTest_Focus = New System.Windows.Forms.ToolStripMenuItem()
         Me.tssmRadCollimation = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTest_ReadNEFFile = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiTest_ippiXCorr = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem9 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsmiTestCode_UseOpenCV = New System.Windows.Forms.ToolStripMenuItem()
         Me.MedianWithinNETToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -130,7 +133,6 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.tsmiAnalysis_FindStars = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -441,9 +443,15 @@ Partial Class MainForm
         Me.tsmiAnalysis_XvsYPlot.Size = New System.Drawing.Size(261, 22)
         Me.tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
         '
+        'tsmiAnalysis_FindStars
+        '
+        Me.tsmiAnalysis_FindStars.Name = "tsmiAnalysis_FindStars"
+        Me.tsmiAnalysis_FindStars.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_FindStars.Text = "Find stars"
+        '
         'tsmiProcessing
         '
-        Me.tsmiProcessing.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiProcessing_AdjustRGB, Me.tsmiStretch, Me.tsmiPlateSolve, Me.tsmiSetPixelToValue, Me.tsmiProcessing_MedianFilter, Me.SubtractMedianToolStripMenuItem, Me.tsmiProcessing_LSBMSB, Me.tsmiProcessing_Specials, Me.tsmiProcessing_Stack, Me.tsmiHotPixelFilter, Me.tsmiProc_Bin2Median, Me.tsmiProc_Bin2MaxOut})
+        Me.tsmiProcessing.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiProcessing_AdjustRGB, Me.tsmiStretch, Me.tsmiPlateSolve, Me.tsmiSetPixelToValue, Me.tsmiProcessing_MedianFilter, Me.SubtractMedianToolStripMenuItem, Me.tsmiProcessing_LSBMSB, Me.tsmiProcessing_Specials, Me.tsmiProcessing_Stack, Me.tsmiHotPixelFilter, Me.tsmiProc_Bin2OpenCV, Me.tsmiProc_Bin2Median, Me.tsmiProc_Bin2MaxOut})
         Me.tsmiProcessing.Name = "tsmiProcessing"
         Me.tsmiProcessing.Size = New System.Drawing.Size(76, 22)
         Me.tsmiProcessing.Text = "Processing"
@@ -516,6 +524,12 @@ Partial Class MainForm
         Me.tsmiHotPixelFilter.Size = New System.Drawing.Size(301, 22)
         Me.tsmiHotPixelFilter.Text = "Special hotpixel filter - EXPERIMENTAL"
         '
+        'tsmiProc_Bin2OpenCV
+        '
+        Me.tsmiProc_Bin2OpenCV.Name = "tsmiProc_Bin2OpenCV"
+        Me.tsmiProc_Bin2OpenCV.Size = New System.Drawing.Size(301, 22)
+        Me.tsmiProc_Bin2OpenCV.Text = "Bin 2 with OpenCV"
+        '
         'tsmiProc_Bin2Median
         '
         Me.tsmiProc_Bin2Median.Name = "tsmiProc_Bin2Median"
@@ -530,7 +544,7 @@ Partial Class MainForm
         '
         'tsmiTest
         '
-        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tssmRadCollimation, Me.tsmiTest_ReadNEFFile, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw})
+        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tssmRadCollimation, Me.tsmiTest_ReadNEFFile, Me.tsmiTest_ippiXCorr, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw})
         Me.tsmiTest.Name = "tsmiTest"
         Me.tsmiTest.Size = New System.Drawing.Size(68, 22)
         Me.tsmiTest.Text = "Test code"
@@ -563,6 +577,12 @@ Partial Class MainForm
         Me.tsmiTest_ReadNEFFile.Name = "tsmiTest_ReadNEFFile"
         Me.tsmiTest_ReadNEFFile.Size = New System.Drawing.Size(274, 22)
         Me.tsmiTest_ReadNEFFile.Text = "NEF reading"
+        '
+        'tsmiTest_ippiXCorr
+        '
+        Me.tsmiTest_ippiXCorr.Name = "tsmiTest_ippiXCorr"
+        Me.tsmiTest_ippiXCorr.Size = New System.Drawing.Size(274, 22)
+        Me.tsmiTest_ippiXCorr.Text = "ippi XCorr"
         '
         'ToolStripMenuItem9
         '
@@ -667,7 +687,7 @@ Partial Class MainForm
         '
         'WorkflowToolStripMenuItem
         '
-        Me.WorkflowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiWorkflow_Runner, Me.ToolStripMenuItem13, Me.FixRADECErrorToolStripMenuItem, Me.MultifileActionToolStripMenuItem})
+        Me.WorkflowToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.MultifileActionToolStripMenuItem, Me.ToolStripMenuItem13, Me.FixRADECErrorToolStripMenuItem, Me.tsmiWorkflow_Runner})
         Me.WorkflowToolStripMenuItem.Name = "WorkflowToolStripMenuItem"
         Me.WorkflowToolStripMenuItem.Size = New System.Drawing.Size(70, 22)
         Me.WorkflowToolStripMenuItem.Text = "Workflow"
@@ -865,12 +885,6 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'tsmiAnalysis_FindStars
-        '
-        Me.tsmiAnalysis_FindStars.Name = "tsmiAnalysis_FindStars"
-        Me.tsmiAnalysis_FindStars.Size = New System.Drawing.Size(261, 22)
-        Me.tsmiAnalysis_FindStars.Text = "Find stars"
-        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1016,4 +1030,6 @@ Partial Class MainForm
     Friend WithEvents tsmiProc_Bin2Median As ToolStripMenuItem
     Friend WithEvents tsmiProc_Bin2MaxOut As ToolStripMenuItem
     Friend WithEvents tsmiAnalysis_FindStars As ToolStripMenuItem
+    Friend WithEvents tsmiProc_Bin2OpenCV As ToolStripMenuItem
+    Friend WithEvents tsmiTest_ippiXCorr As ToolStripMenuItem
 End Class

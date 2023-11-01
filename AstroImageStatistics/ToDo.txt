@@ -1,4 +1,9 @@
-﻿- ReadHeader gibt es doppelt
+﻿2023-10-29
+- MultifileAction geht nicht mit den Files aus \\192.168.100.10\astro\2021_02_13 (SH2-155)
+
+
+
+- ReadHeader gibt es doppelt
 - On 16bit fixed: If BZero and BScale project data outside value range, use "force direct" to avoid overflow
 - Move over Histo stürzt ab bei Float
 - ASCOM dynamisch einbinden

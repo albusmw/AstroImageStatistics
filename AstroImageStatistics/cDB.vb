@@ -58,7 +58,6 @@ Public Class cDB
     Private Const Cat_plot As String = "3.) Plotting"
     Private Const Cat_Proc_Vignette As String = "4.) Processing - vignette"
     Private Const Cat_log As String = "5.) Logging"
-    Private Const Cat_save As String = "6.) Saving"
     Private Const Cat_misc As String = "9.) Misc"
 
     '''<summary>Location of the EXE.</summary>
@@ -167,14 +166,6 @@ Public Class cDB
     <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
     <ComponentModel.DefaultValue(True)>
     Public Property AutoClearLog As Boolean = True
-
-    '===================================================================================================================================================
-
-    <ComponentModel.Category(Cat_save)>
-    <ComponentModel.DisplayName("a) Image quality")>
-    <ComponentModel.Description("Image quality parameter to use")>
-    <ComponentModel.DefaultValue(80L)>
-    Public Property ImageQuality As Int64 = 80L
 
     '===================================================================================================================================================
 

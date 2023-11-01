@@ -18,29 +18,29 @@ Public Class AstroImageStatistics_Fun
         'Get the FITS header information
         Dim DataStartPos As Integer = -1
         Dim FITSHeader As List(Of cFITSHeaderParser.sHeaderElement) = cFITSHeaderChanger.ParseHeader(FileToRun, DataStartPos)
-        Dim File_RA_JNow As String = Nothing
-        Dim File_Dec_JNow As String = Nothing
+        Dim File_RA_JNow_string As String = Nothing
+        Dim File_Dec_JNow_string As String = Nothing
         Dim File_FOV1 As Object = Nothing
         Dim File_FOV2 As Object = Nothing
         For Each Entry As cFITSHeaderParser.sHeaderElement In FITSHeader
-            If Entry.Keyword = eFITSKeywords.RA Or Entry.Keyword = eFITSKeywords.RA_NOM Then File_RA_JNow = CStr(Entry.Value).Trim("'"c).Trim.Trim("'"c)
-            If Entry.Keyword = eFITSKeywords.DEC Or Entry.Keyword = eFITSKeywords.DEC_NOM Then File_Dec_JNow = CStr(Entry.Value).Trim("'"c).Trim.Trim("'"c)
+            If Entry.Keyword = eFITSKeywords.RA Or Entry.Keyword = eFITSKeywords.RA_NOM Then File_RA_JNow_string = CStr(Entry.Value).Trim("'"c).Trim.Trim("'"c)
+            If Entry.Keyword = eFITSKeywords.DEC Or Entry.Keyword = eFITSKeywords.DEC_NOM Then File_Dec_JNow_string = CStr(Entry.Value).Trim("'"c).Trim.Trim("'"c)
             If Entry.Keyword = eFITSKeywords.FOV1 Then File_FOV1 = Entry.Value
             If Entry.Keyword = eFITSKeywords.FOV2 Then File_FOV2 = Entry.Value
         Next Entry
 
         'Exit on no data
-        If IsNothing(File_RA_JNow) Or IsNothing(File_Dec_JNow) Then Return "No RA and/or DEC specified in input file."
+        If IsNothing(File_RA_JNow_string) Or IsNothing(File_Dec_JNow_string) Then Return "No RA and/or DEC specified in input file."
 
         'Data from QHYCapture (10Micron) are in JNow, so convert to J2000 for PlateSolve
+        Dim File_RA_JNow As Double = AstroParser.ParseRA(File_RA_JNow_string)
+        Dim File_Dec_JNow As Double = AstroParser.ParseDeclination(File_Dec_JNow_string)
         Dim File_RA_J2000 As Double = Double.NaN
         Dim File_Dec_J2000 As Double = Double.NaN
-        JNowToJ2000(AstroParser.ParseRA(File_RA_JNow), AstroParser.ParseDeclination(File_Dec_JNow), File_RA_J2000, File_Dec_J2000)
+        JNowToJ2000(File_RA_JNow, File_Dec_JNow, File_RA_J2000, File_Dec_J2000)
 
         'Run plate solve
         Dim ErrorCode1 As String = String.Empty
-        Dim SolverIn_RA As String() = File_RA_JNow.Trim.Trim("'"c).Split(":"c)
-        Dim SolverIn_Dec As String() = File_Dec_JNow.Trim.Trim("'"c).Split(":"c)
         cPlateSolve.PlateSolvePath = PlateSolve2Path
         With Solver
             .SetRA(File_RA_J2000)                                                                       'theoretical position (Wikipedia, J2000.0)
@@ -60,7 +60,7 @@ Public Class AstroImageStatistics_Fun
         J2000ToJNow(Solver.SolvedRA * RadToH, Solver.SolvedDec * RadToGrad, JNow_RA_solved, JNow_Dec_solved)
 
         Dim Output As New List(Of String)
-        Output.Add("Start with        RA <" & File_RA_JNow & ">, DEC <" & File_Dec_JNow & "> (JNow file string)")
+        Output.Add("Start with        RA <" & Ato.AstroCalc.FormatHMS(File_RA_JNow) & ">, DEC <" & Ato.AstroCalc.Format360Degree(File_Dec_JNow) & "> (JNow file string)")
         Output.Add("                  RA <" & Ato.AstroCalc.FormatHMS(File_RA_J2000) & ">, DEC <" & Ato.AstroCalc.Format360Degree(File_Dec_J2000) & "> (J2000)")
         Output.Add("Solved as       : RA <" & Ato.AstroCalc.FormatHMS(Solver.SolvedRA * RadToH) & ">, DEC <" & Ato.AstroCalc.Format360Degree(Solver.SolvedDec * RadToGrad) & "> (J2000)")
         Output.Add("                  RA <" & Ato.AstroCalc.FormatHMS(JNow_RA_solved) & ">, DEC <" & Ato.AstroCalc.Format360Degree(JNow_Dec_solved) & "> (JNow)")
