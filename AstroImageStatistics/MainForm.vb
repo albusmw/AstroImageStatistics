@@ -210,7 +210,7 @@ Public Class MainForm
                 If IsNothing(Stats.MonochromHistogram_Int) = False And AIS.DB.CalcStat_Mono Then
                     Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Int, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
                 End If
-                Disp.Plotter.ManuallyScaleXAxis(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
+                Disp.Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
             Case AstroNET.Statistics.eDataMode.Float
                 'Plot histogram
                 Disp.Plotter.Clear()
@@ -223,7 +223,7 @@ Public Class MainForm
                 If IsNothing(Stats.MonochromHistogram_Float32) = False And AIS.DB.CalcStat_Mono Then
                     Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Float32, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
                 End If
-                Disp.Plotter.ManuallyScaleXAxis(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
+                Disp.Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
         End Select
         Disp.Plotter.AutoScaleYAxisLog()
         Disp.Plotter.GridOnOff(True, True)
@@ -253,7 +253,7 @@ Public Class MainForm
         Disp.Plotter.PlotXvsY("Max", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Maximum), New cZEDGraphService.sGraphStyle(Color.Red, AIS.DB.PlotStyle, 1))
         Disp.Plotter.PlotXvsY("Min", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Minimum), New cZEDGraphService.sGraphStyle(Color.Green, AIS.DB.PlotStyle, 1))
         Disp.Plotter.PlotXvsY("Sigma", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Sigma), New cZEDGraphService.sGraphStyle(Color.Orange, AIS.DB.PlotStyle, 1), True)
-        Disp.Plotter.ManuallyScaleXAxis(XAxis(0), XAxis(XAxis.GetUpperBound(0)))
+        Disp.Plotter.ManuallyScaleXAxisLin(XAxis(0), XAxis(XAxis.GetUpperBound(0)))
         Disp.Plotter.GridOnOff(True, True)
         Disp.Plotter.ForceUpdate()
         'Set style of the window
@@ -274,7 +274,7 @@ Public Class MainForm
         'Plot data
         Disp.Plotter.Clear()
         Disp.Plotter.PlotXvsY("Data", Trace, XNorm, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
-        Disp.Plotter.ManuallyScaleXAxis(Trace.Keys.First, Trace.Keys.Last)
+        Disp.Plotter.ManuallyScaleXAxisLin(Trace.Keys.First, Trace.Keys.Last)
         Disp.Plotter.AutoScaleYAxisLog()
         Disp.Plotter.GridOnOff(True, True)
         Disp.Plotter.ForceUpdate()
@@ -658,7 +658,7 @@ Public Class MainForm
         Disp.Plotter.Clear()
         Disp.Plotter.PlotXvsY("Mono", XAxis, PlotData.Values.ToArray.ToDouble, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
         Disp.Plotter.GridOnOff(True, True)
-        Disp.Plotter.ManuallyScaleXAxis(XAxis(0), XAxis(XAxis.GetUpperBound(0)))
+        Disp.Plotter.ManuallyScaleXAxisLin(XAxis(0), XAxis(XAxis.GetUpperBound(0)))
         Disp.Plotter.AutoScaleYAxisLog()
         Disp.Plotter.ForceUpdate()
         'Set style of the window

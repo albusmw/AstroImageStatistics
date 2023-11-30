@@ -253,8 +253,11 @@
     <Compile Include="..\..\MyFramework\AsImProc.vb">
       <Link>MyFramework\AsImProc.vb</Link>
     </Compile>
-    <Compile Include="..\..\MyFramework\ExtAndGeneric.vb">
-      <Link>MyFramework\ExtAndGeneric.vb</Link>
+    <Compile Include="..\..\MyLib\Download.vb">
+      <Link>MyLib\Download.vb</Link>
+    </Compile>
+    <Compile Include="..\..\MyLib\Extensions.vb">
+      <Link>MyLib\Extensions.vb</Link>
     </Compile>
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
@@ -341,9 +344,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\Everything.vb">
       <Link>common\Everything.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\Extensions.vb">
-      <Link>atomics\Extensions.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Generics.vb">
       <Link>common\Generics.vb</Link>
