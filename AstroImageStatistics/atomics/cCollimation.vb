@@ -68,7 +68,7 @@ Public Class cCollimation
         Dim Y_min As New List(Of Double)
         For Each Entry As Integer In RadStat.Keys
             X.Add(Math.Sqrt(Entry))
-            Y_mean.Add(SignalProcessing.Sum(RadStat(Entry).ToArray) / RadStat(Entry).Count)
+            Y_mean.Add((RadStat(Entry).ToArray).Sum / RadStat(Entry).Count)
             Y_max.Add(RadStat(Entry).Max)
             Y_min.Add(RadStat(Entry).Min)
         Next Entry

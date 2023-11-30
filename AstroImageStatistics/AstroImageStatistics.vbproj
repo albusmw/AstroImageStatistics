@@ -46,6 +46,9 @@
   <PropertyGroup>
     <ApplicationIcon>Statistics.ico</ApplicationIcon>
   </PropertyGroup>
+  <PropertyGroup>
+    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="AdvancedDataGridView, Version=1.2.28405.11, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\DG.AdvancedDataGridView.1.2.28405.11\lib\net40\AdvancedDataGridView.dll</HintPath>
@@ -525,6 +528,7 @@
       <DesignTimeSharedInput>True</DesignTimeSharedInput>
     </Compile>
     <Compile Include="Processing.vb" />
+    <Compile Include="Settings.vb" />
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\QHYCapture\QHYCapture\frmImageForm.resx">
@@ -597,6 +601,7 @@
     <EmbeddedResource Include="..\HelpContent.rtf">
       <Link>HelpContent.rtf</Link>
     </EmbeddedResource>
+    <None Include="My Project\app.manifest" />
     <None Include="My Project\Application.myapp">
       <Generator>MyApplicationCodeGenerator</Generator>
       <LastGenOutput>Application.Designer.vb</LastGenOutput>

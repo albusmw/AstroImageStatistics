@@ -292,7 +292,7 @@ Public Class frmImageDisplay
 
         'Construct the holder of the zoomed image
         ZoomStatCalc.ResetAllProcessors()
-        ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data = ImgArrayFunction.GetROI(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, ROICoord.Left, ROICoord.Left + ROICoord.Width - 1, ROICoord.Top, ROICoord.Top + ROICoord.Height - 1)
+        ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data = (SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data.GetROI(ROICoord.Left, ROICoord.Left + ROICoord.Width - 1, ROICoord.Top, ROICoord.Top + ROICoord.Height - 1))
         If ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data.LongLength < 4 Then Exit Sub
 
         'Calculate statistics

@@ -1667,9 +1667,9 @@ Public Class MainForm
         ZoomStatCalc.ResetAllProcessors()
         Dim Status_GetROI As cIntelIPP.IppStatus = AIS.DB.IPP.Copy(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data, CInt(OV_X), CInt(0), CInt(EffArea_Width), CInt(EffArea_Height))
         'Run VB function (may be wrong)
-        Dim Data_New(,) As UInt16 = ImgArrayFunction.GetROI(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, OV_X, W - 1, 0, H - OV_Y - 2)
+        Dim Data_New(,) As UInt16 = AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data.GetROI(OV_X, W - 1, 0, H - OV_Y - 2)
         'Compare both ROI's
-        Dim DiffCount As Integer = ImgArrayFunction.FindDifferences(ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data, Data_New)
+        Dim DiffCount As Long = ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data.FindDifferences(Data_New)
 
         AIS.DB.LastFile_FITSHeader.Add(New cFITSHeaderParser.sHeaderElement(eFITSKeywords.NAXIS1, EffArea_Width))
         AIS.DB.LastFile_FITSHeader.Add(New cFITSHeaderParser.sHeaderElement(eFITSKeywords.NAXIS2, EffArea_Height))
@@ -1694,9 +1694,9 @@ Public Class MainForm
         ZoomStatCalc.ResetAllProcessors()
         Dim Status_GetROI As cIntelIPP.IppStatus = AIS.DB.IPP.Copy(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data, CInt(OV_X), CInt(0), CInt(EffArea_Width), CInt(EffArea_Height))
         'Run VB function (may be wrong)
-        Dim Data_New(,) As UInt16 = ImgArrayFunction.GetROI(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, OV_X, W - 1, 0, H - OV_Y - 1)
+        Dim Data_New(,) As UInt16 = AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data.GetROI(OV_X, W - 1, 0, H - OV_Y - 1)
         'Compare both ROI's
-        Dim DiffCount As Integer = ImgArrayFunction.FindDifferences(ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data, Data_New)
+        Dim DiffCount As Long = ZoomStatCalc.DataProcessor_UInt16.ImageData(0).Data.FindDifferences(Data_New)
 
     End Sub
 
