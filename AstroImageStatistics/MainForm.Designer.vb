@@ -111,10 +111,10 @@ Partial Class MainForm
         Me.tsmiTools_TestFile = New System.Windows.Forms.ToolStripMenuItem()
         Me.CheckROICutoutToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.WorkflowToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiWorkflow_Runner = New System.Windows.Forms.ToolStripMenuItem()
+        Me.MultifileActionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem13 = New System.Windows.Forms.ToolStripSeparator()
         Me.FixRADECErrorToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.MultifileActionToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiWorkflow_Runner = New System.Windows.Forms.ToolStripMenuItem()
         Me.ofdMain = New System.Windows.Forms.OpenFileDialog()
         Me.tbLogOutput = New System.Windows.Forms.TextBox()
         Me.ssMain = New System.Windows.Forms.StatusStrip()
@@ -692,11 +692,12 @@ Partial Class MainForm
         Me.WorkflowToolStripMenuItem.Size = New System.Drawing.Size(70, 22)
         Me.WorkflowToolStripMenuItem.Text = "Workflow"
         '
-        'tsmiWorkflow_Runner
+        'MultifileActionToolStripMenuItem
         '
-        Me.tsmiWorkflow_Runner.Name = "tsmiWorkflow_Runner"
-        Me.tsmiWorkflow_Runner.Size = New System.Drawing.Size(204, 22)
-        Me.tsmiWorkflow_Runner.Text = "Open runner"
+        Me.MultifileActionToolStripMenuItem.Name = "MultifileActionToolStripMenuItem"
+        Me.MultifileActionToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.M), System.Windows.Forms.Keys)
+        Me.MultifileActionToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
+        Me.MultifileActionToolStripMenuItem.Text = "Multi-file action"
         '
         'ToolStripMenuItem13
         '
@@ -709,12 +710,11 @@ Partial Class MainForm
         Me.FixRADECErrorToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
         Me.FixRADECErrorToolStripMenuItem.Text = "Fix RA_DEC error"
         '
-        'MultifileActionToolStripMenuItem
+        'tsmiWorkflow_Runner
         '
-        Me.MultifileActionToolStripMenuItem.Name = "MultifileActionToolStripMenuItem"
-        Me.MultifileActionToolStripMenuItem.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.M), System.Windows.Forms.Keys)
-        Me.MultifileActionToolStripMenuItem.Size = New System.Drawing.Size(204, 22)
-        Me.MultifileActionToolStripMenuItem.Text = "Multi-file action"
+        Me.tsmiWorkflow_Runner.Name = "tsmiWorkflow_Runner"
+        Me.tsmiWorkflow_Runner.Size = New System.Drawing.Size(204, 22)
+        Me.tsmiWorkflow_Runner.Text = "Open runner"
         '
         'ofdMain
         '

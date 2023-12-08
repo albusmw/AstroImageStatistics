@@ -38,7 +38,7 @@ Public Class MainForm
     '''<summary>Evaluation results for 1 file (FITS header and statistics).</summary>
     Private Class cFileEvalOut
         Public DataStartPos As Integer = -1
-        Public Header As Dictionary(Of eFITSKeywords, Object)
+        Public FITSHeader As Dictionary(Of eFITSKeywords, Object)
         Public Statistics As AstroNET.Statistics.sStatistics
     End Class
 
@@ -89,7 +89,7 @@ Public Class MainForm
             Processing.LoadFITSFile(FileName, Nothing, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
         End If
 
-        RecStat.Header = AIS.DB.LastFile_FITSHeader.GetCardsAsDictionary
+        RecStat.FITSHeader = AIS.DB.LastFile_FITSHeader.GetCardsAsDictionary
 
         '=========================================================================================================
         'Display fits header
@@ -99,10 +99,7 @@ Public Class MainForm
             Log.Log("Loading file <" & FileName & "> ...")
             Log.Log("  -> <" & System.IO.Path.GetFileNameWithoutExtension(FileName) & ">")
             Log.Log("FITS header:")
-            Dim ContentToPrint As New List(Of String)
-            For Each Entry As eFITSKeywords In RecStat.Header.Keys
-                ContentToPrint.Add("  " & FITSKeyword.GetKeywords(Entry)(0).PadRight(10) & "=" & CStr(RecStat.Header(Entry)).Trim.PadLeft(40))
-            Next Entry
+            Dim ContentToPrint As List(Of String) = cFITSHeaderParser.GetListToDisplay(RecStat.FITSHeader)
             Log.Log(ContentToPrint)
             Log.Log(New String("-"c, 107))
         End If
@@ -1105,8 +1102,8 @@ Public Class MainForm
         Dim FoundFitsKeywords As New Dictionary(Of eFITSKeywords, Integer)
         Dim FoundStatParameters As New List(Of String)
         For Each FileName As String In AllFilesEverRead.Keys
-            For Each Key As eFITSKeywords In AllFilesEverRead(FileName).Header.Keys
-                Dim HeaderValue As String = CStr(AllFilesEverRead(FileName).Header(Key))
+            For Each Key As eFITSKeywords In AllFilesEverRead(FileName).FITSHeader.Keys
+                Dim HeaderValue As String = CStr(AllFilesEverRead(FileName).FITSHeader(Key))
                 If FoundFitsKeywords.ContainsKey(Key) = False Then FoundFitsKeywords.Add(Key, -1)
                 If FoundFitsKeywords(Key) < HeaderValue.Length Then
                     FoundFitsKeywords(Key) = HeaderValue.Length
@@ -1142,8 +1139,8 @@ Public Class MainForm
                 For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
                     KeyIdx += 1
                     'Add the found entry or no entry
-                    If AllFilesEverRead(FileName).Header.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).Value = CType(AllFilesEverRead(FileName).Header(Key), ClosedXML.Excel.XLCellValue)
+                    If AllFilesEverRead(FileName).FITSHeader.ContainsKey(Key) Then
+                        worksheet.Cell(FileIdx, KeyIdx).Value = CType(AllFilesEverRead(FileName).FITSHeader(Key), ClosedXML.Excel.XLCellValue)
                     Else
                         worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
                     End If

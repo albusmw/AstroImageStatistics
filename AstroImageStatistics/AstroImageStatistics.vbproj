@@ -380,7 +380,7 @@
       <Link>atomics\SQLT.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Utils.vb">
-      <Link>Utils.vb</Link>
+      <Link>common\Utils.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>
@@ -436,6 +436,9 @@
       <DependentUpon>frmMultiFileAction.vb</DependentUpon>
     </Compile>
     <Compile Include="frmMultiFileAction.vb">
+      <SubType>Form</SubType>
+    </Compile>
+    <Compile Include="frmMultiFileAction_cConfig.vb">
       <SubType>Form</SubType>
     </Compile>
     <Compile Include="frmSaveFile.Designer.vb">
