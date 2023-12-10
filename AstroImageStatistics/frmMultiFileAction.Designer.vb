@@ -34,6 +34,14 @@ Partial Class frmMultiFileAction
         Me.tpFITSHeader = New System.Windows.Forms.TabPage()
         Me.tbFITSHeader = New System.Windows.Forms.TextBox()
         Me.tbCombinedROI = New System.Windows.Forms.TabPage()
+        Me.cbCalculateROI = New System.Windows.Forms.CheckBox()
+        Me.pbImage = New AstroImageStatistics.PictureBoxEx()
+        Me.tbSinglePixelStat = New System.Windows.Forms.TabPage()
+        Me.tbPixelStat = New System.Windows.Forms.TextBox()
+        Me.Label3 = New System.Windows.Forms.Label()
+        Me.Label2 = New System.Windows.Forms.Label()
+        Me.tbPosY = New System.Windows.Forms.TextBox()
+        Me.tbPosX = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
         Me.tbLog = New System.Windows.Forms.TextBox()
         Me.msMain = New System.Windows.Forms.MenuStrip()
@@ -49,10 +57,9 @@ Partial Class frmMultiFileAction
         Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
         Me.ClearLogToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAction_Stack = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ofdMain = New System.Windows.Forms.OpenFileDialog()
-        Me.pbImage = New AstroImageStatistics.PictureBoxEx()
         Me.SetModeToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.StoreAlignedFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ofdMain = New System.Windows.Forms.OpenFileDialog()
         CType(Me.adgvMain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.scMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.scMain.Panel1.SuspendLayout()
@@ -68,8 +75,9 @@ Partial Class frmMultiFileAction
         Me.tcAspect.SuspendLayout()
         Me.tpFITSHeader.SuspendLayout()
         Me.tbCombinedROI.SuspendLayout()
-        Me.msMain.SuspendLayout()
         CType(Me.pbImage, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.tbSinglePixelStat.SuspendLayout()
+        Me.msMain.SuspendLayout()
         Me.SuspendLayout()
         '
         'adgvMain
@@ -188,6 +196,7 @@ Partial Class frmMultiFileAction
             Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
         Me.tcAspect.Controls.Add(Me.tpFITSHeader)
         Me.tcAspect.Controls.Add(Me.tbCombinedROI)
+        Me.tcAspect.Controls.Add(Me.tbSinglePixelStat)
         Me.tcAspect.Location = New System.Drawing.Point(6, 19)
         Me.tcAspect.Name = "tcAspect"
         Me.tcAspect.SelectedIndex = 0
@@ -222,6 +231,7 @@ Partial Class frmMultiFileAction
         'tbCombinedROI
         '
         Me.tbCombinedROI.BackColor = System.Drawing.SystemColors.Control
+        Me.tbCombinedROI.Controls.Add(Me.cbCalculateROI)
         Me.tbCombinedROI.Controls.Add(Me.pbImage)
         Me.tbCombinedROI.Location = New System.Drawing.Point(4, 22)
         Me.tbCombinedROI.Name = "tbCombinedROI"
@@ -229,6 +239,90 @@ Partial Class frmMultiFileAction
         Me.tbCombinedROI.Size = New System.Drawing.Size(898, 338)
         Me.tbCombinedROI.TabIndex = 1
         Me.tbCombinedROI.Text = "Combined ROI"
+        '
+        'cbCalculateROI
+        '
+        Me.cbCalculateROI.AutoSize = True
+        Me.cbCalculateROI.Location = New System.Drawing.Point(7, 7)
+        Me.cbCalculateROI.Name = "cbCalculateROI"
+        Me.cbCalculateROI.Size = New System.Drawing.Size(60, 17)
+        Me.cbCalculateROI.TabIndex = 6
+        Me.cbCalculateROI.Text = "Display"
+        Me.cbCalculateROI.UseVisualStyleBackColor = True
+        '
+        'pbImage
+        '
+        Me.pbImage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
+            Or System.Windows.Forms.AnchorStyles.Left) _
+            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
+        Me.pbImage.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
+        Me.pbImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor
+        Me.pbImage.Location = New System.Drawing.Point(3, 30)
+        Me.pbImage.Name = "pbImage"
+        Me.pbImage.Size = New System.Drawing.Size(889, 305)
+        Me.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
+        Me.pbImage.TabIndex = 5
+        Me.pbImage.TabStop = False
+        '
+        'tbSinglePixelStat
+        '
+        Me.tbSinglePixelStat.BackColor = System.Drawing.SystemColors.Control
+        Me.tbSinglePixelStat.Controls.Add(Me.tbPixelStat)
+        Me.tbSinglePixelStat.Controls.Add(Me.Label3)
+        Me.tbSinglePixelStat.Controls.Add(Me.Label2)
+        Me.tbSinglePixelStat.Controls.Add(Me.tbPosY)
+        Me.tbSinglePixelStat.Controls.Add(Me.tbPosX)
+        Me.tbSinglePixelStat.Location = New System.Drawing.Point(4, 22)
+        Me.tbSinglePixelStat.Name = "tbSinglePixelStat"
+        Me.tbSinglePixelStat.Padding = New System.Windows.Forms.Padding(3)
+        Me.tbSinglePixelStat.Size = New System.Drawing.Size(898, 338)
+        Me.tbSinglePixelStat.TabIndex = 2
+        Me.tbSinglePixelStat.Text = "Single pixel statistics"
+        '
+        'tbPixelStat
+        '
+        Me.tbPixelStat.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
+        Me.tbPixelStat.Location = New System.Drawing.Point(157, 16)
+        Me.tbPixelStat.Multiline = True
+        Me.tbPixelStat.Name = "tbPixelStat"
+        Me.tbPixelStat.ScrollBars = System.Windows.Forms.ScrollBars.Both
+        Me.tbPixelStat.Size = New System.Drawing.Size(735, 316)
+        Me.tbPixelStat.TabIndex = 4
+        Me.tbPixelStat.WordWrap = False
+        '
+        'Label3
+        '
+        Me.Label3.AutoSize = True
+        Me.Label3.Location = New System.Drawing.Point(17, 45)
+        Me.Label3.Name = "Label3"
+        Me.Label3.Size = New System.Drawing.Size(54, 13)
+        Me.Label3.TabIndex = 3
+        Me.Label3.Text = "Position Y"
+        '
+        'Label2
+        '
+        Me.Label2.AutoSize = True
+        Me.Label2.Location = New System.Drawing.Point(17, 19)
+        Me.Label2.Name = "Label2"
+        Me.Label2.Size = New System.Drawing.Size(54, 13)
+        Me.Label2.TabIndex = 2
+        Me.Label2.Text = "Position X"
+        '
+        'tbPosY
+        '
+        Me.tbPosY.Location = New System.Drawing.Point(77, 42)
+        Me.tbPosY.Name = "tbPosY"
+        Me.tbPosY.Size = New System.Drawing.Size(74, 20)
+        Me.tbPosY.TabIndex = 1
+        Me.tbPosY.Text = "10"
+        '
+        'tbPosX
+        '
+        Me.tbPosX.Location = New System.Drawing.Point(77, 16)
+        Me.tbPosX.Name = "tbPosX"
+        Me.tbPosX.Size = New System.Drawing.Size(74, 20)
+        Me.tbPosX.TabIndex = 0
+        Me.tbPosX.Text = "10"
         '
         'Label1
         '
@@ -315,56 +409,42 @@ Partial Class frmMultiFileAction
         'tsmiAction_Run
         '
         Me.tsmiAction_Run.Name = "tsmiAction_Run"
-        Me.tsmiAction_Run.Size = New System.Drawing.Size(180, 22)
+        Me.tsmiAction_Run.Size = New System.Drawing.Size(178, 22)
         Me.tsmiAction_Run.Text = "Run"
         '
         'ToolStripMenuItem2
         '
         Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(177, 6)
+        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(175, 6)
         '
         'ClearLogToolStripMenuItem
         '
         Me.ClearLogToolStripMenuItem.Name = "ClearLogToolStripMenuItem"
-        Me.ClearLogToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.ClearLogToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.ClearLogToolStripMenuItem.Text = "Clear log"
         '
         'tsmiAction_Stack
         '
         Me.tsmiAction_Stack.Name = "tsmiAction_Stack"
-        Me.tsmiAction_Stack.Size = New System.Drawing.Size(180, 22)
+        Me.tsmiAction_Stack.Size = New System.Drawing.Size(178, 22)
         Me.tsmiAction_Stack.Text = "Stack (special code)"
-        '
-        'ofdMain
-        '
-        Me.ofdMain.FileName = "OpenFileDialog1"
-        '
-        'pbImage
-        '
-        Me.pbImage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pbImage.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.pbImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor
-        Me.pbImage.Location = New System.Drawing.Point(3, 3)
-        Me.pbImage.Name = "pbImage"
-        Me.pbImage.Size = New System.Drawing.Size(889, 332)
-        Me.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.pbImage.TabIndex = 5
-        Me.pbImage.TabStop = False
         '
         'SetModeToolStripMenuItem
         '
         Me.SetModeToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.StoreAlignedFilesToolStripMenuItem})
         Me.SetModeToolStripMenuItem.Name = "SetModeToolStripMenuItem"
-        Me.SetModeToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.SetModeToolStripMenuItem.Size = New System.Drawing.Size(178, 22)
         Me.SetModeToolStripMenuItem.Text = "Set mode"
         '
         'StoreAlignedFilesToolStripMenuItem
         '
         Me.StoreAlignedFilesToolStripMenuItem.Name = "StoreAlignedFilesToolStripMenuItem"
-        Me.StoreAlignedFilesToolStripMenuItem.Size = New System.Drawing.Size(180, 22)
+        Me.StoreAlignedFilesToolStripMenuItem.Size = New System.Drawing.Size(167, 22)
         Me.StoreAlignedFilesToolStripMenuItem.Text = "Store aligned files"
+        '
+        'ofdMain
+        '
+        Me.ofdMain.FileName = "OpenFileDialog1"
         '
         'frmMultiFileAction
         '
@@ -394,9 +474,12 @@ Partial Class frmMultiFileAction
         Me.tpFITSHeader.ResumeLayout(False)
         Me.tpFITSHeader.PerformLayout()
         Me.tbCombinedROI.ResumeLayout(False)
+        Me.tbCombinedROI.PerformLayout()
+        CType(Me.pbImage, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.tbSinglePixelStat.ResumeLayout(False)
+        Me.tbSinglePixelStat.PerformLayout()
         Me.msMain.ResumeLayout(False)
         Me.msMain.PerformLayout()
-        CType(Me.pbImage, System.ComponentModel.ISupportInitialize).EndInit()
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -432,4 +515,11 @@ Partial Class frmMultiFileAction
     Friend WithEvents tbCombinedROI As TabPage
     Friend WithEvents SetModeToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents StoreAlignedFilesToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents cbCalculateROI As CheckBox
+    Friend WithEvents tbSinglePixelStat As TabPage
+    Friend WithEvents Label3 As Label
+    Friend WithEvents Label2 As Label
+    Friend WithEvents tbPosY As TextBox
+    Friend WithEvents tbPosX As TextBox
+    Friend WithEvents tbPixelStat As TextBox
 End Class

@@ -256,6 +256,9 @@
     <Compile Include="..\..\MyFramework\AsImProc.vb">
       <Link>MyFramework\AsImProc.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\AstroDSP.vb">
+      <Link>MyLib\AstroDSP.vb</Link>
+    </Compile>
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
     </Compile>

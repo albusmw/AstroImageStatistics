@@ -2239,4 +2239,20 @@ Public Class MainForm
         MyForm.Show()
     End Sub
 
+    Private Sub SigmaClipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SigmaClipToolStripMenuItem.Click
+        Dim TestClass As New AstroDSP.cSigmaClipped
+        Dim Samples(999) As UInt16
+        Dim RndGen As New Random
+        For Idx As Integer = 0 To Samples.GetUpperBound(0)
+            Samples(Idx) = CType(RndGen.Next(1000, 2000), UInt16)
+        Next Idx
+        Samples(4) = 20000
+        Samples(66) = 0
+        For LoopIdx As Integer = 1 To 10000
+            Dim PixelRemoved As Integer = 0
+            Dim NewMean As Double = TestClass.SigmaClipped_mean(Samples, PixelRemoved)
+        Next LoopIdx
+        MsgBox("OK")
+    End Sub
+
 End Class

@@ -133,6 +133,7 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
+        Me.SigmaClipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -423,7 +424,7 @@ Partial Class MainForm
         Me.tsmiAnalysis_MultiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_MultiFile_Open, Me.tsmiAnalysis_MultiFile_LoadAbove})
         Me.tsmiAnalysis_MultiFile.Name = "tsmiAnalysis_MultiFile"
         Me.tsmiAnalysis_MultiFile.Size = New System.Drawing.Size(261, 22)
-        Me.tsmiAnalysis_MultiFile.Text = "Multi-file statistics"
+        Me.tsmiAnalysis_MultiFile.Text = "Multi-file pixelwise statistics"
         '
         'tsmiAnalysis_MultiFile_Open
         '
@@ -544,7 +545,7 @@ Partial Class MainForm
         '
         'tsmiTest
         '
-        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tssmRadCollimation, Me.tsmiTest_ReadNEFFile, Me.tsmiTest_ippiXCorr, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw})
+        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tssmRadCollimation, Me.tsmiTest_ReadNEFFile, Me.tsmiTest_ippiXCorr, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw, Me.SigmaClipToolStripMenuItem})
         Me.tsmiTest.Name = "tsmiTest"
         Me.tsmiTest.Size = New System.Drawing.Size(68, 22)
         Me.tsmiTest.Text = "Test code"
@@ -885,6 +886,12 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
+        'SigmaClipToolStripMenuItem
+        '
+        Me.SigmaClipToolStripMenuItem.Name = "SigmaClipToolStripMenuItem"
+        Me.SigmaClipToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
+        Me.SigmaClipToolStripMenuItem.Text = "Sigma clip"
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1032,4 +1039,5 @@ Partial Class MainForm
     Friend WithEvents tsmiAnalysis_FindStars As ToolStripMenuItem
     Friend WithEvents tsmiProc_Bin2OpenCV As ToolStripMenuItem
     Friend WithEvents tsmiTest_ippiXCorr As ToolStripMenuItem
+    Friend WithEvents SigmaClipToolStripMenuItem As ToolStripMenuItem
 End Class

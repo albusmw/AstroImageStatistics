@@ -1,5 +1,6 @@
 ﻿Option Explicit On
 Option Strict On
+Imports AstroImageStatistics.cColorMaps
 
 Partial Public Class frmMultiFileAction
 
@@ -7,9 +8,10 @@ Partial Public Class frmMultiFileAction
 
         Private Const Cat_generic As String = "1.) Generic settings"
         Private Const Cat_processing As String = "2.) Processing"
-        Private Const Cat_stack As String = "3.) Stacking and alignment"
-        Private Const Cat_ROIDisplay As String = "4.) ROI display"
-        Private Const Cat_statistics As String = "5.) Statistics"
+        Private Const Cat_alignment As String = "3.) Alignment"
+        Private Const Cat_CutLimitation As String = "4.) Cut limitations"
+        Private Const Cat_ROIDisplay As String = "5.) ROI display"
+        Private Const Cat_statistics As String = "6.) Statistics"
 
         '=======================================================================================================
 
@@ -55,7 +57,21 @@ Partial Public Class frmMultiFileAction
         Private MyGen_OutputFilefloat32 As String = "Stacked_float32.fits"
 
         <ComponentModel.Category(Cat_generic)>
-        <ComponentModel.DisplayName("d) Auto-open stack files")>
+        <ComponentModel.DisplayName("d) Output file - sigma-clipped")>
+        <ComponentModel.Description("Output file")>
+        <ComponentModel.DefaultValue("Stacked_SigmaClip.fits")>
+        Public Property Gen_OutputFileSigmaClip As String
+            Get
+                Return MyGen_OutputFileSigmaClip
+            End Get
+            Set(value As String)
+                MyGen_OutputFileSigmaClip = value
+            End Set
+        End Property
+        Private MyGen_OutputFileSigmaClip As String = "Stacked_SigmaClip.fits"
+
+        <ComponentModel.Category(Cat_generic)>
+        <ComponentModel.DisplayName("e) Auto-open stack files")>
         <ComponentModel.Description("Open stacked file on finish?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(True)>
@@ -117,8 +133,23 @@ Partial Public Class frmMultiFileAction
         Private MyProcessing_CalcStackedFile As Boolean = True
 
         <ComponentModel.Category(Cat_processing)>
-        <ComponentModel.DisplayName("d) Store aligned files")>
-        <ComponentModel.Description("Store each file as new aligned file?")>
+        <ComponentModel.DisplayName("d) Calculate sigmaclip stack")>
+        <ComponentModel.Description("Calculate sigmaclip stacked file?")>
+        <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
+        <ComponentModel.DefaultValue(False)>
+        Public Property Processing_CalcSigmaClip As Boolean
+            Get
+                Return MyProcessing_Calcsigmaclip
+            End Get
+            Set(value As Boolean)
+                MyProcessing_Calcsigmaclip = value
+            End Set
+        End Property
+        Private MyProcessing_CalcSigmaClip As Boolean = False
+
+        <ComponentModel.Category(Cat_processing)>
+        <ComponentModel.DisplayName("e) Store individual aligned files")>
+        <ComponentModel.Description("Store each individual file as new aligned file?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(False)>
         Public Property Processing_StoreAlignedFiles As Boolean
@@ -133,7 +164,7 @@ Partial Public Class frmMultiFileAction
 
         '=======================================================================================================
 
-        <ComponentModel.Category(Cat_stack)>
+        <ComponentModel.Category(Cat_alignment)>
         <ComponentModel.DisplayName("a) Run Bin2 on input data?")>
         <ComponentModel.Description("Run Bin2 with max removal?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
@@ -148,7 +179,7 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStack_RunBin2 As Boolean = True
 
-        <ComponentModel.Category(Cat_stack)>
+        <ComponentModel.Category(Cat_alignment)>
         <ComponentModel.DisplayName("b) XCorr segmentation")>
         <ComponentModel.Description("Segments per smaller axis for XCorr")>
         <ComponentModel.DefaultValue(4)>
@@ -162,7 +193,7 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStack_XCorrSegmentation As Integer = 4
 
-        <ComponentModel.Category(Cat_stack)>
+        <ComponentModel.Category(Cat_alignment)>
         <ComponentModel.DisplayName("c) XCorr tile reduction")>
         <ComponentModel.Description("Pixel to make tile smaller - equals to maximum shift")>
         <ComponentModel.DefaultValue(50)>
@@ -176,7 +207,7 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStack_TlpReduction As Integer = 50
 
-        <ComponentModel.Category(Cat_stack)>
+        <ComponentModel.Category(Cat_alignment)>
         <ComponentModel.DisplayName("d) Shift margin")>
         <ComponentModel.Description("Shift margin for match all ROIs to 1 big image")>
         <ComponentModel.DefaultValue(20)>
@@ -189,6 +220,64 @@ Partial Public Class frmMultiFileAction
             End Set
         End Property
         Private MyStack_ShiftMargin As Integer = 20
+
+        '=======================================================================================================
+
+        <ComponentModel.Category(Cat_CutLimitation)>
+        <ComponentModel.DisplayName("a) Left limit")>
+        <ComponentModel.Description("Left limit")>
+        <ComponentModel.DefaultValue(0)>
+        Public Property CutLimit_Left As Integer
+            Get
+                Return MyCutLimit_Left
+            End Get
+            Set(value As Integer)
+                MyCutLimit_Left = value
+            End Set
+        End Property
+        Private MyCutLimit_Left As Integer = 0
+
+        <ComponentModel.Category(Cat_CutLimitation)>
+        <ComponentModel.DisplayName("b) Right limit")>
+        <ComponentModel.Description("Right limit")>
+        <ComponentModel.DefaultValue(100000)>
+        Public Property CutLimit_Right As Integer
+            Get
+                Return MyCutLimit_Right
+            End Get
+            Set(value As Integer)
+                MyCutLimit_Right = value
+            End Set
+        End Property
+        Private MyCutLimit_Right As Integer = 100000
+
+        <ComponentModel.Category(Cat_CutLimitation)>
+        <ComponentModel.DisplayName("c) Top limit")>
+        <ComponentModel.Description("Top limit")>
+        <ComponentModel.DefaultValue(0)>
+        Public Property CutLimit_Top As Integer
+            Get
+                Return MyCutLimit_Top
+            End Get
+            Set(value As Integer)
+                MyCutLimit_Top = value
+            End Set
+        End Property
+        Private MyCutLimit_Top As Integer = 0
+
+        <ComponentModel.Category(Cat_CutLimitation)>
+        <ComponentModel.DisplayName("d) Bottom limit")>
+        <ComponentModel.Description("Bottom limit")>
+        <ComponentModel.DefaultValue(100000)>
+        Public Property CutLimit_Bottom As Integer
+            Get
+                Return MyCutLimit_Bottom
+            End Get
+            Set(value As Integer)
+                MyCutLimit_Bottom = value
+            End Set
+        End Property
+        Private MyCutLimit_Bottom As Integer = 100000
 
         '=======================================================================================================
 
@@ -275,6 +364,20 @@ Partial Public Class frmMultiFileAction
             End Set
         End Property
         Private MyStack_ROIDisplay_MouseWheelSteps As Integer = 5
+
+        <ComponentModel.Category(Cat_ROIDisplay)>
+        <ComponentModel.DisplayName("g) Color mode")>
+        <ComponentModel.Description("Color mode")>
+        <ComponentModel.DefaultValue(eMaps.Hot)>
+        Public Property Stack_ROIDisplay_ColorMode As eMaps
+            Get
+                Return MyStack_ROIDisplay_ColorMode
+            End Get
+            Set(value As eMaps)
+                MyStack_ROIDisplay_ColorMode = value
+            End Set
+        End Property
+        Private MyStack_ROIDisplay_ColorMode As eMaps = eMaps.FalseColor
 
         '=======================================================================================================
 
