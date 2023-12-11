@@ -85,9 +85,9 @@ Partial Public Class frmMultiFileAction
         End With
     End Sub
 
-    '''<summary>Handle the prop of files.</summary>
+    '''<summary>Add files to the list.</summary>
     '''<param name="NewFiles">Files that should be added.</param>
-    Private Sub AddFiles(NewFiles() As String)
+    Private Sub AddFiles(NewFiles As IEnumerable(Of String))
         'Handle drag-and-drop for all dropped FIT(s) files
         For Each File As String In NewFiles
             If System.IO.Path.GetExtension(File).ToUpper.StartsWith(".FIT") Then
@@ -245,7 +245,7 @@ Partial Public Class frmMultiFileAction
         UpdateTable()
     End Sub
 
-    Private Sub tsmiFile_OpenStackDir_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenStackDir.Click
+    Private Sub tsmiFile_OpenWorkingDir_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenWorkingDir.Click
         Process.Start(Config.Gen_root)
     End Sub
 
@@ -379,7 +379,7 @@ Partial Public Class frmMultiFileAction
                 Dim NewROIs As New Dictionary(Of String, Rectangle)
                 For Each FileName As String In CutROIs.Keys
                     NewROIs.Add(FileName, CutROIs(FileName).ExpandRight(1))      'Calculate all new ROIs by expanding to the right
-                    If NewROIs(FileName).Right > AllListFiles(FileName).NAXIS1 - 1 Then Exit Do
+                    If NewROIs(FileName).Right > AllListFiles(FileName).NAXIS1 Then Exit Do
                     If NewROIs(FileName).Right > Config.CutLimit_Right Then Exit Do
                 Next FileName
                 'Copy new ROIs if they are valid
@@ -391,7 +391,7 @@ Partial Public Class frmMultiFileAction
                 Dim NewROIs As New Dictionary(Of String, Rectangle)
                 For Each FileName As String In CutROIs.Keys
                     NewROIs.Add(FileName, CutROIs(FileName).ExpandBottom(1))      'Calculate all new ROIs by expanding to the bottom
-                    If NewROIs(FileName).Bottom > AllListFiles(FileName).NAXIS2 - 1 Then Exit Do
+                    If NewROIs(FileName).Bottom > AllListFiles(FileName).NAXIS2 Then Exit Do
                     If NewROIs(FileName).Bottom > Config.CutLimit_Bottom Then Exit Do
                 Next FileName
                 'Copy new ROIs if they are valid
@@ -400,6 +400,7 @@ Partial Public Class frmMultiFileAction
 
             'Last.) Generate new files
             Dim FileIdx As Integer = -1
+            Dim AlignFolder As String = String.Empty
             For Each FileToProcess As String In GetCheckedFiles()
                 FileIdx += 1
                 MarkFile(FileToProcess, Color.Red)
@@ -411,14 +412,18 @@ Partial Public Class frmMultiFileAction
                     Dim DataAsUInt32(,) As UInt32 = {} : AIS.DB.IPP.Convert(FileROI, DataAsUInt32)
                     AIS.DB.IPP.Add(DataAsUInt32, Stacked_UInt32)
                 End If
-                'Store data (if required)
+                'Store data if a sigma clipping should be applied
                 If Config.Processing_CalcSigmaClip = True Then
                     SigmaClipROIs(FileIdx) = New c2D(Of UShort)(FileROI)
                 End If
+                'Generate folder
+                If FileIdx = 0 Then
+                    AlignFolder = System.IO.Path.Combine(Config.Gen_root, System.IO.Path.GetFileNameWithoutExtension(FileToProcess) & "_aligned")
+                    If System.IO.Directory.Exists(AlignFolder) = False Then System.IO.Directory.CreateDirectory(AlignFolder)
+                End If
                 'Store aligned file (if selected)
                 If Config.Processing_StoreAlignedFiles = True Then
-                    Dim FileNameOnly As String = System.IO.Path.GetFileName(FileToProcess)
-                    Dim NewFile As String = System.IO.Path.Combine("C:\!Astro\!DSC\NGC3372\Aligned", FileNameOnly)
+                    Dim NewFile As String = System.IO.Path.Combine(AlignFolder, System.IO.Path.GetFileName(FileToProcess))
                     cFITSWriter.Write(NewFile, FileROI, cFITSWriter.eBitPix.Int16)
                 End If
                 MarkFile(FileToProcess, Color.Green)
@@ -432,7 +437,7 @@ Partial Public Class frmMultiFileAction
             Dim NAXIS1 As Integer = SigmaClipROIs(0).Matrix.GetUpperBound(0) - 1
             Dim NAXIS2 As Integer = SigmaClipROIs(0).Matrix.GetUpperBound(1) - 1
             Dim Calculated(NAXIS1 - 1, NAXIS2 - 1) As Double
-            Dim Avg As New AstroDSP.cSigmaClipped
+            Dim SigmaClipped As New AstroDSP.cSigmaClipped(Config.Stack_SigClip_LowBound, Config.Stack_SigClip_HighBound)
             For Idx1 As Integer = 0 To Calculated.GetUpperBound(0)
                 For Idx2 As Integer = 0 To Calculated.GetUpperBound(1)
                     Dim IgnoredPixel As Integer = 0
@@ -440,7 +445,7 @@ Partial Public Class frmMultiFileAction
                     For FileIdx As Integer = 0 To SigmaClipROIs.GetUpperBound(0) - 1
                         Samples(FileIdx) = SigmaClipROIs(FileIdx).Matrix(Idx1, Idx2)
                     Next FileIdx
-                    Calculated(Idx1, Idx2) = Avg.SigmaClipped_mean(Samples, IgnoredPixel)
+                    Calculated(Idx1, Idx2) = SigmaClipped.SigmaClipped_mean(Samples, IgnoredPixel)
                 Next Idx2
             Next Idx1
             Dim StackFileName_SigmaClip As String = IO.Path.Combine(Config.Gen_root, Config.Gen_OutputFileSigmaClip)
@@ -524,7 +529,9 @@ Partial Public Class frmMultiFileAction
             .Filter = "FITS files (*.fit|*.fits)|*.fit?"
             .Multiselect = True
             If .ShowDialog = DialogResult.OK Then
-                AddFiles(.FileNames)
+                Dim SortedList As New List(Of String)(.FileNames)
+                SortedList.Sort()
+                AddFiles(SortedList)
             End If
         End With
     End Sub
@@ -549,7 +556,8 @@ Partial Public Class frmMultiFileAction
         Try
             'Drop files direct from the explorer
             If DropContent.ContainsKey("FileDrop") Then
-                Dim DroppedFiles As String() = CType(DropContent("FileDrop"), String())
+                Dim DroppedFiles As New List(Of String) : DroppedFiles.AddRange(CType(DropContent("FileDrop"), String()))
+                DroppedFiles.Sort()
                 AddFiles(DroppedFiles)
             End If
             'Drop text file that contains file paths

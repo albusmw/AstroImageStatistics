@@ -47,7 +47,7 @@ Partial Class frmMultiFileAction
         Me.msMain = New System.Windows.Forms.MenuStrip()
         Me.FileToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.AddFilesToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiFile_OpenStackDir = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiFile_OpenWorkingDir = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsmiFile_Exit = New System.Windows.Forms.ToolStripMenuItem()
         Me.FileListToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
@@ -358,7 +358,7 @@ Partial Class frmMultiFileAction
         '
         'FileToolStripMenuItem
         '
-        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddFilesToolStripMenuItem, Me.tsmiFile_OpenStackDir, Me.ToolStripMenuItem1, Me.tsmiFile_Exit})
+        Me.FileToolStripMenuItem.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AddFilesToolStripMenuItem, Me.tsmiFile_OpenWorkingDir, Me.ToolStripMenuItem1, Me.tsmiFile_Exit})
         Me.FileToolStripMenuItem.Name = "FileToolStripMenuItem"
         Me.FileToolStripMenuItem.Size = New System.Drawing.Size(37, 20)
         Me.FileToolStripMenuItem.Text = "File"
@@ -366,24 +366,24 @@ Partial Class frmMultiFileAction
         'AddFilesToolStripMenuItem
         '
         Me.AddFilesToolStripMenuItem.Name = "AddFilesToolStripMenuItem"
-        Me.AddFilesToolStripMenuItem.Size = New System.Drawing.Size(200, 22)
+        Me.AddFilesToolStripMenuItem.Size = New System.Drawing.Size(199, 22)
         Me.AddFilesToolStripMenuItem.Text = "Add file(s)"
         '
-        'tsmiFile_OpenStackDir
+        'tsmiFile_OpenWorkingDir
         '
-        Me.tsmiFile_OpenStackDir.Name = "tsmiFile_OpenStackDir"
-        Me.tsmiFile_OpenStackDir.Size = New System.Drawing.Size(200, 22)
-        Me.tsmiFile_OpenStackDir.Text = "Open stacking directory"
+        Me.tsmiFile_OpenWorkingDir.Name = "tsmiFile_OpenWorkingDir"
+        Me.tsmiFile_OpenWorkingDir.Size = New System.Drawing.Size(199, 22)
+        Me.tsmiFile_OpenWorkingDir.Text = "Open working directory"
         '
         'ToolStripMenuItem1
         '
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(197, 6)
+        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(196, 6)
         '
         'tsmiFile_Exit
         '
         Me.tsmiFile_Exit.Name = "tsmiFile_Exit"
-        Me.tsmiFile_Exit.Size = New System.Drawing.Size(200, 22)
+        Me.tsmiFile_Exit.Size = New System.Drawing.Size(199, 22)
         Me.tsmiFile_Exit.Text = "Exit"
         '
         'FileListToolStripMenuItem
@@ -499,7 +499,7 @@ Partial Class frmMultiFileAction
     Friend WithEvents pgMain As PropertyGrid
     Friend WithEvents FileListToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents ClearListToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents tsmiFile_OpenStackDir As ToolStripMenuItem
+    Friend WithEvents tsmiFile_OpenWorkingDir As ToolStripMenuItem
     Friend WithEvents ActionsToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsmiAction_Stack As ToolStripMenuItem
     Friend WithEvents tsmiAction_Run As ToolStripMenuItem

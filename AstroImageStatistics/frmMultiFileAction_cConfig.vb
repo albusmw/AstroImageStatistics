@@ -7,11 +7,12 @@ Partial Public Class frmMultiFileAction
     Public Class cConfig
 
         Private Const Cat_generic As String = "1.) Generic settings"
-        Private Const Cat_processing As String = "2.) Processing"
+        Private Const Cat_processing As String = "2.) Processing steps"
         Private Const Cat_alignment As String = "3.) Alignment"
         Private Const Cat_CutLimitation As String = "4.) Cut limitations"
-        Private Const Cat_ROIDisplay As String = "5.) ROI display"
-        Private Const Cat_statistics As String = "6.) Statistics"
+        Private Const Cat_stack As String = "5.) Stacking"
+        Private Const Cat_ROIDisplay As String = "6.) ROI display"
+        Private Const Cat_statistics As String = "7.) Statistics"
 
         '=======================================================================================================
 
@@ -278,6 +279,36 @@ Partial Public Class frmMultiFileAction
             End Set
         End Property
         Private MyCutLimit_Bottom As Integer = 100000
+
+        '=======================================================================================================
+
+        <ComponentModel.Category(Cat_stack)>
+        <ComponentModel.DisplayName("a) Sigma delta - low bound")>
+        <ComponentModel.Description("Values below (mean - <this value>*sigma) are ignored")>
+        <ComponentModel.DefaultValue(3.0)>
+        Public Property Stack_SigClip_LowBound As Double
+            Get
+                Return MyStack_SigClip_LowBound
+            End Get
+            Set(value As Double)
+                MyStack_SigClip_LowBound = value
+            End Set
+        End Property
+        Private MyStack_SigClip_LowBound As Double = 3.0
+
+        <ComponentModel.Category(Cat_stack)>
+        <ComponentModel.DisplayName("b) Sigma delta - high bound")>
+        <ComponentModel.Description("Values above (mean + <this value>*sigma) are ignored")>
+        <ComponentModel.DefaultValue(3.0)>
+        Public Property Stack_SigClip_HighBound As Double
+            Get
+                Return MyStack_SigClip_HighBound
+            End Get
+            Set(value As Double)
+                MyStack_SigClip_HighBound = value
+            End Set
+        End Property
+        Private MyStack_SigClip_HighBound As Double = 3.0
 
         '=======================================================================================================
 
