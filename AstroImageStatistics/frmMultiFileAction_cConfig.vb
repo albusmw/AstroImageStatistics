@@ -86,84 +86,55 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStat_OpenStackedFile As Boolean = True
 
-        '=======================================================================================================
+        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+        ' Processing steps
+        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_processing)>
         <ComponentModel.DisplayName("a) Calculate statistics")>
         <ComponentModel.Description("Calculate statistics for each file?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(True)>
-        Public Property Processing_CalcStatistics As Boolean
-            Get
-                Return MyProcessing_CalcStatistics
-            End Get
-            Set(value As Boolean)
-                MyProcessing_CalcStatistics = value
-            End Set
-        End Property
-        Private MyProcessing_CalcStatistics As Boolean = True
+        Public Property Processing_CalcStatistics As Boolean = True
 
         <ComponentModel.Category(Cat_processing)>
         <ComponentModel.DisplayName("b) Calculate alignment")>
         <ComponentModel.Description("Calculate alignment for each file?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(True)>
-        Public Property Processing_CalcAlignment As Boolean
-            Get
-                Return MyProcessing_CalcAlignment
-            End Get
-            Set(value As Boolean)
-                MyProcessing_CalcAlignment = value
-            End Set
-        End Property
-        Private MyProcessing_CalcAlignment As Boolean = True
+        Public Property Processing_CalcAlignment As Boolean = True
 
         <ComponentModel.Category(Cat_processing)>
         <ComponentModel.DisplayName("c) Calculate stacked file")>
         <ComponentModel.Description("Calculate stacked file?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(True)>
-        Public Property Processing_CalcStackedFile As Boolean
-            Get
-                Return MyProcessing_CalcStackedFile
-            End Get
-            Set(value As Boolean)
-                MyProcessing_CalcStackedFile = value
-            End Set
-        End Property
-        Private MyProcessing_CalcStackedFile As Boolean = True
+        Public Property Processing_CalcStackedFile As Boolean = True
 
         <ComponentModel.Category(Cat_processing)>
         <ComponentModel.DisplayName("d) Calculate sigmaclip stack")>
         <ComponentModel.Description("Calculate sigmaclip stacked file?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(False)>
-        Public Property Processing_CalcSigmaClip As Boolean
-            Get
-                Return MyProcessing_Calcsigmaclip
-            End Get
-            Set(value As Boolean)
-                MyProcessing_Calcsigmaclip = value
-            End Set
-        End Property
-        Private MyProcessing_CalcSigmaClip As Boolean = False
+        Public Property Processing_CalcSigmaClip As Boolean = False
 
         <ComponentModel.Category(Cat_processing)>
         <ComponentModel.DisplayName("e) Store individual aligned files")>
         <ComponentModel.Description("Store each individual file as new aligned file?")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(False)>
-        Public Property Processing_StoreAlignedFiles As Boolean
-            Get
-                Return MyProcessing_StoreAlignedFiles
-            End Get
-            Set(value As Boolean)
-                MyProcessing_StoreAlignedFiles = value
-            End Set
-        End Property
-        Private MyProcessing_StoreAlignedFiles As Boolean = False
+        Public Property Processing_StoreAlignedFiles As Boolean = False
 
-        '=======================================================================================================
+        <ComponentModel.Category(Cat_processing)>
+        <ComponentModel.DisplayName("f) Display FITS header")>
+        <ComponentModel.Description("Display FITS header on new file?")>
+        <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
+        <ComponentModel.DefaultValue(False)>
+        Public Property Processing_DisplayFITSHeader As Boolean = False
+
+        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+        ' Alignment
+        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_alignment)>
         <ComponentModel.DisplayName("a) Run Bin2 on input data?")>
@@ -222,7 +193,9 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStack_ShiftMargin As Integer = 20
 
-        '=======================================================================================================
+        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+        ' Cut range limitations
+        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_CutLimitation)>
         <ComponentModel.DisplayName("a) Left limit")>
@@ -280,7 +253,9 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyCutLimit_Bottom As Integer = 100000
 
-        '=======================================================================================================
+        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+        ' Stacking
+        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_stack)>
         <ComponentModel.DisplayName("a) Sigma delta - low bound")>
@@ -310,10 +285,40 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStack_SigClip_HighBound As Double = 3.0
 
-        '=======================================================================================================
+        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+        ' ROI display
+        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("a) Base X")>
+        <ComponentModel.DisplayName("a) Active")>
+        <ComponentModel.Description("Display the (combined) ROI; deactivate for more performance")>
+        <ComponentModel.DefaultValue(False)>
+        Public Property ROIDisplay_Active As Boolean
+            Get
+                Return MyROIDisplay_Active
+            End Get
+            Set(value As Boolean)
+                MyROIDisplay_Active = value
+            End Set
+        End Property
+        Private MyROIDisplay_Active As Boolean = False
+
+        <ComponentModel.Category(Cat_ROIDisplay)>
+        <ComponentModel.DisplayName("b) Display combined ROI")>
+        <ComponentModel.Description("Display a combined ROI with also the alignment applied")>
+        <ComponentModel.DefaultValue(False)>
+        Public Property ROIDisplay_CombinedROI As Boolean
+            Get
+                Return MyROIDisplay_CombinedROI
+            End Get
+            Set(value As Boolean)
+                MyROIDisplay_CombinedROI = value
+            End Set
+        End Property
+        Private MyROIDisplay_CombinedROI As Boolean = False
+
+        <ComponentModel.Category(Cat_ROIDisplay)>
+        <ComponentModel.DisplayName("c) Base X")>
         <ComponentModel.Description("Base X")>
         <ComponentModel.DefaultValue(1000)>
         Public Property ROIDisplay_X As Integer
@@ -327,7 +332,7 @@ Partial Public Class frmMultiFileAction
         Private MyROIDisplay_X As Integer = 1000
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("b) Base Y")>
+        <ComponentModel.DisplayName("d) Base Y")>
         <ComponentModel.Description("Base Y")>
         <ComponentModel.DefaultValue(1000)>
         Public Property ROIDisplay_Y As Integer
@@ -341,7 +346,7 @@ Partial Public Class frmMultiFileAction
         Private MyROIDisplay_Y As Integer = 1000
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("c) ROI display width")>
+        <ComponentModel.DisplayName("e) ROI display width")>
         <ComponentModel.Description("ROI display - width")>
         <ComponentModel.DefaultValue(200)>
         Public Property ROIDisplay_Width As Integer
@@ -355,7 +360,7 @@ Partial Public Class frmMultiFileAction
         Private MyROIDisplay_Width As Integer = 200
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("d) ROI display height")>
+        <ComponentModel.DisplayName("f) ROI display height")>
         <ComponentModel.Description("ROI display - height")>
         <ComponentModel.DefaultValue(200)>
         Public Property ROIDisplay_Height As Integer
@@ -369,7 +374,7 @@ Partial Public Class frmMultiFileAction
         Private MyROIDisplay_Height As Integer = 200
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("e) ROI display max mode")>
+        <ComponentModel.DisplayName("g) ROI display max mode")>
         <ComponentModel.Description("TRUE to get max of all ROI's, FALSE to get sum")>
         <ComponentModel.DefaultValue(True)>
         Public Property ROIDisplay_MaxMode As Boolean
@@ -383,7 +388,7 @@ Partial Public Class frmMultiFileAction
         Private MyROIDisplay_MaxMode As Boolean = True
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("f) ROI shift mouse wheel steps")>
+        <ComponentModel.DisplayName("h) ROI shift mouse wheel steps")>
         <ComponentModel.Description("ROI shift mouse wheel steps")>
         <ComponentModel.DefaultValue(5)>
         Public Property Stack_ROIDisplay_MouseWheelSteps As Integer
@@ -397,7 +402,7 @@ Partial Public Class frmMultiFileAction
         Private MyStack_ROIDisplay_MouseWheelSteps As Integer = 5
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("g) Color mode")>
+        <ComponentModel.DisplayName("i) Color mode")>
         <ComponentModel.Description("Color mode")>
         <ComponentModel.DefaultValue(eMaps.Hot)>
         Public Property Stack_ROIDisplay_ColorMode As eMaps
@@ -410,7 +415,9 @@ Partial Public Class frmMultiFileAction
         End Property
         Private MyStack_ROIDisplay_ColorMode As eMaps = eMaps.FalseColor
 
-        '=======================================================================================================
+        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+        ' Statistics
+        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_statistics)>
         <ComponentModel.DisplayName("a) Calculate histogram?")>
@@ -478,6 +485,32 @@ Partial Public Class frmMultiFileAction
             End Set
         End Property
         Private MyStat_StatSigmaFile As String = IO.Path.Combine(AIS.DB.MyPath, "Stack_sigma.fits")
+
+        <ComponentModel.Category(Cat_statistics)>
+        <ComponentModel.DisplayName("f) Single pixel statistics - X")>
+        <ComponentModel.Description("X coordinate of the single statistics display")>
+        Public Property Stat_SinglePixelX As Integer
+            Get
+                Return MyStat_SinglePixelX
+            End Get
+            Set(value As Integer)
+                MyStat_SinglePixelX = value
+            End Set
+        End Property
+        Private MyStat_SinglePixelX As Integer = 0
+
+        <ComponentModel.Category(Cat_statistics)>
+        <ComponentModel.DisplayName("g) Single pixel statistics - Y")>
+        <ComponentModel.Description("Y coordinate of the single statistics display")>
+        Public Property Stat_SinglePixelY As Integer
+            Get
+                Return MyStat_SinglePixelY
+            End Get
+            Set(value As Integer)
+                MyStat_SinglePixelY = value
+            End Set
+        End Property
+        Private MyStat_SinglePixelY As Integer = 0
 
     End Class
 
