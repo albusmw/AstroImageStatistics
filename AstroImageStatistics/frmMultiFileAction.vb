@@ -685,8 +685,8 @@ Partial Public Class frmMultiFileAction
         Dim StarImageSum_UInt16(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
         Dim StarImageSum_UInt32(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt32
         For Each File As String In FilesToLoad
-            Dim DeltaX As Integer = AllListFiles(File).DeltaX
-            Dim DeltaY As Integer = AllListFiles(File).DeltaY
+            Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = AllListFiles(File).DeltaX
+            Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = AllListFiles(File).DeltaY
             Data.ResetAllProcessors()
             Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
             Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File, UseIPP, ROI, ForceDirect)
