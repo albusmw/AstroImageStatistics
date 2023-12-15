@@ -527,7 +527,7 @@ Partial Public Class frmMultiFileAction
 
     Private Sub AddFilesToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles tsmiFile_AddFiles.Click
         With ofdMain
-            .Filter = "FITS files (*.fit|*.fits)|*.fit?"
+            .Filter = "FITS files (*.fit?)|*.fit?"
             .Multiselect = True
             If .ShowDialog = DialogResult.OK Then
                 Dim SortedList As New List(Of String)(.FileNames)
