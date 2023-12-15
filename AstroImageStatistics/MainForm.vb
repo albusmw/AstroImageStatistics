@@ -73,6 +73,32 @@ Public Class MainForm
     '''<param name="FileName">File to read in.</param>
     '''<param name="Container">Container for data and statistics.</param>
     '''<returns>Position where the data start.</returns>
+    Private Function LoadFileDataOnly(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As Integer
+
+        Dim FileNameOnly As String = System.IO.Path.GetFileName(FileName)
+        Running()
+
+        If AIS.DB.AutoClearLog = True Then
+            Log.Clear()
+        End If
+
+        Dim RecStat As New cFileEvalOut
+        If AIS.DB.UseIPP Then
+            Processing.LoadFITSFile(FileName, AIS.DB.IPP, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
+        Else
+            Processing.LoadFITSFile(FileName, Nothing, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
+        End If
+
+        'End
+        Idle()
+        Return RecStat.DataStartPos
+
+    End Function
+
+    '''<summary>Load the given file.</summary>
+    '''<param name="FileName">File to read in.</param>
+    '''<param name="Container">Container for data and statistics.</param>
+    '''<returns>Position where the data start.</returns>
     Private Function LoadFile(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As Integer
 
         Dim FileNameOnly As String = System.IO.Path.GetFileName(FileName)
@@ -2253,6 +2279,49 @@ Public Class MainForm
             Dim NewMean As Double = TestClass.SigmaClipped_mean(Samples, PixelRemoved)
         Next LoopIdx
         MsgBox("OK")
+    End Sub
+
+    Private Sub tsmiFile_ConvertTo16BitFITS_Click(sender As Object, e As EventArgs) Handles tsmiFile_ConvertTo16BitFITS.Click
+
+        'Select file
+        ofdMain.Filter = "FIT(s) files (FIT/FITS/FTS)|*.FIT;*.FITS;*.FTS"
+        If ofdMain.ShowDialog <> DialogResult.OK Then Exit Sub
+
+        'Load data
+        Dim FileContainer As AstroNET.Statistics = Nothing
+        LoadFileDataOnly(ofdMain.FileNames(0), FileContainer)
+
+        Dim X As String = FileContainer.Dimensions
+        Select Case FileContainer.DataType
+            Case eDataType.UInt16
+                'Is already UInt16 - do nothing
+                MsgBox("File is already 16-bit fixed point!")
+            Case eDataType.UInt32
+                'Downscale with full range
+                If sfdMain.ShowDialog <> DialogResult.OK Then Exit Sub
+                Dim Data_Min As UInt32 = UInt32.MaxValue
+                Dim Data_Max As UInt32 = UInt32.MinValue
+                Dim NewRange_Min As UInt16 = UInt16.MinValue
+                Dim NewRange_Max As UInt16 = UInt16.MaxValue
+                AIS.DB.IPP.MinMax(FileContainer.DataProcessor_UInt32.ImageData(0).Data, Data_Min, Data_Max)
+                Dim A As Double = (NewRange_Min - NewRange_Max) / (Data_Min - Data_Max)
+                Dim B As Double = NewRange_Max - (A * Data_Max)
+                Dim NewData(,) As UInt16 = FileContainer.DataProcessor_UInt32.ImageData(0).Data.ToUInt16(A, B)
+                cFITSWriter.Write(sfdMain.FileName, NewData, cFITSWriter.eBitPix.Int16)
+            Case eDataType.Float32
+                'Downscale with full range
+                If sfdMain.ShowDialog <> DialogResult.OK Then Exit Sub
+                Dim Data_Min As Single = Single.NaN
+                Dim Data_Max As Single = Single.NaN
+                Dim NewRange_Min As Double = UInt16.MinValue
+                Dim NewRange_Max As Double = UInt16.MaxValue
+                AIS.DB.IPP.MinMax(FileContainer.DataProcessor_Float32.ImageData(0).Data, Data_Min, Data_Max)
+                Dim A As Double = (NewRange_Min - NewRange_Max) / (Data_Min - Data_Max)
+                Dim B As Double = NewRange_Max - (A * Data_Max)
+                Dim NewData(,) As UInt16 = FileContainer.DataProcessor_Float32.ImageData(0).Data.ToUInt16(A, B)
+                cFITSWriter.Write(sfdMain.FileName, NewData, cFITSWriter.eBitPix.Int16)
+        End Select
+
     End Sub
 
 End Class

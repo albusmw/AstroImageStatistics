@@ -104,6 +104,7 @@ Partial Class MainForm
         Me.frmTest_HistoInteractive = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTestCode_StreamDeck = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsTest_LibRaw = New System.Windows.Forms.ToolStripMenuItem()
+        Me.SigmaClipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ALADINCoords = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ChangeHeader = New System.Windows.Forms.ToolStripMenuItem()
@@ -133,7 +134,7 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.SigmaClipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiFile_ConvertTo16BitFITS = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -161,7 +162,7 @@ Partial Class MainForm
         '
         'tsmiFile
         '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_Open, Me.tsmiFile_OpenRecent, Me.tsmiFile_OpenLastFile, Me.ToolStripMenuItem8, Me.tsmiFile_FITSGrep, Me.tsmiFile_AstroBinSearch, Me.ToolStripMenuItem11, Me.tsmiFile_Compress2nd, Me.ToolStripMenuItem2, Me.tsmiFile_SaveLastStat, Me.tsmiSaveAllFilesStat, Me.tsmiSaveFITSAndStats, Me.tsmiSaveImageData, Me.ToolStripMenuItem14, Me.tsmiFile_ClearStatMem, Me.ToolStripMenuItem1, Me.OpenEXELocationToolStripMenuItem, Me.ToolStripMenuItem5, Me.ExitToolStripMenuItem})
+        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_Open, Me.tsmiFile_OpenRecent, Me.tsmiFile_OpenLastFile, Me.ToolStripMenuItem8, Me.tsmiFile_FITSGrep, Me.tsmiFile_AstroBinSearch, Me.ToolStripMenuItem11, Me.tsmiFile_Compress2nd, Me.ToolStripMenuItem2, Me.tsmiFile_SaveLastStat, Me.tsmiSaveAllFilesStat, Me.tsmiSaveFITSAndStats, Me.tsmiSaveImageData, Me.tsmiFile_ConvertTo16BitFITS, Me.ToolStripMenuItem14, Me.tsmiFile_ClearStatMem, Me.ToolStripMenuItem1, Me.OpenEXELocationToolStripMenuItem, Me.ToolStripMenuItem5, Me.ExitToolStripMenuItem})
         Me.tsmiFile.Name = "tsmiFile"
         Me.tsmiFile.Size = New System.Drawing.Size(37, 22)
         Me.tsmiFile.Text = "File"
@@ -649,6 +650,12 @@ Partial Class MainForm
         Me.tsTest_LibRaw.Size = New System.Drawing.Size(274, 22)
         Me.tsTest_LibRaw.Text = "LibRaw access"
         '
+        'SigmaClipToolStripMenuItem
+        '
+        Me.SigmaClipToolStripMenuItem.Name = "SigmaClipToolStripMenuItem"
+        Me.SigmaClipToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
+        Me.SigmaClipToolStripMenuItem.Text = "Sigma clip"
+        '
         'tsmiTools
         '
         Me.tsmiTools.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiTools_ALADINCoords, Me.tsmiTools_ChangeHeader, Me.tsmiTools_RemoveOverscan, Me.tsmiTools_TestFile, Me.CheckROICutoutToolStripMenuItem})
@@ -886,11 +893,11 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'SigmaClipToolStripMenuItem
+        'tsmiFile_ConvertTo16BitFITS
         '
-        Me.SigmaClipToolStripMenuItem.Name = "SigmaClipToolStripMenuItem"
-        Me.SigmaClipToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
-        Me.SigmaClipToolStripMenuItem.Text = "Sigma clip"
+        Me.tsmiFile_ConvertTo16BitFITS.Name = "tsmiFile_ConvertTo16BitFITS"
+        Me.tsmiFile_ConvertTo16BitFITS.Size = New System.Drawing.Size(366, 22)
+        Me.tsmiFile_ConvertTo16BitFITS.Text = "Make file 16-bit FITS file"
         '
         'MainForm
         '
@@ -1040,4 +1047,5 @@ Partial Class MainForm
     Friend WithEvents tsmiProc_Bin2OpenCV As ToolStripMenuItem
     Friend WithEvents tsmiTest_ippiXCorr As ToolStripMenuItem
     Friend WithEvents SigmaClipToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiFile_ConvertTo16BitFITS As ToolStripMenuItem
 End Class
