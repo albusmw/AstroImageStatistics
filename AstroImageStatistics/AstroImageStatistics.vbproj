@@ -351,9 +351,6 @@
     <Compile Include="..\..\src\atomics\Everything.vb">
       <Link>common\Everything.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\Generics.vb">
-      <Link>common\Generics.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\ImageFileFormatSpecific.vb">
       <Link>common\ImageFileFormatSpecific.vb</Link>
     </Compile>
