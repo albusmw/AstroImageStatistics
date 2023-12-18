@@ -80,11 +80,11 @@ Public Class frmStacking
             'Load file
             Select Case ThisHeader.BitPix
                 Case 8
-                    AllImages(AllImagesIdx).DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt8(FileName, AIS.DB.UseIPP)
+                    AllImages(AllImagesIdx).DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt8(FileName, AIS.Config.UseIPP)
                 Case 16
-                    AllImages(AllImagesIdx).DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileName, AIS.DB.UseIPP, AIS.DB.ForceDirect)
+                    AllImages(AllImagesIdx).DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileName, AIS.Config.UseIPP, AIS.Config.ForceDirect)
                 Case 32
-                    AllImages(AllImagesIdx).DataProcessor_Int32.ImageData = FITSReader.ReadInInt32(FileName, AIS.DB.UseIPP)
+                    AllImages(AllImagesIdx).DataProcessor_Int32.ImageData = FITSReader.ReadInInt32(FileName, AIS.Config.UseIPP)
             End Select
 
             'Init memories

@@ -31,7 +31,7 @@ Public Class frmXvsYPlot
     Private Sub FillBox(ByRef Box As ComboBox)
         With Box
             .Items.Clear()
-            For Each Pattern As String In AIS.DB.BayerPatternNames
+            For Each Pattern As String In AIS.Config.BayerPatternNames
                 .Items.Add(Pattern)
             Next
         End With

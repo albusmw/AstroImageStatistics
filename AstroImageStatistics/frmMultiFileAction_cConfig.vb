@@ -1,5 +1,6 @@
 ﻿Option Explicit On
 Option Strict On
+Imports System.ComponentModel
 Imports AstroImageStatistics.cColorMaps
 
 Partial Public Class frmMultiFileAction
@@ -13,6 +14,19 @@ Partial Public Class frmMultiFileAction
         Private Const Cat_stack As String = "5.) Stacking"
         Private Const Cat_ROIDisplay As String = "6.) ROI display"
         Private Const Cat_statistics As String = "7.) Statistics"
+
+        Public Enum eROIDisplay
+            <Description("Off")>
+            Off
+            <Description("Selected file only")>
+            [Single]
+            <Description("All files - stacked - mean per pixel")>
+            Stacked_mean
+            <Description("All files - stacked - max per pixel")>
+            Stacked_max
+            <Description("All files - side-by-side")>
+            Mosaik
+        End Enum
 
         '=======================================================================================================
 
@@ -39,15 +53,7 @@ Partial Public Class frmMultiFileAction
         <ComponentModel.DisplayName("c) Output file - float32")>
         <ComponentModel.Description("Output file")>
         <ComponentModel.DefaultValue("Stacked_float32.fits")>
-        Public Property Gen_OutputFilefloat32 As String
-            Get
-                Return MyGen_OutputFilefloat32
-            End Get
-            Set(value As String)
-                MyGen_OutputFilefloat32 = value
-            End Set
-        End Property
-        Private MyGen_OutputFilefloat32 As String = "Stacked_float32.fits"
+        Public Property Gen_OutputFilefloat32 As String = "Stacked_float32.fits"
 
         <ComponentModel.Category(Cat_generic)>
         <ComponentModel.DisplayName("d) Output file - sigma-clipped")>
@@ -186,66 +192,52 @@ Partial Public Class frmMultiFileAction
         '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("a) Active")>
+        <ComponentModel.DisplayName("a) Mode")>
         <ComponentModel.Description("Display the (combined) ROI; deactivate for more performance")>
-        <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
-        <ComponentModel.DefaultValue(False)>
-        Public Property ROIDisplay_Active As Boolean = False
+        <ComponentModel.TypeConverter(GetType(ComponentModelEx.EnumDesciptionConverter))>
+        <ComponentModel.DefaultValue(eROIDisplay.Off)>
+        Public Property ROIDisplay_Mode As eROIDisplay = eROIDisplay.Off
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("b) Display combined ROI")>
-        <ComponentModel.Description("Display a combined ROI with also the alignment applied")>
-        <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
-        <ComponentModel.DefaultValue(False)>
-        Public Property ROIDisplay_CombinedROI As Boolean = False
-
-        <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("c) Use delta XY")>
+        <ComponentModel.DisplayName("b) Use delta XY")>
         <ComponentModel.Description("TRUE to use delta X and Y for ROI correction")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
         <ComponentModel.DefaultValue(True)>
         Public Property ROIDisplay_UseDeltaXY As Boolean = True
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("d) ROI display max mode")>
-        <ComponentModel.Description("TRUE to get max of all ROI's, FALSE to get sum")>
-        <ComponentModel.TypeConverter(GetType(ComponentModelEx.BooleanPropertyConverter_YesNo))>
-        <ComponentModel.DefaultValue(True)>
-        Public Property ROIDisplay_MaxMode As Boolean = True
-
-        <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("e) Color mode")>
+        <ComponentModel.DisplayName("d) Color mode")>
         <ComponentModel.Description("Color mode")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.EnumDesciptionConverter))>
         <ComponentModel.DefaultValue(eMaps.Hot)>
         Public Property Stack_ROIDisplay_ColorMode As eMaps = eMaps.FalseColor
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("f) Base X")>
+        <ComponentModel.DisplayName("e) Base X")>
         <ComponentModel.Description("Base X")>
         <ComponentModel.DefaultValue(1000)>
         Public Property ROIDisplay_X As Integer = 1000
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("g) Base Y")>
+        <ComponentModel.DisplayName("f) Base Y")>
         <ComponentModel.Description("Base Y")>
         <ComponentModel.DefaultValue(1000)>
         Public Property ROIDisplay_Y As Integer = 1000
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("h) ROI display width")>
+        <ComponentModel.DisplayName("g) ROI display width")>
         <ComponentModel.Description("ROI display - width")>
         <ComponentModel.DefaultValue(200)>
         Public Property ROIDisplay_Width As Integer = 200
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("i) ROI display height")>
+        <ComponentModel.DisplayName("h) ROI display height")>
         <ComponentModel.Description("ROI display - height")>
         <ComponentModel.DefaultValue(200)>
         Public Property ROIDisplay_Height As Integer = 200
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("j) ROI shift mouse wheel steps")>
+        <ComponentModel.DisplayName("i) ROI shift mouse wheel steps")>
         <ComponentModel.Description("ROI shift mouse wheel steps")>
         <ComponentModel.DefaultValue(5)>
         Public Property Stack_ROIDisplay_MouseWheelSteps As Integer = 5

@@ -2,8 +2,93 @@
 Option Strict On
 
 Public Class AIS
+
     Public Shared DB As New cDB
+    Public Shared Config As New cConfig
+
+    '''<summary>Get all (existing) files last loaded.</summary>
+    Public Shared Function GetRecentFiles() As List(Of String)
+        Dim FileNamesFile As String = System.IO.Path.Combine(DB.MyPath, Config.LastFiles)
+        Dim RetVal As New List(Of String)
+        If System.IO.File.Exists(FileNamesFile) Then
+            For Each Line As String In System.IO.File.ReadAllLines(FileNamesFile)
+                If System.IO.File.Exists(Line) Then RetVal.Add(Line)
+            Next Line
+        End If
+        Return RetVal
+    End Function
+
+    '''<summary>Get all (existing) files last loaded.</summary>
+    Public Shared Sub StoreRecentFile(ByVal NewFile As String)
+        Dim FileNamesFile As String = System.IO.Path.Combine(DB.MyPath, Config.LastFiles)
+        Dim FileContent As New List(Of String)
+        If System.IO.File.Exists(FileNamesFile) Then
+            For Each Line As String In System.IO.File.ReadAllLines(FileNamesFile)
+                FileContent.Add(Line)
+                If System.IO.Path.GetFullPath(Line) = System.IO.Path.GetFullPath(NewFile) Then
+                    Exit Sub                'file already in the list ...
+                End If
+            Next Line
+        End If
+        FileContent.Insert(0, NewFile)         'insert new file at top
+        System.IO.File.WriteAllLines(FileNamesFile, FileContent.ToArray)
+    End Sub
+
 End Class
+
+'''<summary>Properties of one loaded files.</summary>
+Public Class cFileProps
+    '''<summary>Loaded FITS header entries.</summary>
+    Public FITSHeader As Dictionary(Of eFITSKeywords, Object)
+    '''<summary>Data start position within the file.</summary>
+    Public DataStartPosition As Integer
+    '''<summary>Calculated statistics values.</summary>
+    Public Statistics As AstroNET.Statistics.sStatistics
+    '''<summary>Entered DeltaX.</summary>
+    Public DeltaX As Integer = 0
+    '''<summary>Entered DeltaY.</summary>
+    Public DeltaY As Integer = 0
+    '''<summary>Width from the FITS header info.</summary>
+    Public ReadOnly Property NAXIS1() As Integer
+        Get
+            If IsNothing(FITSHeader) Then Return -1
+            If FITSHeader.ContainsKey(eFITSKeywords.NAXIS1) = False Then Return -1
+            Return CType(FITSHeader(eFITSKeywords.NAXIS1), Integer)
+        End Get
+    End Property
+    '''<summary>Width from the FITS header info.</summary>
+    Public ReadOnly Property NAXIS2() As Integer
+        Get
+            If IsNothing(FITSHeader) Then Return -1
+            If FITSHeader.ContainsKey(eFITSKeywords.NAXIS2) = False Then Return -1
+            Return CType(FITSHeader(eFITSKeywords.NAXIS2), Integer)
+        End Get
+    End Property
+    '''<summary>DateTime from the FITS header info.</summary>
+    Public ReadOnly Property DateTime() As String
+        Get
+            If IsNothing(FITSHeader) Then Return String.Empty
+            If FITSHeader.ContainsKey(eFITSKeywords.DATE_OBS) = False Then Return String.Empty
+            Dim RetVal As String = CType(FITSHeader(eFITSKeywords.DATE_OBS), String)
+            If FITSHeader.ContainsKey(eFITSKeywords.TIME_OBS) = True Then RetVal &= "T" & CType(FITSHeader(eFITSKeywords.TIME_OBS), String)
+            Return RetVal
+        End Get
+    End Property
+End Class
+
+'''<summary>Detailed evaluation reults.</summary>
+Public Structure sFileEvalResults
+    '''<summary>Statistics for pixel with identical Y value.</summary>
+    Dim StatPerRow() As Ato.cSingleValueStatistics
+    '''<summary>Statistics for pixel with identical X value.</summary>
+    Dim StatPerCol() As Ato.cSingleValueStatistics
+    '''<summary>Raw vignette.</summary>
+    Public Vig_RawData As Dictionary(Of Double, Double)
+    '''<summary>Reduced and binned vignette.</summary>
+    Public Vig_BinUsedData As Dictionary(Of Double, Double)
+    '''<summary>Fitted vignette.</summary>
+    Public Vig_Fitting() As Double
+End Structure
 
 Public Class cDB
 
@@ -35,23 +120,21 @@ Public Class cDB
 
     Public Stars As New List(Of sSpecialPoint)
 
-
-    '''<summary>Detailed evaluation reults.</summary>
-    Public Structure sFileEvalResults
-        '''<summary>Statistics for pixel with identical Y value.</summary>
-        Dim StatPerRow() As Ato.cSingleValueStatistics
-        '''<summary>Statistics for pixel with identical X value.</summary>
-        Dim StatPerCol() As Ato.cSingleValueStatistics
-        '''<summary>Raw vignette.</summary>
-        Public Vig_RawData As Dictionary(Of Double, Double)
-        '''<summary>Reduced and binned vignette.</summary>
-        Public Vig_BinUsedData As Dictionary(Of Double, Double)
-        '''<summary>Fitted vignette.</summary>
-        Public Vig_Fitting() As Double
-    End Structure
-
     '''<summary>Handle to Intel IPP functions.</summary>
     Public IPP As cIntelIPP
+
+    Public ReadOnly Property IPPPath As String
+        Get
+            Return IPP.IPPPath
+        End Get
+    End Property
+
+    '''<summary>Location of the EXE.</summary>
+    Public ReadOnly Property MyPath As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
+
+End Class
+
+Public Class cConfig
 
     Private Const Cat_load As String = "1.) Loading"
     Private Const Cat_analysis As String = "2.) Analysis"
@@ -59,14 +142,6 @@ Public Class cDB
     Private Const Cat_Proc_Vignette As String = "4.) Processing - vignette"
     Private Const Cat_log As String = "5.) Logging"
     Private Const Cat_misc As String = "9.) Misc"
-
-    '''<summary>Location of the EXE.</summary>
-    <ComponentModel.Browsable(False)>
-    Public ReadOnly Property MyPath As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
-
-    '''<summary>Location of the EXE.</summary>
-    <ComponentModel.Browsable(False)>
-    Public ReadOnly Property LastFiles As String = System.IO.Path.Combine(MyPath, "LastOpened.txt")
 
     <ComponentModel.Category(Cat_load)>
     <ComponentModel.DisplayName("a) Use IPP?")>
@@ -82,11 +157,11 @@ Public Class cDB
     <ComponentModel.DefaultValue(False)>
     Public Property ForceDirect As Boolean = False
 
+    '''<summary>File to hold last opened files.</summary>
     <ComponentModel.Category(Cat_load)>
-    <ComponentModel.DisplayName("c) No output if loading > ... files")>
-    <ComponentModel.Description("Do not plot or display anything if > ... files are loaded")>
-    <ComponentModel.DefaultValue(10)>
-    Public Property NoOutputOnManyFiles As Integer = 10
+    <ComponentModel.DisplayName("c) Last opened files")>
+    <ComponentModel.Description("File to hold last opened files.")>
+    Public ReadOnly Property LastFiles As String = "LastOpened.txt"
 
     '===================================================================================================================================================
 
@@ -174,40 +249,6 @@ Public Class cDB
     <ComponentModel.Description("Bayer pattern - 1 character for each channel")>
     <ComponentModel.DefaultValue("RGGB")>
     Public Property BayerPattern As String = "RGGB"
-
-    <ComponentModel.Category(Cat_misc)>
-    <ComponentModel.DisplayName("b) Used IPP path")>
-    Public ReadOnly Property IPPPath As String
-        Get
-            Return IPP.IPPPath
-        End Get
-    End Property
-
-    '''<summary>Get all (existing) files last loaded.</summary>
-    Public Function GetRecentFiles() As List(Of String)
-        Dim RetVal As New List(Of String)
-        If System.IO.File.Exists(LastFiles) Then
-            For Each Line As String In System.IO.File.ReadAllLines(LastFiles)
-                If System.IO.File.Exists(Line) Then RetVal.Add(Line)
-            Next Line
-        End If
-        Return RetVal
-    End Function
-
-    '''<summary>Get all (existing) files last loaded.</summary>
-    Public Sub StoreRecentFile(ByVal NewFile As String)
-        Dim FileContent As New List(Of String)
-        If System.IO.File.Exists(LastFiles) Then
-            For Each Line As String In System.IO.File.ReadAllLines(LastFiles)
-                FileContent.Add(Line)
-                If System.IO.Path.GetFullPath(Line) = System.IO.Path.GetFullPath(NewFile) Then
-                    Exit Sub                'file already in the list ...
-                End If
-            Next Line
-        End If
-        FileContent.Insert(0, NewFile)         'insert new file at top
-        System.IO.File.WriteAllLines(LastFiles, FileContent.ToArray)
-    End Sub
 
     '''<summary>Get the channel name of the bayer pattern index.</summary>
     '''<param name="Idx">0-based index.</param>

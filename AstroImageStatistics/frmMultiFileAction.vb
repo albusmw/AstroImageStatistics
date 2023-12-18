@@ -29,46 +29,6 @@ Partial Public Class frmMultiFileAction
     '''<summary>PROI image generator.</summary>
     Private ROIImageGenerator As New cImageFromData
 
-    '''<summary>Properties of loaded files.</summary>
-    Private Class cFileProps
-        '''<summary>Loaded FITS header entries.</summary>
-        Public FITSHeader As Dictionary(Of eFITSKeywords, Object)
-        '''<summary>Data start position within the file.</summary>
-        Public DataStartPosition As Integer
-        '''<summary>Calculated statistics values.</summary>
-        Public Statistics As AstroNET.Statistics.sStatistics
-        '''<summary>Entered DeltaX.</summary>
-        Public DeltaX As Integer = 0
-        '''<summary>Entered DeltaY.</summary>
-        Public DeltaY As Integer = 0
-        '''<summary>Width from the FITS header info.</summary>
-        Public ReadOnly Property NAXIS1() As Integer
-            Get
-                If IsNothing(FITSHeader) Then Return -1
-                If FITSHeader.ContainsKey(eFITSKeywords.NAXIS1) = False Then Return -1
-                Return CType(FITSHeader(eFITSKeywords.NAXIS1), Integer)
-            End Get
-        End Property
-        '''<summary>Width from the FITS header info.</summary>
-        Public ReadOnly Property NAXIS2() As Integer
-            Get
-                If IsNothing(FITSHeader) Then Return -1
-                If FITSHeader.ContainsKey(eFITSKeywords.NAXIS2) = False Then Return -1
-                Return CType(FITSHeader(eFITSKeywords.NAXIS2), Integer)
-            End Get
-        End Property
-        '''<summary>DateTime from the FITS header info.</summary>
-        Public ReadOnly Property DateTime() As String
-            Get
-                If IsNothing(FITSHeader) Then Return String.Empty
-                If FITSHeader.ContainsKey(eFITSKeywords.DATE_OBS) = False Then Return String.Empty
-                Dim RetVal As String = CType(FITSHeader(eFITSKeywords.DATE_OBS), String)
-                If FITSHeader.ContainsKey(eFITSKeywords.TIME_OBS) = True Then RetVal &= "T" & CType(FITSHeader(eFITSKeywords.TIME_OBS), String)
-                Return RetVal
-            End Get
-        End Property
-    End Class
-
     Private Class c2D(Of T)
         Public Matrix(,) As T = {}
         Public Sub New(ByRef Data(,) As T)
@@ -578,8 +538,8 @@ Partial Public Class frmMultiFileAction
             'Activate or deactivate the file processing for this file
             Dim Cell As DataGridViewCheckBoxCell = CType(adgvMain.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex), DataGridViewCheckBoxCell)
             Cell.Value = Not CType(Cell.Value, Boolean)
+            CalcAndDisplayCombinedROI()
         End If
-        CalcAndDisplayCombinedROI()
     End Sub
 
     Private Sub adgvMain_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles adgvMain.RowEnter
@@ -662,7 +622,7 @@ Partial Public Class frmMultiFileAction
     '''<summary>Generate a combined ROI for all selected files (e.g. for manual alignment).</summary>
     Private Sub CalcAndDisplayCombinedROI()
 
-        If Config.ROIDisplay_Active = False Then Exit Sub
+        If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Off Then Exit Sub
 
         Dim UseIPP As Boolean = True
         Dim ForceDirect As Boolean = False
@@ -673,60 +633,117 @@ Partial Public Class frmMultiFileAction
 
         'Get all files or only the selected file
         Dim FilesToLoad As New List(Of String)
-        If Config.ROIDisplay_CombinedROI = True Then
-            'Display all checked files
-            FilesToLoad.AddRange(GetCheckedFiles)
-        Else
+        If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Single Then
             'Display only active file
             FilesToLoad.Add(GetSelectedFileName)
+        Else
+            'Display all checked files
+            FilesToLoad.AddRange(GetCheckedFiles)
         End If
 
         'Sum up all images
         Dim StarImageSum_UInt16(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
         Dim StarImageSum_UInt32(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt32
-        For Each File As String In FilesToLoad
-            Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = AllListFiles(File).DeltaX
-            Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = AllListFiles(File).DeltaY
-            Data.ResetAllProcessors()
-            Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
-            Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File, UseIPP, ROI, ForceDirect)
-            If Config.ROIDisplay_MaxMode = True Then
-                AIS.DB.IPP.MaxEvery(Data.DataProcessor_UInt16.ImageData(0).Data, StarImageSum_UInt16)
-            Else
-                For Idx1 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(0)
-                    For Idx2 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(1)
-                        StarImageSum_UInt32(Idx1, Idx2) += Data.DataProcessor_UInt16.ImageData(0).Data(Idx1, Idx2)
-                    Next Idx2
-                Next Idx1
-            End If
-        Next File
-
-        'Get a UInt16 value again
-        Dim StarImage(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
-        If Config.ROIDisplay_MaxMode = True Then
-            StarImage = StarImageSum_UInt16.CreateCopy
+        If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Mosaik Then
+            StarImageSum_UInt16 = CalculateMosaik(FilesToLoad)
         Else
-            Dim StarImageSum_Min As UInt32 = UInt32.MaxValue
-            Dim StarImageSum_Max As UInt32 = UInt32.MinValue
-            AIS.DB.IPP.MinMax(StarImageSum_UInt32, StarImageSum_Min, StarImageSum_Max)
-
-            For Idx1 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(0)
-                For Idx2 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(1)
-                    StarImage(Idx1, Idx2) = ScaleToUInt16(StarImageSum_UInt32(Idx1, Idx2), StarImageSum_Min, StarImageSum_Max)
-                Next Idx2
-            Next Idx1
+            For Each File As String In FilesToLoad
+                Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = AllListFiles(File).DeltaX
+                Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = AllListFiles(File).DeltaY
+                Data.ResetAllProcessors()
+                Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
+                Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File, UseIPP, ROI, ForceDirect)
+                Select Case Config.ROIDisplay_Mode
+                    Case cConfig.eROIDisplay.Single
+                        StarImageSum_UInt16 = Data.DataProcessor_UInt16.ImageData(0).Data
+                    Case cConfig.eROIDisplay.Stacked_max
+                        AIS.DB.IPP.MaxEvery(Data.DataProcessor_UInt16.ImageData(0).Data, StarImageSum_UInt16)
+                    Case cConfig.eROIDisplay.Stacked_mean
+                        For Idx1 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(0)
+                            For Idx2 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(1)
+                                StarImageSum_UInt32(Idx1, Idx2) += Data.DataProcessor_UInt16.ImageData(0).Data(Idx1, Idx2)
+                            Next Idx2
+                        Next Idx1
+                End Select
+            Next File
         End If
 
+        'Get a UInt16 value again
+        Dim ImageToDisplay(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
+        Select Case Config.ROIDisplay_Mode
+            Case cConfig.eROIDisplay.Single, cConfig.eROIDisplay.Stacked_max, cConfig.eROIDisplay.Mosaik
+                ImageToDisplay = StarImageSum_UInt16.CreateCopy
+            Case cConfig.eROIDisplay.Stacked_mean
+                Dim StarImageSum_Min As UInt32 = UInt32.MaxValue
+                Dim StarImageSum_Max As UInt32 = UInt32.MinValue
+                AIS.DB.IPP.MinMax(StarImageSum_UInt32, StarImageSum_Min, StarImageSum_Max)
+
+                For Idx1 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(0)
+                    For Idx2 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(1)
+                        ImageToDisplay(Idx1, Idx2) = ScaleToUInt16(StarImageSum_UInt32(Idx1, Idx2), StarImageSum_Min, StarImageSum_Max)
+                    Next Idx2
+                Next Idx1
+        End Select
+
+        'Calculate statistics on the image
         Dim SumStat As New AstroNET.Statistics(AIS.DB.IPP)
-        SumStat.DataProcessor_UInt16.ImageData(0).Data = StarImage
+        SumStat.DataProcessor_UInt16.ImageData(0).Data = ImageToDisplay
         Dim SumStatStat As AstroNET.Statistics.sStatistics = SumStat.ImageStatistics
 
+        'Display the image
         ROIImageGenerator.ColorMap = Config.Stack_ROIDisplay_ColorMode
-        ROIImageGenerator.GenerateDisplayImage(StarImage, CUShort(SumStatStat.MonoStatistics_Int.Min.Key), CUShort(SumStatStat.MonoStatistics_Int.Max.Key), AIS.DB.IPP)
+        ROIImageGenerator.GenerateDisplayImage(ImageToDisplay, CUShort(SumStatStat.MonoStatistics_Int.Min.Key), CUShort(SumStatStat.MonoStatistics_Int.Max.Key), AIS.DB.IPP)
         ROIImageGenerator.OutputImage.UnlockBits()
         pbImage.Image = ROIImageGenerator.OutputImage.BitmapToProcess
 
     End Sub
+
+    Private Function CalculateMosaik(ByVal FilesToLoad As List(Of String)) As UInt16(,)
+
+        Dim Tile_border As Integer = 3
+        Dim Display_blur As Integer = 1
+        Dim UseIPP As Boolean = True
+        Dim ForceDirect As Boolean = False
+
+        Dim FITSReader As New cFITSReader
+
+        Dim MosaikWidth As Integer = CInt(Math.Ceiling(Math.Sqrt(FilesToLoad.Count)))              'Number of tiles in X direction
+        Dim MosaikHeight As Integer = CInt(Math.Ceiling(FilesToLoad.Count / MosaikWidth))          'Number of tiles in Y direction
+        Dim TileBorderWidth As Integer = Tile_border * (MosaikWidth - 1)
+        Dim TileBorderHeight As Integer = Tile_border * (MosaikHeight - 1)
+
+        Dim MosaikImage((MosaikWidth * Config.ROIDisplay_Width) + TileBorderWidth - 1, (MosaikHeight * Config.ROIDisplay_Height) + TileBorderHeight - 1) As UInt16
+
+        'Compose the mosaik
+        Dim WidthPtr As Integer = 0 : Dim WidthIdx As Integer = 0
+        Dim HeightPtr As Integer = 0
+
+        For Each File As String In FilesToLoad
+            Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = AllListFiles(File).DeltaX
+            Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = AllListFiles(File).DeltaY
+            Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
+            Dim SingleFileTile(,) As UInt16 = FITSReader.ReadInUInt16(File, UseIPP, ROI, ForceDirect)
+            If Display_blur > 1 Then cOpenCvSharp.MedianBlur(SingleFileTile, Display_blur)
+            Try
+                For X As Integer = 0 To Config.ROIDisplay_Width - 1
+                    For Y As Integer = 0 To Config.ROIDisplay_Height - 1
+                        MosaikImage(WidthPtr + X, HeightPtr + Y) = SingleFileTile(X, Y)
+                    Next Y
+                Next X
+            Catch ex As Exception
+                'Log this error ...
+            End Try
+            WidthPtr += Config.ROIDisplay_Width + Tile_border : WidthIdx += 1
+            If WidthIdx >= MosaikWidth Then
+                HeightPtr += Config.ROIDisplay_Height + Tile_border
+                WidthPtr = 0
+                WidthIdx = 0
+            End If
+        Next File
+
+        Return MosaikImage
+
+    End Function
 
     '''<summary>Mark a file in the list.</summary>
     Private Sub MarkFile(ByVal FileName As String, ByVal Color As Color)
@@ -805,5 +822,146 @@ Partial Public Class frmMultiFileAction
         Return CUShort(BitConverter.ToInt16({Bytes(1), Bytes(0)}, 0) + 32768)
 
     End Function
+
+    Private Sub tsmiFile_SaveAllFilesHisto_Click(sender As Object, e As EventArgs) Handles tsmiFile_SaveAllFilesHisto.Click
+
+        Dim AllCheckedFiles As List(Of String) = GetCheckedFiles()
+
+        With sfdMain
+            .Filter = "EXCEL file (*.xlsx)|*.xlsx"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
+        'Get combined hist mono X axis (INT only)
+        Dim AllADUValues As New List(Of Long)
+        Dim FileList As New List(Of String)
+        FileList.Add("ADU value")
+        For Each SingleFile As String In AllCheckedFiles
+            FileList.Add(System.IO.Path.GetFileNameWithoutExtension(SingleFile))
+            If AllListFiles(SingleFile).Statistics.Count > 0 Then
+                For Each ADUValue As Long In AllListFiles(SingleFile).Statistics.MonochromHistogram_Int.Keys
+                    If AllADUValues.Contains(ADUValue) = False Then AllADUValues.Add(ADUValue)
+                Next ADUValue
+            End If
+        Next SingleFile
+        AllADUValues.Sort()
+
+        Using workbook As New ClosedXML.Excel.XLWorkbook
+
+            'Generate data
+            Dim XY As New List(Of Object())
+            For Each ADUValue As Long In AllADUValues
+                Dim Values As New List(Of Object)
+                Values.Add(ADUValue)
+                For Each SingleFile As String In AllCheckedFiles
+                    If AllListFiles(SingleFile).Statistics.MonochromHistogram_Int.ContainsKey(ADUValue) Then Values.Add(AllListFiles(SingleFile).Statistics.MonochromHistogram_Int(ADUValue)) Else Values.Add(String.Empty)
+                Next SingleFile
+                XY.Add(Values.ToArray)
+            Next ADUValue
+            Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Histogram")
+            worksheet.Cell(1, 1).InsertData(FileList, True)                                             'file names
+            worksheet.Cell(2, 1).InsertData(XY)                                                         'combined histogram
+            For Each col In worksheet.ColumnsUsed
+                col.AdjustToContents()
+            Next col
+
+            'Save and open
+            Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
+            workbook.SaveAs(FileToGenerate)
+            Process.Start(FileToGenerate)
+
+        End Using
+
+    End Sub
+
+    Private Sub tsmiFile_SaveFITSandStats_Click(sender As Object, e As EventArgs) Handles tsmiFile_SaveFITSandStats.Click
+
+        Dim AllCheckedFiles As List(Of String) = GetCheckedFiles()
+
+        With sfdMain
+            .Filter = "EXCEL file (*.xlsx)|*.xlsx"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
+        'Generate a list of all FITS keys and statistics including the maximum entry length
+        Dim FoundFitsKeywords As New Dictionary(Of eFITSKeywords, Integer)
+        Dim FoundStatParameters As New List(Of String)
+        For Each FileName As String In AllCheckedFiles
+            For Each Key As eFITSKeywords In AllListFiles(FileName).FITSHeader.Keys
+                Dim HeaderValue As String = CStr(AllListFiles(FileName).FITSHeader(Key))
+                If FoundFitsKeywords.ContainsKey(Key) = False Then FoundFitsKeywords.Add(Key, -1)
+                If FoundFitsKeywords(Key) < HeaderValue.Length Then
+                    FoundFitsKeywords(Key) = HeaderValue.Length
+                End If
+            Next Key
+            If AllListFiles(FileName).Statistics.Count > 0 Then
+                For Each StatParameter As String In AllListFiles(FileName).Statistics.MonoStatistics_Int.AllStats.Keys
+                    If FoundStatParameters.Contains(StatParameter) = False Then FoundStatParameters.Add(StatParameter)
+                Next StatParameter
+            End If
+        Next FileName
+
+        Using workbook As New ClosedXML.Excel.XLWorkbook
+
+            Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Overview")
+            Dim FileIdx As Integer = 1
+            Dim KeyIdx As Integer = 1
+
+            'Add header
+            For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
+                KeyIdx += 1
+                worksheet.Cell(FileIdx, KeyIdx).Value = Key.ToString
+            Next Key
+            For Each StatParameter As String In FoundStatParameters
+                KeyIdx += 1
+                worksheet.Cell(FileIdx, KeyIdx).Value = StatParameter
+            Next StatParameter
+            FileIdx += 1
+
+            'Add all files
+            For Each FileName As String In AllCheckedFiles
+                KeyIdx = 1
+                worksheet.Cell(FileIdx, KeyIdx).Value = FileName
+                'Add all FITS headers
+                For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
+                    KeyIdx += 1
+                    'Add the found entry or no entry
+                    If AllListFiles(FileName).FITSHeader.ContainsKey(Key) Then
+                        worksheet.Cell(FileIdx, KeyIdx).SetTypedValue(AllListFiles(FileName).FITSHeader(Key))
+                    Else
+                        worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
+                    End If
+                Next Key
+                'Add all statistics values
+                For Each Key As String In FoundStatParameters
+                    KeyIdx += 1
+                    If AllListFiles(FileName).Statistics.MonoStatistics_Int.AllStats.ContainsKey(Key) Then
+                        worksheet.Cell(FileIdx, KeyIdx).SetTypedValue(AllListFiles(FileName).Statistics.MonoStatistics_Int.AllStats(Key))
+                    Else
+                        worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
+                    End If
+
+                Next Key
+                FileIdx += 1
+            Next FileName
+
+            'Auto-adjust all collumns
+            For Each col In worksheet.ColumnsUsed
+                col.AdjustToContents()
+            Next col
+
+            'Save and open
+            Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
+            workbook.SaveAs(FileToGenerate)
+            Process.Start(FileToGenerate)
+
+        End Using
+
+    End Sub
+
+    Private Sub cmsMain_ToClipboard_Click(sender As Object, e As EventArgs) Handles cmsMain_ToClipboard.Click
+        Clipboard.Clear()
+        Clipboard.SetImage(pbImage.Image)
+    End Sub
 
 End Class

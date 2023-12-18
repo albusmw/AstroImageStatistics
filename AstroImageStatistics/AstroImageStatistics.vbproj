@@ -259,6 +259,12 @@
     <Compile Include="..\..\MyLib\AstroDSP.vb">
       <Link>MyLib\AstroDSP.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\ClosedXML.vb">
+      <Link>MyLib\ClosedXML.vb</Link>
+    </Compile>
+    <Compile Include="..\..\MyLib\CodeUtils.vb">
+      <Link>MyLib\CodeUtils.vb</Link>
+    </Compile>
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
     </Compile>
@@ -508,12 +514,6 @@
     <Compile Include="frmManualAdjust.vb">
       <SubType>Form</SubType>
     </Compile>
-    <Compile Include="frmNavigator.Designer.vb">
-      <DependentUpon>frmNavigator.vb</DependentUpon>
-    </Compile>
-    <Compile Include="frmNavigator.vb">
-      <SubType>Form</SubType>
-    </Compile>
     <Compile Include="My Project\AssemblyInfo.vb" />
     <Compile Include="My Project\Application.Designer.vb">
       <AutoGen>True</AutoGen>
@@ -589,9 +589,6 @@
     </EmbeddedResource>
     <EmbeddedResource Include="frmManualAdjust.resx">
       <DependentUpon>frmManualAdjust.vb</DependentUpon>
-    </EmbeddedResource>
-    <EmbeddedResource Include="frmNavigator.resx">
-      <DependentUpon>frmNavigator.vb</DependentUpon>
     </EmbeddedResource>
     <EmbeddedResource Include="My Project\Resources.resx">
       <Generator>VbMyResourcesResXFileCodeGenerator</Generator>

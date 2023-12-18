@@ -38,6 +38,7 @@ Partial Class MainForm
         Me.tsmiSaveAllFilesStat = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiSaveFITSAndStats = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiSaveImageData = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiFile_ConvertTo16BitFITS = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem14 = New System.Windows.Forms.ToolStripSeparator()
         Me.tsmiFile_ClearStatMem = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
@@ -53,7 +54,6 @@ Partial Class MainForm
         Me.tsmiAnalysisHotPixel_detect = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysisHotPixel_fixfile = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem7 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiAnalysis_MultiAreaCompare = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysis_ManualColorBalancer = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysisVignette = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAnalysisVignette_CalcRaw = New System.Windows.Forms.ToolStripMenuItem()
@@ -134,7 +134,6 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
-        Me.tsmiFile_ConvertTo16BitFITS = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -172,7 +171,7 @@ Partial Class MainForm
         Me.tsmiFile_Open.Name = "tsmiFile_Open"
         Me.tsmiFile_Open.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.O), System.Windows.Forms.Keys)
         Me.tsmiFile_Open.Size = New System.Drawing.Size(366, 22)
-        Me.tsmiFile_Open.Text = "Open file(s) to analyse"
+        Me.tsmiFile_Open.Text = "Open file to analyse"
         Me.tsmiFile_Open.ToolTipText = "Open one or more files for analysis"
         '
         'tsmiFile_OpenRecent
@@ -250,6 +249,12 @@ Partial Class MainForm
         Me.tsmiSaveImageData.Size = New System.Drawing.Size(366, 22)
         Me.tsmiSaveImageData.Text = "Save current image"
         '
+        'tsmiFile_ConvertTo16BitFITS
+        '
+        Me.tsmiFile_ConvertTo16BitFITS.Name = "tsmiFile_ConvertTo16BitFITS"
+        Me.tsmiFile_ConvertTo16BitFITS.Size = New System.Drawing.Size(366, 22)
+        Me.tsmiFile_ConvertTo16BitFITS.Text = "Make file 16-bit FITS file"
+        '
         'ToolStripMenuItem14
         '
         Me.ToolStripMenuItem14.Name = "ToolStripMenuItem14"
@@ -286,7 +291,7 @@ Partial Class MainForm
         '
         'tsmiAnalysis
         '
-        Me.tsmiAnalysis.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_RowColStat, Me.tsmiAnalysis_Plot, Me.tsmiAnalysisHotPixel, Me.ToolStripMenuItem7, Me.tsmiAnalysis_MultiAreaCompare, Me.tsmiAnalysis_ManualColorBalancer, Me.tsmiAnalysisVignette, Me.tsmiAnalysisPixelMap, Me.tsmiAnalysis_RawFITSHeader, Me.tsmiAnalysis_FloatAsIntError, Me.tsmiAnalysis_MultiFile, Me.tsmiAnalysis_XvsYPlot, Me.tsmiAnalysis_FindStars})
+        Me.tsmiAnalysis.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_RowColStat, Me.tsmiAnalysis_Plot, Me.tsmiAnalysisHotPixel, Me.ToolStripMenuItem7, Me.tsmiAnalysis_ManualColorBalancer, Me.tsmiAnalysisVignette, Me.tsmiAnalysisPixelMap, Me.tsmiAnalysis_RawFITSHeader, Me.tsmiAnalysis_FloatAsIntError, Me.tsmiAnalysis_MultiFile, Me.tsmiAnalysis_XvsYPlot, Me.tsmiAnalysis_FindStars})
         Me.tsmiAnalysis.Name = "tsmiAnalysis"
         Me.tsmiAnalysis.Size = New System.Drawing.Size(62, 22)
         Me.tsmiAnalysis.Text = "Analysis"
@@ -294,7 +299,7 @@ Partial Class MainForm
         'tsmiAnalysis_RowColStat
         '
         Me.tsmiAnalysis_RowColStat.Name = "tsmiAnalysis_RowColStat"
-        Me.tsmiAnalysis_RowColStat.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_RowColStat.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_RowColStat.Text = "Row and column statistics"
         '
         'tsmiAnalysis_Plot
@@ -302,7 +307,7 @@ Partial Class MainForm
         Me.tsmiAnalysis_Plot.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_Plot_Replot, Me.tsmiAnalysis_Plot_ADUQuant})
         Me.tsmiAnalysis_Plot.Name = "tsmiAnalysis_Plot"
         Me.tsmiAnalysis_Plot.ShortcutKeys = CType((System.Windows.Forms.Keys.Control Or System.Windows.Forms.Keys.P), System.Windows.Forms.Keys)
-        Me.tsmiAnalysis_Plot.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_Plot.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_Plot.Text = "Plot"
         '
         'tsmiAnalysis_Plot_Replot
@@ -321,7 +326,7 @@ Partial Class MainForm
         '
         Me.tsmiAnalysisHotPixel.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysisHotPixel_detect, Me.tsmiAnalysisHotPixel_fixfile})
         Me.tsmiAnalysisHotPixel.Name = "tsmiAnalysisHotPixel"
-        Me.tsmiAnalysisHotPixel.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysisHotPixel.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysisHotPixel.Text = "Hot pixel"
         '
         'tsmiAnalysisHotPixel_detect
@@ -339,25 +344,19 @@ Partial Class MainForm
         'ToolStripMenuItem7
         '
         Me.ToolStripMenuItem7.Name = "ToolStripMenuItem7"
-        Me.ToolStripMenuItem7.Size = New System.Drawing.Size(258, 6)
-        '
-        'tsmiAnalysis_MultiAreaCompare
-        '
-        Me.tsmiAnalysis_MultiAreaCompare.Name = "tsmiAnalysis_MultiAreaCompare"
-        Me.tsmiAnalysis_MultiAreaCompare.Size = New System.Drawing.Size(261, 22)
-        Me.tsmiAnalysis_MultiAreaCompare.Text = "Multi-file area compare (Navigator)"
+        Me.ToolStripMenuItem7.Size = New System.Drawing.Size(219, 6)
         '
         'tsmiAnalysis_ManualColorBalancer
         '
         Me.tsmiAnalysis_ManualColorBalancer.Name = "tsmiAnalysis_ManualColorBalancer"
-        Me.tsmiAnalysis_ManualColorBalancer.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_ManualColorBalancer.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_ManualColorBalancer.Text = "Manual color balancer"
         '
         'tsmiAnalysisVignette
         '
         Me.tsmiAnalysisVignette.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysisVignette_CalcRaw, Me.tsmiAnalysisVignette_CalcParam, Me.tsmiAnalysisVignette_Correct, Me.tsmiAnalysisVignette_Display, Me.ToolStripMenuItem10, Me.tsmiAnalysisVignette_Clear})
         Me.tsmiAnalysisVignette.Name = "tsmiAnalysisVignette"
-        Me.tsmiAnalysisVignette.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysisVignette.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysisVignette.Text = "Vignette"
         '
         'tsmiAnalysisVignette_CalcRaw
@@ -399,7 +398,7 @@ Partial Class MainForm
         '
         Me.tsmiAnalysisPixelMap.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysisPixelMap_SaveFor})
         Me.tsmiAnalysisPixelMap.Name = "tsmiAnalysisPixelMap"
-        Me.tsmiAnalysisPixelMap.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysisPixelMap.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysisPixelMap.Text = "Pixel map files"
         '
         'tsmiAnalysisPixelMap_SaveFor
@@ -411,20 +410,20 @@ Partial Class MainForm
         'tsmiAnalysis_RawFITSHeader
         '
         Me.tsmiAnalysis_RawFITSHeader.Name = "tsmiAnalysis_RawFITSHeader"
-        Me.tsmiAnalysis_RawFITSHeader.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_RawFITSHeader.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_RawFITSHeader.Text = "Raw FITS Header"
         '
         'tsmiAnalysis_FloatAsIntError
         '
         Me.tsmiAnalysis_FloatAsIntError.Name = "tsmiAnalysis_FloatAsIntError"
-        Me.tsmiAnalysis_FloatAsIntError.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_FloatAsIntError.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_FloatAsIntError.Text = "Float error to int"
         '
         'tsmiAnalysis_MultiFile
         '
         Me.tsmiAnalysis_MultiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAnalysis_MultiFile_Open, Me.tsmiAnalysis_MultiFile_LoadAbove})
         Me.tsmiAnalysis_MultiFile.Name = "tsmiAnalysis_MultiFile"
-        Me.tsmiAnalysis_MultiFile.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_MultiFile.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_MultiFile.Text = "Multi-file pixelwise statistics"
         '
         'tsmiAnalysis_MultiFile_Open
@@ -442,13 +441,13 @@ Partial Class MainForm
         'tsmiAnalysis_XvsYPlot
         '
         Me.tsmiAnalysis_XvsYPlot.Name = "tsmiAnalysis_XvsYPlot"
-        Me.tsmiAnalysis_XvsYPlot.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_XvsYPlot.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
         '
         'tsmiAnalysis_FindStars
         '
         Me.tsmiAnalysis_FindStars.Name = "tsmiAnalysis_FindStars"
-        Me.tsmiAnalysis_FindStars.Size = New System.Drawing.Size(261, 22)
+        Me.tsmiAnalysis_FindStars.Size = New System.Drawing.Size(222, 22)
         Me.tsmiAnalysis_FindStars.Text = "Find stars"
         '
         'tsmiProcessing
@@ -893,12 +892,6 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
-        'tsmiFile_ConvertTo16BitFITS
-        '
-        Me.tsmiFile_ConvertTo16BitFITS.Name = "tsmiFile_ConvertTo16BitFITS"
-        Me.tsmiFile_ConvertTo16BitFITS.Size = New System.Drawing.Size(366, 22)
-        Me.tsmiFile_ConvertTo16BitFITS.Text = "Make file 16-bit FITS file"
-        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -969,7 +962,6 @@ Partial Class MainForm
     Friend WithEvents tsmiTest_Focus As ToolStripMenuItem
     Friend WithEvents tsmiAnalysisHotPixel As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem7 As ToolStripSeparator
-    Friend WithEvents tsmiAnalysis_MultiAreaCompare As ToolStripMenuItem
     Friend WithEvents tspbMain As ToolStripProgressBar
     Friend WithEvents tsmiFile_OpenRecent As ToolStripMenuItem
     Friend WithEvents gbDetails As GroupBox

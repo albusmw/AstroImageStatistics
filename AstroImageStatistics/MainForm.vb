@@ -30,68 +30,38 @@ Public Class MainForm
     '''<summary>Drag-and-drop handler.</summary>
     Private WithEvents DD As Ato.DragDrop
 
-    '''<summary>Statistics of all processed files.</summary>
-    Private AllFilesEverRead As New Dictionary(Of String, cFileEvalOut)
-
     Private MyStreamDeck As OpenMacroBoard.SDK.IMacroBoard
-
-    '''<summary>Evaluation results for 1 file (FITS header and statistics).</summary>
-    Private Class cFileEvalOut
-        Public DataStartPos As Integer = -1
-        Public FITSHeader As Dictionary(Of eFITSKeywords, Object)
-        Public Statistics As AstroNET.Statistics.sStatistics
-    End Class
 
     '''<summary>Menu - File - Open.</summary>
     Private Sub tsmiFile_Open_Click(sender As Object, e As EventArgs) Handles tsmiFile_Open.Click
         ofdMain.Filter = "FIT(s) files (FIT/FITS/FTS)|*.FIT;*.FITS;*.FTS"
+        ofdMain.Multiselect = False
         If ofdMain.ShowDialog <> DialogResult.OK Then Exit Sub
-        OpenAllFiles(New List(Of String)(ofdMain.FileNames))
-    End Sub
-
-    '''<summary>Open the passed bunch of files.</summary>
-    '''<param name="AllFiles">Bunch of files to open.</param>
-    Private Sub OpenAllFiles(ByVal AllFiles As List(Of String))
-        'Init multi-file load info
-        tspbMultiFile.Maximum = AllFiles.Count
-        tspbMultiFile.Value = 0
-        'Load all files
-        For Each File As String In AllFiles
-            If AllFiles.Count > 1 Then
-                tspbMultiFile.Value += 1
-                tsslMultiFile.Text = "Process file " & tspbMultiFile.Value.ValRegIndep & "/" & AllFiles.Count.ValRegIndep
-            End If
-            LoadFile(File, AIS.DB.LastFile_Data)
-        Next File
-        'Reset multi-file load info
-        tspbMultiFile.Maximum = 0
-        tspbMultiFile.Value = 0
-        tsslMultiFile.Text = "---"
+        LoadFile(ofdMain.FileName, AIS.DB.LastFile_Data)
     End Sub
 
     '''<summary>Load the given file.</summary>
     '''<param name="FileName">File to read in.</param>
     '''<param name="Container">Container for data and statistics.</param>
     '''<returns>Position where the data start.</returns>
-    Private Function LoadFileDataOnly(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As Integer
+    Private Function LoadFileDataOnly(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As cFileProps
 
+        Dim RetVal As New cFileProps
         Dim FileNameOnly As String = System.IO.Path.GetFileName(FileName)
         Running()
 
-        If AIS.DB.AutoClearLog = True Then
-            Log.Clear()
-        End If
+        If AIS.Config.AutoClearLog = True Then Log.Clear()
 
-        Dim RecStat As New cFileEvalOut
-        If AIS.DB.UseIPP Then
-            Processing.LoadFITSFile(FileName, AIS.DB.IPP, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
+
+        If AIS.Config.UseIPP Then
+            Processing.LoadFITSFile(FileName, AIS.DB.IPP, AIS.Config.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RetVal.DataStartPosition)
         Else
-            Processing.LoadFITSFile(FileName, Nothing, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
+            Processing.LoadFITSFile(FileName, Nothing, AIS.Config.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RetVal.DataStartPosition)
         End If
 
         'End
         Idle()
-        Return RecStat.DataStartPos
+        Return RetVal
 
     End Function
 
@@ -99,69 +69,61 @@ Public Class MainForm
     '''<param name="FileName">File to read in.</param>
     '''<param name="Container">Container for data and statistics.</param>
     '''<returns>Position where the data start.</returns>
-    Private Function LoadFile(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As Integer
+    Private Function LoadFile(ByVal FileName As String) As cFileProps
+        Return LoadFile(FileName, AIS.DB.LastFile_Data)
+    End Function
 
+    '''<summary>Load the given file.</summary>
+    '''<param name="FileName">File to read in.</param>
+    '''<param name="Container">Container for data and statistics.</param>
+    '''<returns>Position where the data start.</returns>
+    Private Function LoadFile(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As cFileProps
+
+        Dim RetVal As New cFileProps
         Dim FileNameOnly As String = System.IO.Path.GetFileName(FileName)
         Running()
 
-        If AIS.DB.AutoClearLog = True Then
-            Log.Clear()
-        End If
+        If AIS.Config.AutoClearLog = True Then Log.Clear()
 
-        Dim RecStat As New cFileEvalOut
-        If AIS.DB.UseIPP Then
-            Processing.LoadFITSFile(FileName, AIS.DB.IPP, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
+        If AIS.Config.UseIPP Then
+            Processing.LoadFITSFile(FileName, AIS.DB.IPP, AIS.Config.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RetVal.DataStartPosition)
         Else
-            Processing.LoadFITSFile(FileName, Nothing, AIS.DB.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RecStat.DataStartPos)
+            Processing.LoadFITSFile(FileName, Nothing, AIS.Config.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, RetVal.DataStartPosition)
         End If
 
-        RecStat.FITSHeader = AIS.DB.LastFile_FITSHeader.GetCardsAsDictionary
+        RetVal.FITSHeader = AIS.DB.LastFile_FITSHeader.GetCardsAsDictionary
 
         '=========================================================================================================
         'Display fits header
 
         AIS.DB.LastFile_Name = FileName
-        If DisplayOutput() Then
-            Log.Log("Loading file <" & FileName & "> ...")
-            Log.Log("  -> <" & System.IO.Path.GetFileNameWithoutExtension(FileName) & ">")
-            Log.Log("FITS header:")
-            Dim ContentToPrint As List(Of String) = cFITSHeaderParser.GetListToDisplay(RecStat.FITSHeader)
-            Log.Log(ContentToPrint)
-            Log.Log(New String("-"c, 107))
-        End If
+        Log.Log("Loading file <" & FileName & "> ...")
+        Log.Log("  -> <" & System.IO.Path.GetFileNameWithoutExtension(FileName) & ">")
+        Log.Log("FITS header:")
+        Dim ContentToPrint As List(Of String) = cFITSHeaderParser.GetListToDisplay(RetVal.FITSHeader)
+        Log.Log(ContentToPrint)
+        Log.Log(New String("-"c, 107))
 
         '=========================================================================================================
         'Calculate the statistics
 
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(Container, AIS.DB.CalcStat_Mono, AIS.DB.CalcStat_Bayer, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        If DisplayOutput() Then Log.Log(StatisticsReport)
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(Container, AIS.Config.CalcStat_Mono, AIS.Config.CalcStat_Bayer, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
 
         'Record statistics
-        RecStat.Statistics = AIS.DB.LastFile_Statistics
-        If AllFilesEverRead.ContainsKey(FileName) = False Then
-            AllFilesEverRead.Add(FileName, RecStat)
-        Else
-            AllFilesEverRead(FileName) = RecStat
-        End If
+        RetVal.Statistics = AIS.DB.LastFile_Statistics
 
         '=========================================================================================================
         'Plot statistics and remember this file as last processed file
-        If (AIS.DB.AutoOpenStatGraph = True) And DisplayOutput() Then PlotStatistics(FileName, AIS.DB.LastFile_Statistics)
+        If AIS.Config.AutoOpenStatGraph = True Then PlotStatistics(FileName, AIS.DB.LastFile_Statistics)
         'Me.Focus()
 
         'Store recent file
-        AIS.DB.StoreRecentFile(FileName)
+        AIS.StoreRecentFile(FileName)
 
         Idle()
-        Return RecStat.DataStartPos
+        Return RetVal
 
-    End Function
-
-    '''<summary>Returns true if no graph / text should be displayed.</summary>
-    Private Function DisplayOutput() As Boolean
-        If tspbMultiFile.Maximum = 0 Then Return True
-        If tspbMultiFile.Maximum > AIS.DB.NoOutputOnManyFiles Then Return False
-        Return True
     End Function
 
     '''<summary>A point of the graph was selected - give information.</summary>
@@ -224,27 +186,27 @@ Public Class MainForm
             Case AstroNET.Statistics.eDataMode.Fixed
                 'Plot histogram
                 Disp.Plotter.Clear()
-                If IsNothing(Stats.BayerHistograms_Int) = False And AIS.DB.CalcStat_Bayer Then
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Int(0, 0), 1, New cZEDGraphService.sGraphStyle(Color.Red, AIS.DB.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Int(0, 1), 1, New cZEDGraphService.sGraphStyle(Color.LightGreen, AIS.DB.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Int(1, 0), 1, New cZEDGraphService.sGraphStyle(Color.Green, AIS.DB.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Int(1, 1), 1, New cZEDGraphService.sGraphStyle(Color.Blue, AIS.DB.PlotStyle, 1))
+                If IsNothing(Stats.BayerHistograms_Int) = False And AIS.Config.CalcStat_Bayer Then
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Int(0, 0), 1, New cZEDGraphService.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Int(0, 1), 1, New cZEDGraphService.sGraphStyle(Color.LightGreen, AIS.Config.PlotStyle, 1))
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Int(1, 0), 1, New cZEDGraphService.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Int(1, 1), 1, New cZEDGraphService.sGraphStyle(Color.Blue, AIS.Config.PlotStyle, 1))
                 End If
-                If IsNothing(Stats.MonochromHistogram_Int) = False And AIS.DB.CalcStat_Mono Then
-                    Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Int, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
+                If IsNothing(Stats.MonochromHistogram_Int) = False And AIS.Config.CalcStat_Mono Then
+                    Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Int, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
                 End If
                 Disp.Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
             Case AstroNET.Statistics.eDataMode.Float
                 'Plot histogram
                 Disp.Plotter.Clear()
-                If IsNothing(Stats.BayerHistograms_Float32) = False And AIS.DB.CalcStat_Bayer Then
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Float32(0, 0), 1, New cZEDGraphService.sGraphStyle(Color.Red, AIS.DB.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Float32(0, 1), 1, New cZEDGraphService.sGraphStyle(Color.LightGreen, AIS.DB.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Float32(1, 0), 1, New cZEDGraphService.sGraphStyle(Color.Green, AIS.DB.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.DB.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Float32(1, 1), 1, New cZEDGraphService.sGraphStyle(Color.Blue, AIS.DB.PlotStyle, 1))
+                If IsNothing(Stats.BayerHistograms_Float32) = False And AIS.Config.CalcStat_Bayer Then
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Float32(0, 0), 1, New cZEDGraphService.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Float32(0, 1), 1, New cZEDGraphService.sGraphStyle(Color.LightGreen, AIS.Config.PlotStyle, 1))
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Float32(1, 0), 1, New cZEDGraphService.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
+                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Float32(1, 1), 1, New cZEDGraphService.sGraphStyle(Color.Blue, AIS.Config.PlotStyle, 1))
                 End If
-                If IsNothing(Stats.MonochromHistogram_Float32) = False And AIS.DB.CalcStat_Mono Then
-                    Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Float32, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
+                If IsNothing(Stats.MonochromHistogram_Float32) = False And AIS.Config.CalcStat_Mono Then
+                    Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Float32, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
                 End If
                 Disp.Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
         End Select
@@ -258,7 +220,7 @@ Public Class MainForm
         Disp.HostForm.Icon = Me.Icon
         Disp.Tag = "Statistics"
         'Position window below the main window
-        If AIS.DB.StackGraphs = True Then
+        If AIS.Config.StackGraphs = True Then
             Disp.HostForm.Left = Me.Left
             Disp.HostForm.Top = Me.Top + Me.Height
             Disp.HostForm.Height = Me.Height
@@ -272,10 +234,10 @@ Public Class MainForm
         'Plot data
         Dim XAxis() As Double = Ato.cSingleValueStatistics.GetAspectVectorXAxis(Stats)
         Disp.Plotter.Clear()
-        Disp.Plotter.PlotXvsY("Mean", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Mean), New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
-        Disp.Plotter.PlotXvsY("Max", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Maximum), New cZEDGraphService.sGraphStyle(Color.Red, AIS.DB.PlotStyle, 1))
-        Disp.Plotter.PlotXvsY("Min", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Minimum), New cZEDGraphService.sGraphStyle(Color.Green, AIS.DB.PlotStyle, 1))
-        Disp.Plotter.PlotXvsY("Sigma", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Sigma), New cZEDGraphService.sGraphStyle(Color.Orange, AIS.DB.PlotStyle, 1), True)
+        Disp.Plotter.PlotXvsY("Mean", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Mean), New cZEDGraphService.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
+        Disp.Plotter.PlotXvsY("Max", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Maximum), New cZEDGraphService.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
+        Disp.Plotter.PlotXvsY("Min", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Minimum), New cZEDGraphService.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
+        Disp.Plotter.PlotXvsY("Sigma", XAxis, Ato.cSingleValueStatistics.GetAspectVector(Stats, Ato.cSingleValueStatistics.eAspects.Sigma), New cZEDGraphService.sGraphStyle(Color.Orange, AIS.Config.PlotStyle, 1), True)
         Disp.Plotter.ManuallyScaleXAxisLin(XAxis(0), XAxis(XAxis.GetUpperBound(0)))
         Disp.Plotter.GridOnOff(True, True)
         Disp.Plotter.ForceUpdate()
@@ -296,7 +258,7 @@ Public Class MainForm
         Disp.PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
         'Plot data
         Disp.Plotter.Clear()
-        Disp.Plotter.PlotXvsY("Data", Trace, XNorm, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
+        Disp.Plotter.PlotXvsY("Data", Trace, XNorm, 1, New cZEDGraphService.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
         Disp.Plotter.ManuallyScaleXAxisLin(Trace.Keys.First, Trace.Keys.Last)
         Disp.Plotter.AutoScaleYAxisLog()
         Disp.Plotter.GridOnOff(True, True)
@@ -372,7 +334,7 @@ Public Class MainForm
     Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
 
         'Init GUI
-        pgMain.SelectedObject = AIS.DB
+        pgMain.SelectedObject = AIS.Config
         Log = New cLog(tbLogOutput, tsslMain)
 
         'If a file is droped to the EXE (icon), use this as filename
@@ -398,12 +360,15 @@ Public Class MainForm
     End Sub
 
     Private Sub DD_DropOccured(Files() As String) Handles DD.DropOccured
-        'Handle drag-and-drop for all dropped FIT(s) files
+        'Handle drag-and-drop for the first dropped FIT(s) file
         Dim AllFiles As New List(Of String)
         For Each File As String In Files
-            If System.IO.Path.GetExtension(File).ToUpper.StartsWith(".FIT") Then AllFiles.Add(File)
+            If System.IO.Path.GetExtension(File).ToUpper.StartsWith(".FIT") Then
+                LoadFile(File)
+                Exit Sub
+            End If
         Next File
-        OpenAllFiles(AllFiles)
+
     End Sub
 
     Private Sub tsmiFile_OpenLastFile_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenLastFile.Click
@@ -609,8 +574,8 @@ Public Class MainForm
             Next BayerIdx2
         Next BayerIdx1
 
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        If DisplayOutput() Then Log.Log(StatisticsReport)
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
         Idle()
 
     End Sub
@@ -630,8 +595,8 @@ Public Class MainForm
     Private Sub tsmiStretch_Click(sender As Object, e As EventArgs) Handles tsmiStretch.Click
         Running()
         ImageProcessing.MakeHistoStraight(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        If DisplayOutput() Then Log.Log(StatisticsReport)
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
         Idle()
     End Sub
 
@@ -679,7 +644,7 @@ Public Class MainForm
         Disp.PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
         'Plot data
         Disp.Plotter.Clear()
-        Disp.Plotter.PlotXvsY("Mono", XAxis, PlotData.Values.ToArray.ToDouble, New cZEDGraphService.sGraphStyle(Color.Black, AIS.DB.PlotStyle, 1))
+        Disp.Plotter.PlotXvsY("Mono", XAxis, PlotData.Values.ToArray.ToDouble, New cZEDGraphService.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
         Disp.Plotter.GridOnOff(True, True)
         Disp.Plotter.ManuallyScaleXAxisLin(XAxis(0), XAxis(XAxis.GetUpperBound(0)))
         Disp.Plotter.AutoScaleYAxisLog()
@@ -692,7 +657,7 @@ Public Class MainForm
 
     Private Sub tsmiPlateSolve_Click(sender As Object, e As EventArgs) Handles tsmiPlateSolve.Click
         Dim SolverLog As String() = {}
-        Dim ErrorCode As String = AstroImageStatistics_Fun.PlateSolve(AIS.DB.LastFile_Name, AIS.DB.PlateSolve2Path, AIS.DB.PlateSolve2HoldOpen, SolverLog)
+        Dim ErrorCode As String = AstroImageStatistics_Fun.PlateSolve(AIS.DB.LastFile_Name, AIS.Config.PlateSolve2Path, AIS.Config.PlateSolve2HoldOpen, SolverLog)
         If String.IsNullOrEmpty(ErrorCode) = True Then
             Log.Log("Plate solve results: > ", SolverLog)
         Else
@@ -704,114 +669,111 @@ Public Class MainForm
         Dim X As New frmFITSGrep : X.Show()
     End Sub
 
-    Private Sub tsmiFile_ClearStatMem_Click(sender As Object, e As EventArgs) Handles tsmiFile_ClearStatMem.Click
-        AllFilesEverRead.Clear()
-    End Sub
+    'Private Sub tsmiTest_Focus_Click(sender As Object, e As EventArgs) Handles tsmiTest_Focus.Click
 
-    Private Sub tsmiTest_Focus_Click(sender As Object, e As EventArgs) Handles tsmiTest_Focus.Click
+    '    'Focus analysis test code
+    '    'Test files: \\192.168.100.10\astro\2021_02_12 (Focus)\Small
 
-        'Focus analysis test code
-        'Test files: \\192.168.100.10\astro\2021_02_12 (Focus)\Small
 
-        Dim StatFocusPoint As New Dictionary(Of Integer, Dictionary(Of Long, ULong))
+    '    Dim StatFocusPoint As New Dictionary(Of Integer, Dictionary(Of Long, ULong))
 
-        'Select EXCEL file name
-        With sfdMain
-            .Filter = "EXCEL file (*.xlsx)|*.xlsx"
-            .FileName = "FocusAnalysis.xlsx"
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-        End With
+    '    'Select EXCEL file name
+    '    With sfdMain
+    '        .Filter = "EXCEL file (*.xlsx)|*.xlsx"
+    '        .FileName = "FocusAnalysis.xlsx"
+    '        If .ShowDialog <> DialogResult.OK Then Exit Sub
+    '    End With
 
-        '====================================================================================================
-        'Calculate combined statistics for all equal focus positions
-        For Each FileName As String In AllFilesEverRead.Keys
+    '    '====================================================================================================
+    '    'Calculate combined statistics for all equal focus positions
+    '    For Each FileName As String In AllFilesEverRead.Keys
 
-            Dim FileNameOnly As String = System.IO.Path.GetFileNameWithoutExtension(FileName)
-            Dim FocusPos As Integer = FocusFromFileName(FileNameOnly)
+    '        Dim FileNameOnly As String = System.IO.Path.GetFileNameWithoutExtension(FileName)
+    '        Dim FocusPos As Integer = FocusFromFileName(FileNameOnly)
 
-            If StatFocusPoint.ContainsKey(FocusPos) = False Then
-                StatFocusPoint.Add(FocusPos, AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int.Clone)
-            Else
-                AstroNET.Statistics.CombineHisto(StatFocusPoint(FocusPos), AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int)
-            End If
+    '        If StatFocusPoint.ContainsKey(FocusPos) = False Then
+    '            StatFocusPoint.Add(FocusPos, AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int.Clone)
+    '        Else
+    '            AstroNET.Statistics.CombineHisto(StatFocusPoint(FocusPos), AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int)
+    '        End If
 
-        Next FileName
+    '    Next FileName
 
-        '====================================================================================================
-        'Generate the EXCEL output
-        Dim ExcelRow As Integer = 0
-        Using workbook As New ClosedXML.Excel.XLWorkbook
+    '    '====================================================================================================
+    '    'Generate the EXCEL output
+    '    Dim ExcelRow As Integer = 0
+    '    Using workbook As New ClosedXML.Excel.XLWorkbook
 
-            Dim WorkSheet_Single As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("File Statistics")
-            WorkSheet_Single.Cell(1, 1).InsertData(New List(Of String)({"Filename", "Focus position", "Total Energy", "Focus Quality Indicator"}), True)
-            ExcelRow = 2
+    '        Dim WorkSheet_Single As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("File Statistics")
+    '        WorkSheet_Single.Cell(1, 1).InsertData(New List(Of String)({"Filename", "Focus position", "Total Energy", "Focus Quality Indicator"}), True)
+    '        ExcelRow = 2
 
-            For Each FileName As String In AllFilesEverRead.Keys
+    '        For Each FileName As String In AllFilesEverRead.Keys
 
-                Dim FileNameOnly As String = System.IO.Path.GetFileNameWithoutExtension(FileName)
-                Dim FocusPos As Integer = FocusFromFileName(FileNameOnly)
+    '            Dim FileNameOnly As String = System.IO.Path.GetFileNameWithoutExtension(FileName)
+    '            Dim FocusPos As Integer = FocusFromFileName(FileNameOnly)
 
-                'Save raw data
-                WorkSheet_Single.Cell(ExcelRow, 1).Value = FileNameOnly
-                WorkSheet_Single.Cell(ExcelRow, 2).Value = FocusPos
+    '            'Save raw data
+    '            WorkSheet_Single.Cell(ExcelRow, 1).Value = FileNameOnly
+    '            WorkSheet_Single.Cell(ExcelRow, 2).Value = FocusPos
 
-                'Calculate total energy
-                WorkSheet_Single.Cell(ExcelRow, 3).Value = AstroNET.Statistics.TotalEnergy(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int)
-                WorkSheet_Single.Cell(ExcelRow, 4).Value = AstroNET.Statistics.FocusQualityIndicator(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int, 5.0)
+    '            'Calculate total energy
+    '            WorkSheet_Single.Cell(ExcelRow, 3).Value = AstroNET.Statistics.TotalEnergy(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int)
+    '            WorkSheet_Single.Cell(ExcelRow, 4).Value = AstroNET.Statistics.FocusQualityIndicator(AllFilesEverRead(FileName).Statistics.MonochromHistogram_Int, 5.0)
 
-                ExcelRow += 1
+    '            ExcelRow += 1
 
-            Next FileName
+    '        Next FileName
 
-            'Calculate sum statistics
-            Dim WorkSheet_Sum As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Focus points")
-            WorkSheet_Sum.Cell(1, 1).InsertData(New List(Of String)({"Focus position", "Total Energy", "95-Percentile", "Modus", "Focus Quality Indicator"}), True)
-            ExcelRow = 2
+    '        'Calculate sum statistics
+    '        Dim WorkSheet_Sum As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Focus points")
+    '        WorkSheet_Sum.Cell(1, 1).InsertData(New List(Of String)({"Focus position", "Total Energy", "95-Percentile", "Modus", "Focus Quality Indicator"}), True)
+    '        ExcelRow = 2
 
-            Dim FocusPoint As New List(Of Integer)(StatFocusPoint.Keys)
-            For Each FocusPos As Integer In FocusPoint
+    '        Dim FocusPoint As New List(Of Integer)(StatFocusPoint.Keys)
+    '        For Each FocusPos As Integer In FocusPoint
 
-                WorkSheet_Sum.Cell(ExcelRow, 1).Value = FocusPos
-                WorkSheet_Sum.Cell(ExcelRow, 2).Value = AstroNET.Statistics.TotalEnergy(StatFocusPoint(FocusPos))
-                Dim Results As AstroNET.Statistics.cSingleChannelStatistics_Int = AstroNET.Statistics.CalcStatValuesFromHisto(StatFocusPoint(FocusPos))
-                WorkSheet_Sum.Cell(ExcelRow, 3).Value = Results.Percentile(95)
-                WorkSheet_Sum.Cell(ExcelRow, 4).Value = Results.Modus.Key
-                WorkSheet_Sum.Cell(ExcelRow, 5).Value = AstroNET.Statistics.FocusQualityIndicator(StatFocusPoint(FocusPos), 5.0)
-                ExcelRow += 1
+    '            WorkSheet_Sum.Cell(ExcelRow, 1).Value = FocusPos
+    '            WorkSheet_Sum.Cell(ExcelRow, 2).Value = AstroNET.Statistics.TotalEnergy(StatFocusPoint(FocusPos))
+    '            Dim Results As AstroNET.Statistics.cSingleChannelStatistics_Int = AstroNET.Statistics.CalcStatValuesFromHisto(StatFocusPoint(FocusPos))
+    '            WorkSheet_Sum.Cell(ExcelRow, 3).Value = Results.Percentile(95)
+    '            WorkSheet_Sum.Cell(ExcelRow, 4).Value = Results.Modus.Key
+    '            WorkSheet_Sum.Cell(ExcelRow, 5).Value = AstroNET.Statistics.FocusQualityIndicator(StatFocusPoint(FocusPos), 5.0)
+    '            ExcelRow += 1
 
-            Next FocusPos
+    '        Next FocusPos
 
-            '4) Save and open
-            For Each col In WorkSheet_Single.ColumnsUsed
-                col.AdjustToContents()
-            Next col
-            For Each col In WorkSheet_Sum.ColumnsUsed
-                col.AdjustToContents()
-            Next col
-            Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
-            workbook.SaveAs(FileToGenerate)
-            Process.Start(FileToGenerate)
+    '        '4) Save and open
+    '        For Each col In WorkSheet_Single.ColumnsUsed
+    '            col.AdjustToContents()
+    '        Next col
+    '        For Each col In WorkSheet_Sum.ColumnsUsed
+    '            col.AdjustToContents()
+    '        Next col
+    '        Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
+    '        workbook.SaveAs(FileToGenerate)
+    '        Process.Start(FileToGenerate)
 
-        End Using
+    '    End Using
 
-        '====================================================================================================
-        'Create focus plot
-        Dim Disp1 As New cZEDGraphForm
-        Dim LineGen As New cZEDGraphService.cLineStyleGenerator
-        Dim AllFocusPoints As New List(Of Integer) : AllFocusPoints.AddRange(StatFocusPoint.Keys)
-        For Each FocusPos As Integer In AllFocusPoints
-            'Dim Plot_X As New List(Of Double)
-            'Dim Plot_Y As New List(Of Double)
-            'FocusAnalysis( StatFocusPoint(FocusPos), Plot_X, Plot_Y)
-            Dim Plot_X As Double() = {}
-            Dim Plot_Y As Double() = {}
-            'Dim Plot_Y As New List(Of Double)
-            AstroNET.Statistics.EnergyCCDF(StatFocusPoint(FocusPos), 0.01 * AstroNET.Statistics.TotalEnergy(StatFocusPoint(FocusPos)), Plot_X, Plot_Y)
-            Disp1.PlotData("Focus - <" & FocusPos & ">", Plot_X, Plot_Y, LineGen.GetNextColor)
-        Next FocusPos
-        Disp1.MakeYAxisLog()
+    '    '====================================================================================================
+    '    'Create focus plot
+    '    Dim Disp1 As New cZEDGraphForm
+    '    Dim LineGen As New cZEDGraphService.cLineStyleGenerator
+    '    Dim AllFocusPoints As New List(Of Integer) : AllFocusPoints.AddRange(StatFocusPoint.Keys)
+    '    For Each FocusPos As Integer In AllFocusPoints
+    '        'Dim Plot_X As New List(Of Double)
+    '        'Dim Plot_Y As New List(Of Double)
+    '        'FocusAnalysis( StatFocusPoint(FocusPos), Plot_X, Plot_Y)
+    '        Dim Plot_X As Double() = {}
+    '        Dim Plot_Y As Double() = {}
+    '        'Dim Plot_Y As New List(Of Double)
+    '        AstroNET.Statistics.EnergyCCDF(StatFocusPoint(FocusPos), 0.01 * AstroNET.Statistics.TotalEnergy(StatFocusPoint(FocusPos)), Plot_X, Plot_Y)
+    '        Disp1.PlotData("Focus - <" & FocusPos & ">", Plot_X, Plot_Y, LineGen.GetNextColor)
+    '    Next FocusPos
+    '    Disp1.MakeYAxisLog()
 
-    End Sub
+    'End Sub
 
     Private Function FocusFromFileName(ByVal FileNameOnly As String) As Integer
         Return CInt(FileNameOnly.Split("_"c)(0))
@@ -869,119 +831,11 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub tsmiAnalysis_MultiAreaCompare_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_MultiAreaCompare.Click
-
-        Dim TopValues As Double = 99.99
-
-        'Init a new navigator window
-        Dim Navigator As New frmNavigator
-        Navigator.IPP = AIS.DB.IPP
-        Try
-            Navigator.Settings.Files_Root = System.IO.Path.GetDirectoryName(AIS.DB.LastFile_Name)
-        Catch ex As Exception
-            'Do nut update root file
-        End Try
-
-        'Load stars if present
-        If AIS.DB.Stars.Count > 0 Then
-            For Each Star As cDB.sSpecialPoint In AIS.DB.Stars
-                Navigator.lbSpecialPixel.Items.Add(Star.Coord.X.ToString.Trim.PadLeft(5, " "c) & ":" & Star.Coord.Y.ToString.Trim.PadLeft(5, " "c) & " -> " & Star.Value1.ValRegIndep.PadLeft(8, " "c) & ", mean " & Star.Value2.ValRegIndep.PadLeft(8, " "c))
-            Next Star
-        End If
-
-        If 1 = 0 Then
-
-            'Get top 1 percent of the pixel
-            Dim SpecialPixels As Dictionary(Of UInt16, List(Of Drawing.Point)) = Nothing
-            Try
-                If IsNothing(AIS.DB.LastFile_Data) = False Then
-                    Dim ValueLimit As UShort = CUShort(AIS.DB.LastFile_Statistics.MonochromHistogram_PctFract(TopValues))
-                    SpecialPixels = AIS.DB.LastFile_Data.DataProcessor_UInt16.GetAbove(ValueLimit)
-                End If
-            Catch ex As Exception
-                'Do nothing
-            End Try
-
-            'Optional: Get only pixel which also have high values arround (some sort of blur ...)
-            'SpecialPixels = AstroImageStatistics_Fun.HighSurrounding(CurrentData, CurrentStatistics, SpecialPixels)
-
-
-
-            'Load the list of special pixel values to the navigator
-            Navigator.lbSpecialPixel.Items.Clear()
-            If IsNothing(SpecialPixels) = False Then
-                If SpecialPixels.Count > 0 Then
-                    For Each PixelValue As UShort In SpecialPixels.Keys
-                        For Each Pixel As System.Drawing.Point In SpecialPixels(PixelValue)
-                            Navigator.lbSpecialPixel.Items.Add(Pixel.X.ToString.Trim & ":" & Pixel.Y.ToString.Trim & ":value=" & PixelValue.ValRegIndep)
-                        Next Pixel
-                    Next PixelValue
-                End If
-            End If
-
-        End If
-
-
-        'Show the navigator
-        Navigator.Show()
-        Navigator.ShowMosaik()
-
-    End Sub
-
     Private Sub tsmiFile_OpenRecent_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenRecent.Click
-        Using LastOpenedFiles As New frmLastOpenedFiles(AIS.DB.GetRecentFiles)
+        Using LastOpenedFiles As New frmLastOpenedFiles(AIS.GetRecentFiles)
             If LastOpenedFiles.ShowDialog <> DialogResult.OK Then Exit Sub
-            OpenAllFiles(New List(Of String)({LastOpenedFiles.SelectedFile}))
+            LoadFile(LastOpenedFiles.SelectedFile)
         End Using
-    End Sub
-
-    Private Sub SaveAllfilesStatisticsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles tsmiSaveAllFilesStat.Click
-
-        Dim AddHisto As Boolean = True
-
-        With sfdMain
-            .Filter = "EXCEL file (*.xlsx)|*.xlsx"
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-        End With
-
-        'Get combined hist mono X axis (INT only)
-        Dim AllADUValues As New List(Of Long)
-        Dim FileList As New List(Of String)
-        FileList.Add("ADU value")
-        For Each SingleFile As String In AllFilesEverRead.Keys
-            FileList.Add(System.IO.Path.GetFileNameWithoutExtension(SingleFile))
-            For Each ADUValue As Long In AllFilesEverRead(SingleFile).Statistics.MonochromHistogram_Int.Keys
-                If AllADUValues.Contains(ADUValue) = False Then AllADUValues.Add(ADUValue)
-            Next ADUValue
-        Next SingleFile
-        AllADUValues.Sort()
-
-        Using workbook As New ClosedXML.Excel.XLWorkbook
-
-            'Generate data
-            Dim XY As New List(Of Object())
-            For Each ADUValue As Long In AllADUValues
-                Dim Values As New List(Of Object)
-                Values.Add(ADUValue)
-                For Each SingleFile As String In AllFilesEverRead.Keys
-                    If AllFilesEverRead(SingleFile).Statistics.MonochromHistogram_Int.ContainsKey(ADUValue) Then Values.Add(AllFilesEverRead(SingleFile).Statistics.MonochromHistogram_Int(ADUValue)) Else Values.Add(String.Empty)
-                Next SingleFile
-                XY.Add(Values.ToArray)
-            Next ADUValue
-            Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Histogram")
-            worksheet.Cell(1, 1).InsertData(FileList, True)                                         'file names
-            worksheet.Cell(2, 1).InsertData(XY)                                                     'combined histogram
-            For Each col In worksheet.ColumnsUsed
-                col.AdjustToContents()
-            Next col
-
-            'Save and open
-            Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
-            workbook.SaveAs(FileToGenerate)
-            Process.Start(FileToGenerate)
-
-        End Using
-
     End Sub
 
     Private Sub tsmiTest_ReadNEFFile_Click(sender As Object, e As EventArgs) Handles tsmiTest_ReadNEFFile.Click
@@ -1075,9 +929,9 @@ Public Class MainForm
             Exit Sub
         Else
             cOpenCvSharp.MedianBlur(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, KSize)
-            Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-            If DisplayOutput() Then Log.Log(StatisticsReport)
-            If AIS.DB.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
+            Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+            Log.Log(StatisticsReport)
+            If AIS.Config.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
         End If
     End Sub
 
@@ -1113,89 +967,6 @@ Public Class MainForm
     Private Sub tsmiAnalysis_ManualColorBalancer_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_ManualColorBalancer.Click
         Dim X As New frmManualAdjust
         X.Show()
-    End Sub
-
-    Private Sub tsmiSaveFITSAndStats_Click(sender As Object, e As EventArgs) Handles tsmiSaveFITSAndStats.Click
-
-        Dim AddHisto As Boolean = True
-
-        With sfdMain
-            .Filter = "EXCEL file (*.xlsx)|*.xlsx"
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-        End With
-
-        'Generate a list of all FITS keys and statistics including the maximum entry length
-        Dim FoundFitsKeywords As New Dictionary(Of eFITSKeywords, Integer)
-        Dim FoundStatParameters As New List(Of String)
-        For Each FileName As String In AllFilesEverRead.Keys
-            For Each Key As eFITSKeywords In AllFilesEverRead(FileName).FITSHeader.Keys
-                Dim HeaderValue As String = CStr(AllFilesEverRead(FileName).FITSHeader(Key))
-                If FoundFitsKeywords.ContainsKey(Key) = False Then FoundFitsKeywords.Add(Key, -1)
-                If FoundFitsKeywords(Key) < HeaderValue.Length Then
-                    FoundFitsKeywords(Key) = HeaderValue.Length
-                End If
-            Next Key
-            For Each StatParameter As String In AllFilesEverRead(FileName).Statistics.MonoStatistics_Int.AllStats.Keys
-                If FoundStatParameters.Contains(StatParameter) = False Then FoundStatParameters.Add(StatParameter)
-            Next StatParameter
-        Next FileName
-
-        Using workbook As New ClosedXML.Excel.XLWorkbook
-
-            Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Overview")
-            Dim FileIdx As Integer = 1
-            Dim KeyIdx As Integer = 1
-
-            'Add header
-            For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
-                KeyIdx += 1
-                worksheet.Cell(FileIdx, KeyIdx).Value = Key.ToString
-            Next Key
-            For Each StatParameter As String In FoundStatParameters
-                KeyIdx += 1
-                worksheet.Cell(FileIdx, KeyIdx).Value = StatParameter
-            Next StatParameter
-            FileIdx += 1
-
-            'Add all files
-            For Each FileName As String In AllFilesEverRead.Keys
-                KeyIdx = 1
-                worksheet.Cell(FileIdx, KeyIdx).Value = FileName
-                'Add all FITS headers
-                For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
-                    KeyIdx += 1
-                    'Add the found entry or no entry
-                    If AllFilesEverRead(FileName).FITSHeader.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).Value = CType(AllFilesEverRead(FileName).FITSHeader(Key), ClosedXML.Excel.XLCellValue)
-                    Else
-                        worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
-                    End If
-                Next Key
-                'Add all statistics values
-                For Each Key As String In FoundStatParameters
-                    KeyIdx += 1
-                    If AllFilesEverRead(FileName).Statistics.MonoStatistics_Int.AllStats.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).Value = CType(AllFilesEverRead(FileName).Statistics.MonoStatistics_Int.AllStats(Key), ClosedXML.Excel.XLCellValue)
-                    Else
-                        worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
-                    End If
-
-                Next Key
-                FileIdx += 1
-            Next FileName
-
-            'Auto-adjust all collumns
-            For Each col In worksheet.ColumnsUsed
-                col.AdjustToContents()
-            Next col
-
-            'Save and open
-            Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
-            workbook.SaveAs(FileToGenerate)
-            Process.Start(FileToGenerate)
-
-        End Using
-
     End Sub
 
     Private Sub tsmiAnalysisVignette_CalcRaw_Click(sender As Object, e As EventArgs) Handles tsmiAnalysisVignette_CalcRaw.Click
@@ -1258,8 +1029,8 @@ Public Class MainForm
         End Select
         Log.Log(Stopper.Stamp("Vignette - correction (" & CorrectedValues.ValRegIndep & " values corrected"))
 
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        If DisplayOutput() Then Log.Log(StatisticsReport)
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
         Idle()
 
     End Sub
@@ -1283,7 +1054,7 @@ Public Class MainForm
         'Get only relevant data
         AIS.DB.LastFile_EvalResults.Vig_BinUsedData = New Dictionary(Of Double, Double)
         For Each Distance As Double In AIS.DB.LastFile_EvalResults.Vig_RawData.Keys
-            If Distance >= AIS.DB.VigStartDistance And Distance <= AIS.DB.VigStopDistance Then
+            If Distance >= AIS.Config.VigStartDistance And Distance <= AIS.Config.VigStopDistance Then
                 AIS.DB.LastFile_EvalResults.Vig_BinUsedData.Add(Distance, AIS.DB.LastFile_EvalResults.Vig_RawData(Distance))
             End If
         Next Distance
@@ -1292,10 +1063,10 @@ Public Class MainForm
         AIS.DB.LastFile_EvalResults.Vig_BinUsedData = AIS.DB.LastFile_EvalResults.Vig_BinUsedData.SortDictionary(False, Min, Max)
 
         'Bin if required
-        If AIS.DB.VigCalcBins > 0 Then
+        If AIS.Config.VigCalcBins > 0 Then
             'Build a statistics class for each X and Y bin
-            Dim VigBin_X(AIS.DB.VigCalcBins - 1) As Ato.cSingleValueStatistics
-            Dim VigBin_Y(AIS.DB.VigCalcBins - 1) As Ato.cSingleValueStatistics
+            Dim VigBin_X(AIS.Config.VigCalcBins - 1) As Ato.cSingleValueStatistics
+            Dim VigBin_Y(AIS.Config.VigCalcBins - 1) As Ato.cSingleValueStatistics
             For InitIdx As Integer = 0 To VigBin_X.GetUpperBound(0)
                 VigBin_X(InitIdx) = New Ato.cSingleValueStatistics(False)
                 VigBin_Y(InitIdx) = New Ato.cSingleValueStatistics(False)
@@ -1303,7 +1074,7 @@ Public Class MainForm
             'Sweep over all used dictionary entries, calculate bin and add value for X and Y value
             Dim Range As Double = Max - Min
             For Each Distance As Double In AIS.DB.LastFile_EvalResults.Vig_RawData.Keys
-                Dim Bin As Double = ((Distance - Min) / Range) * (AIS.DB.VigCalcBins - 1)
+                Dim Bin As Double = ((Distance - Min) / Range) * (AIS.Config.VigCalcBins - 1)
                 Dim BinInt As Integer = CInt(Math.Floor(Bin))
                 VigBin_X(BinInt).AddValue(Distance)
                 VigBin_Y(BinInt).AddValue(AIS.DB.LastFile_EvalResults.Vig_RawData(Distance))
@@ -1322,7 +1093,7 @@ Public Class MainForm
         Log.Log("Vignette correction calculation has <" & AIS.DB.LastFile_EvalResults.Vig_BinUsedData.Count.ValRegIndep & "> entries")
 
         'Calculate the fitting
-        If AIS.DB.VigPolyOrder = -1 And AIS.DB.VigCalcBins > 0 Then
+        If AIS.Config.VigPolyOrder = -1 And AIS.Config.VigCalcBins > 0 Then
             'Use the binned data
             Log.Log(" ... using (direct) binned data for fitting")
             AIS.DB.LastFile_EvalResults.Vig_Fitting = AIS.DB.LastFile_EvalResults.Vig_BinUsedData.Values.ToArray
@@ -1330,7 +1101,7 @@ Public Class MainForm
             'Use the polynomial calculation
             Log.Log(" ... using polynomial calcualtion for fitting")
             Dim Polynomial() As Double = {}
-            SignalProcessing.RegressPoly(AIS.DB.LastFile_EvalResults.Vig_BinUsedData, AIS.DB.VigPolyOrder, Polynomial)
+            SignalProcessing.RegressPoly(AIS.DB.LastFile_EvalResults.Vig_BinUsedData, AIS.Config.VigPolyOrder, Polynomial)
             AIS.DB.LastFile_EvalResults.Vig_Fitting = SignalProcessing.ApplyPoly(AIS.DB.LastFile_EvalResults.Vig_BinUsedData.Keys.ToArray, Polynomial)
         End If
 
@@ -1433,8 +1204,8 @@ Public Class MainForm
         Log.Log(ReplaceLog)
         Log.Log("Fixed " & HotPixel.Count & " pixel")
 
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        If DisplayOutput() Then Log.Log(StatisticsReport)
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
         Idle()
 
     End Sub
@@ -1474,9 +1245,9 @@ Public Class MainForm
 
         'Replace original image data with new image data
         AIS.DB.IPP.Copy(NewImage, AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        If DisplayOutput() Then Log.Log(StatisticsReport)
-        If AIS.DB.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
+        If AIS.Config.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
         Idle()
 
     End Sub
@@ -1803,9 +1574,9 @@ Public Class MainForm
         Else
             Dim NewData(,) As UInt16 = {}
             cOpenCvSharp.RelToMedian(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data, KSize)
-            Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-            If DisplayOutput() Then Log.Log(StatisticsReport)
-            If AIS.DB.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
+            Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+            Log.Log(StatisticsReport)
+            If AIS.Config.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
         End If
     End Sub
 
@@ -1882,9 +1653,9 @@ Public Class MainForm
         Select Case AIS.DB.LastFile_Data.DataType
             Case AstroNET.Statistics.eDataType.UInt16
                 AIS.DB.IPP.SwapBytes(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
-                Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-                If DisplayOutput() Then Log.Log(StatisticsReport)
-                If AIS.DB.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
+                Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+                Log.Log(StatisticsReport)
+                If AIS.Config.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
             Case Else
 
         End Select
@@ -1908,9 +1679,9 @@ Public Class MainForm
                         Next Idx2
                     Next Idx1
                 End With
-                Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.DB.BayerPatternNames, AIS.DB.LastFile_Statistics)
-                If DisplayOutput() Then Log.Log(StatisticsReport)
-                If AIS.DB.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
+                Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+                Log.Log(StatisticsReport)
+                If AIS.Config.AutoOpenStatGraph = True Then PlotStatistics(AIS.DB.LastFile_Name, AIS.DB.LastFile_Statistics)
             Case Else
 
         End Select
