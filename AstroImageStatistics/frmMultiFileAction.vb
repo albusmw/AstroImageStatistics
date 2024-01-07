@@ -1,5 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
+Imports System.CodeDom.Compiler
+Imports System.IO
 
 '''<summary>This form should handle actions that apply to multiple files, e.g. dark statistics, hot pixel search, basic stacking, ...</summary>
 Partial Public Class frmMultiFileAction
@@ -289,7 +291,9 @@ Partial Public Class frmMultiFileAction
         ' Cut certain ROI's (for stacking or separate storage)
         '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
-        If (Config.Processing_StoreAlignedFiles = True) Or (Config.Processing_CalcStackedFile) Or (Config.Processing_CalcSigmaClip) Then
+        If (Config.Processing_StoreAlignedFiles = True) Or (Config.Processing_CalcStackedFile = True) Or (Config.Processing_CalcSigmaClip = True) Then
+
+            Log("Running common ROI calculation ...")
 
             Dim CutROIs As New Dictionary(Of String, Rectangle)
 
@@ -348,6 +352,8 @@ Partial Public Class frmMultiFileAction
                 CutROIs = NewROIs.Clone
             Loop Until 1 = 0
 
+            Log("  DONE, I have " & CutROIs.Count.ValRegIndep & " common ROI's, size <" & CutROIs.First.Value.Width.ValRegIndep & "x" & CutROIs.First.Value.Height.ValRegIndep & ">")
+
             'Last.) Generate new files
             Dim FileIdx As Integer = -1
             Dim AlignFolder As String = String.Empty
@@ -387,23 +393,51 @@ Partial Public Class frmMultiFileAction
 
         If Config.Processing_CalcSigmaClip = True Then
 
+            Log("Running sigma-clipping processing ...")
             Dim NAXIS1 As Integer = SigmaClipROIs(0).Matrix.GetUpperBound(0) - 1
             Dim NAXIS2 As Integer = SigmaClipROIs(0).Matrix.GetUpperBound(1) - 1
             Dim Calculated(NAXIS1 - 1, NAXIS2 - 1) As Double
             Dim SigmaClipped As New AstroDSP.cSigmaClipped(Config.Stack_SigClip_LowBound, Config.Stack_SigClip_HighBound)
-            For Idx1 As Integer = 0 To Calculated.GetUpperBound(0)
-                For Idx2 As Integer = 0 To Calculated.GetUpperBound(1)
-                    Dim IgnoredPixel As Integer = 0
-                    Dim Samples(SigmaClipROIs.GetUpperBound(0) - 1) As UInt16
-                    For FileIdx As Integer = 0 To SigmaClipROIs.GetUpperBound(0) - 1
-                        Samples(FileIdx) = SigmaClipROIs(FileIdx).Matrix(Idx1, Idx2)
-                    Next FileIdx
-                    Calculated(Idx1, Idx2) = SigmaClipped.SigmaClipped_mean(Samples, IgnoredPixel)
-                Next Idx2
-            Next Idx1
+            Dim ClipStat(NAXIS1 - 1, NAXIS2 - 1) As UInt16
+            Dim TaskOptions As New ParallelOptions
+            TaskOptions.MaxDegreeOfParallelism = 4
+            Parallel.For(0, Calculated.GetUpperBound(0) + 1, TaskOptions, Sub(Idx1)
+                                                                              Dim LocalIdx1 As Integer = Idx1
+                                                                              For Idx2 As Integer = 0 To Calculated.GetUpperBound(1)
+                                                                                  Dim Samples(SigmaClipROIs.GetUpperBound(0) - 1) As UInt16
+                                                                                  For FileIdx As Integer = 0 To SigmaClipROIs.GetUpperBound(0) - 1
+                                                                                      Samples(FileIdx) = SigmaClipROIs(FileIdx).Matrix(LocalIdx1, Idx2)
+                                                                                  Next FileIdx
+                                                                                  Calculated(LocalIdx1, Idx2) = SigmaClipped.SigmaClipped_mean(Samples, ClipStat(LocalIdx1, Idx2))
+
+                                                                              Next Idx2
+                                                                          End Sub)
+
+            'Calculate the clipping statistics
+            Dim ClipStatistics As New Dictionary(Of UInt16, UInt32)         'dictionary with number of pixel clipped
+            For Idx As Integer = 0 To ClipStat.GetUpperBound(0)
+                For Idx1 As Integer = 0 To ClipStat.GetUpperBound(1)
+                    If ClipStatistics.ContainsKey(ClipStat(Idx, Idx1)) = False Then
+                        ClipStatistics.Add(ClipStat(Idx, Idx1), 1)
+                    Else
+                        ClipStatistics(ClipStat(Idx, Idx1)) += CType(1, UInt16)
+                    End If
+                Next Idx1
+            Next Idx
+            Dim TotalPixel As Long = SigmaClipROIs.Count * NAXIS1 * NAXIS2
+            Dim PixelClipped As UInt32 = 0
+            For Each Key As UInt16 In ClipStatistics.Keys
+                TotalPixel += ClipStatistics(Key)
+                PixelClipped += Key * ClipStatistics(Key)
+            Next Key
+
+            Log("Sigma-clipping done, " & PixelClipped.ValRegIndep & " of " & TotalPixel.ValRegIndep & " pixel removed, this are " & (100 * (PixelClipped / TotalPixel)).ValRegIndep("0.00") & "%")
+
             Dim StackFileName_SigmaClip As String = IO.Path.Combine(Config.Gen_root, Config.Gen_OutputFileSigmaClip)
             cFITSWriter.Write(StackFileName_SigmaClip, Calculated, cFITSWriter.eBitPix.Single)
             If Config.Stat_OpenStackedFile Then AstroImageStatistics.Ato.Utils.StartWithItsEXE(StackFileName_SigmaClip)
+
+            Log("Sigma-clipped file <" & StackFileName_SigmaClip & "> generated")
 
         End If
 
@@ -534,12 +568,13 @@ Partial Public Class frmMultiFileAction
 
     Private Sub adgvMain_CellContentClick(sender As Object, e As DataGridViewCellEventArgs) Handles adgvMain.CellContentClick
         'Click in a certain cell
-        If e.ColumnIndex = 0 Then
-            'Activate or deactivate the file processing for this file
-            Dim Cell As DataGridViewCheckBoxCell = CType(adgvMain.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex), DataGridViewCheckBoxCell)
-            Cell.Value = Not CType(Cell.Value, Boolean)
-            CalcAndDisplayCombinedROI()
-        End If
+        Select Case e.ColumnIndex
+            Case 0
+                'Activate or deactivate the file processing for this file
+                Dim Cell As DataGridViewCheckBoxCell = CType(adgvMain.Rows.Item(e.RowIndex).Cells.Item(e.ColumnIndex), DataGridViewCheckBoxCell)
+                Cell.Value = Not CType(Cell.Value, Boolean)
+        End Select
+        CalcAndDisplayCombinedROI()
     End Sub
 
     Private Sub adgvMain_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles adgvMain.RowEnter
@@ -685,6 +720,8 @@ Partial Public Class frmMultiFileAction
                 Next Idx1
         End Select
 
+        If ImageToDisplay.LongLength = 0 Then Exit Sub
+
         'Calculate statistics on the image
         Dim SumStat As New AstroNET.Statistics(AIS.DB.IPP)
         SumStat.DataProcessor_UInt16.ImageData(0).Data = ImageToDisplay
@@ -779,7 +816,7 @@ Partial Public Class frmMultiFileAction
         Log.Add("Statistics for <" & Pixel.X.ValRegIndep & ":" & Pixel.Y.ValRegIndep & ">")
         Dim AllPixel As UInt16() = GetSamePixelFromMultipleFiles(Pixel)
         Log.Add("  " & AllPixel.Length.ValRegIndep & " pixel")
-        Dim SamplesIgnored As Integer = 0
+        Dim SamplesIgnored As UInt16 = 0
         Dim NewMean As Double = (New AstroDSP.cSigmaClipped).SigmaClipped_mean(AllPixel, SamplesIgnored)
         Log.Add("  SigmaClipped_mean: " & NewMean.ValRegIndep)
         Log.Add("  Samples Ignored: " & SamplesIgnored.ValRegIndep)
@@ -964,4 +1001,25 @@ Partial Public Class frmMultiFileAction
         Clipboard.SetImage(pbImage.Image)
     End Sub
 
+    Private Sub tsmiAction_SelectAll_Click(sender As Object, e As EventArgs) Handles tsmiAction_SelectAll.Click
+        'Select all files for processing
+        SetCheckValue(True)
+        CalcAndDisplayCombinedROI()
+    End Sub
+
+    Private Sub tsmiAction_DeSelectAll_Click(sender As Object, e As EventArgs) Handles tsmiAction_DeSelectAll.Click
+        'Deselect all files for processing
+        SetCheckValue(False)
+        CalcAndDisplayCombinedROI()
+    End Sub
+
+    Private Sub SetCheckValue(ByVal Value As Boolean)
+        For Each Row As DataGridViewRow In adgvMain.Rows
+            Row.Cells(0).Value = Value
+        Next Row
+    End Sub
+
+    Private Sub tsmiAction_Click(sender As Object, e As EventArgs) Handles tsmiAction.Click
+
+    End Sub
 End Class

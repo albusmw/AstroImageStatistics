@@ -179,13 +179,13 @@ Partial Public Class frmMultiFileAction
         <ComponentModel.DisplayName("a) Sigma delta - low bound")>
         <ComponentModel.Description("Values below (mean - <this value>*sigma) are ignored")>
         <ComponentModel.DefaultValue(3.0)>
-        Public Property Stack_SigClip_LowBound As Double = 3.0
+        Public Property Stack_SigClip_LowBound As Double = 2.0
 
         <ComponentModel.Category(Cat_stack)>
         <ComponentModel.DisplayName("b) Sigma delta - high bound")>
         <ComponentModel.Description("Values above (mean + <this value>*sigma) are ignored")>
         <ComponentModel.DefaultValue(3.0)>
-        Public Property Stack_SigClip_HighBound As Double = 3.0
+        Public Property Stack_SigClip_HighBound As Double = 2.0
 
         '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
         ' ROI display

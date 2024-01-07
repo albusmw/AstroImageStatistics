@@ -36,6 +36,8 @@ Partial Class frmMultiFileAction
         Me.tbFITSHeader = New System.Windows.Forms.TextBox()
         Me.tbCombinedROI = New System.Windows.Forms.TabPage()
         Me.pbImage = New AstroImageStatistics.PictureBoxEx()
+        Me.cmsMain = New System.Windows.Forms.ContextMenuStrip(Me.components)
+        Me.cmsMain_ToClipboard = New System.Windows.Forms.ToolStripMenuItem()
         Me.tbSinglePixelStat = New System.Windows.Forms.TabPage()
         Me.tbPixelStat = New System.Windows.Forms.TextBox()
         Me.Label1 = New System.Windows.Forms.Label()
@@ -45,9 +47,10 @@ Partial Class frmMultiFileAction
         Me.tsmiFile_AddFiles = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFile_OpenWorkingDir = New System.Windows.Forms.ToolStripMenuItem()
         Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiFile_Exit = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFile_SaveAllFilesHisto = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFile_SaveFITSandStats = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsmiFile_Exit = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFileList = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiFileList_ClearList = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAction = New System.Windows.Forms.ToolStripMenuItem()
@@ -57,12 +60,13 @@ Partial Class frmMultiFileAction
         Me.tsmiAction_StackSpecial = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAction_Mode = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiAction_Mode_StoreAlignedFiles = New System.Windows.Forms.ToolStripMenuItem()
+        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripSeparator()
+        Me.tsmiAction_SelectAll = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiAction_DeSelectAll = New System.Windows.Forms.ToolStripMenuItem()
         Me.ofdMain = New System.Windows.Forms.OpenFileDialog()
         Me.ssMain = New System.Windows.Forms.StatusStrip()
         Me.tspbMain = New System.Windows.Forms.ToolStripProgressBar()
         Me.sfdMain = New System.Windows.Forms.SaveFileDialog()
-        Me.cmsMain = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.cmsMain_ToClipboard = New System.Windows.Forms.ToolStripMenuItem()
         CType(Me.adgvMain, System.ComponentModel.ISupportInitialize).BeginInit()
         CType(Me.scMain, System.ComponentModel.ISupportInitialize).BeginInit()
         Me.scMain.Panel1.SuspendLayout()
@@ -79,10 +83,10 @@ Partial Class frmMultiFileAction
         Me.tpFITSHeader.SuspendLayout()
         Me.tbCombinedROI.SuspendLayout()
         CType(Me.pbImage, System.ComponentModel.ISupportInitialize).BeginInit()
+        Me.cmsMain.SuspendLayout()
         Me.tbSinglePixelStat.SuspendLayout()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
-        Me.cmsMain.SuspendLayout()
         Me.SuspendLayout()
         '
         'adgvMain
@@ -259,6 +263,18 @@ Partial Class frmMultiFileAction
         Me.pbImage.TabIndex = 5
         Me.pbImage.TabStop = False
         '
+        'cmsMain
+        '
+        Me.cmsMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.cmsMain_ToClipboard})
+        Me.cmsMain.Name = "cmsMain"
+        Me.cmsMain.Size = New System.Drawing.Size(170, 26)
+        '
+        'cmsMain_ToClipboard
+        '
+        Me.cmsMain_ToClipboard.Name = "cmsMain_ToClipboard"
+        Me.cmsMain_ToClipboard.Size = New System.Drawing.Size(169, 22)
+        Me.cmsMain_ToClipboard.Text = "Copy to clipboard"
+        '
         'tbSinglePixelStat
         '
         Me.tbSinglePixelStat.BackColor = System.Drawing.SystemColors.Control
@@ -318,7 +334,7 @@ Partial Class frmMultiFileAction
         '
         'tsmiFile
         '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_AddFiles, Me.tsmiFile_OpenWorkingDir, Me.ToolStripMenuItem1, Me.tsmiFile_Exit, Me.tsmiFile_SaveAllFilesHisto, Me.tsmiFile_SaveFITSandStats})
+        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_AddFiles, Me.tsmiFile_OpenWorkingDir, Me.ToolStripMenuItem1, Me.tsmiFile_SaveAllFilesHisto, Me.tsmiFile_SaveFITSandStats, Me.ToolStripMenuItem3, Me.tsmiFile_Exit})
         Me.tsmiFile.Name = "tsmiFile"
         Me.tsmiFile.Size = New System.Drawing.Size(37, 20)
         Me.tsmiFile.Text = "File"
@@ -340,12 +356,6 @@ Partial Class frmMultiFileAction
         Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
         Me.ToolStripMenuItem1.Size = New System.Drawing.Size(223, 6)
         '
-        'tsmiFile_Exit
-        '
-        Me.tsmiFile_Exit.Name = "tsmiFile_Exit"
-        Me.tsmiFile_Exit.Size = New System.Drawing.Size(226, 22)
-        Me.tsmiFile_Exit.Text = "Exit"
-        '
         'tsmiFile_SaveAllFilesHisto
         '
         Me.tsmiFile_SaveAllFilesHisto.Name = "tsmiFile_SaveAllFilesHisto"
@@ -358,6 +368,17 @@ Partial Class frmMultiFileAction
         Me.tsmiFile_SaveFITSandStats.Size = New System.Drawing.Size(226, 22)
         Me.tsmiFile_SaveFITSandStats.Text = "Save FITS and statistics (XLS)"
         '
+        'ToolStripMenuItem3
+        '
+        Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
+        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(223, 6)
+        '
+        'tsmiFile_Exit
+        '
+        Me.tsmiFile_Exit.Name = "tsmiFile_Exit"
+        Me.tsmiFile_Exit.Size = New System.Drawing.Size(226, 22)
+        Me.tsmiFile_Exit.Text = "Exit"
+        '
         'tsmiFileList
         '
         Me.tsmiFileList.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFileList_ClearList})
@@ -368,12 +389,12 @@ Partial Class frmMultiFileAction
         'tsmiFileList_ClearList
         '
         Me.tsmiFileList_ClearList.Name = "tsmiFileList_ClearList"
-        Me.tsmiFileList_ClearList.Size = New System.Drawing.Size(180, 22)
+        Me.tsmiFileList_ClearList.Size = New System.Drawing.Size(119, 22)
         Me.tsmiFileList_ClearList.Text = "Clear list"
         '
         'tsmiAction
         '
-        Me.tsmiAction.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAction_Run, Me.ToolStripMenuItem2, Me.tsmiAction_ClearLog, Me.tsmiAction_StackSpecial, Me.tsmiAction_Mode})
+        Me.tsmiAction.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAction_Run, Me.ToolStripMenuItem2, Me.tsmiAction_ClearLog, Me.tsmiAction_StackSpecial, Me.tsmiAction_Mode, Me.ToolStripMenuItem4, Me.tsmiAction_SelectAll, Me.tsmiAction_DeSelectAll})
         Me.tsmiAction.Name = "tsmiAction"
         Me.tsmiAction.Size = New System.Drawing.Size(59, 20)
         Me.tsmiAction.Text = "Actions"
@@ -414,6 +435,23 @@ Partial Class frmMultiFileAction
         Me.tsmiAction_Mode_StoreAlignedFiles.Size = New System.Drawing.Size(167, 22)
         Me.tsmiAction_Mode_StoreAlignedFiles.Text = "Store aligned files"
         '
+        'ToolStripMenuItem4
+        '
+        Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
+        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(177, 6)
+        '
+        'tsmiAction_SelectAll
+        '
+        Me.tsmiAction_SelectAll.Name = "tsmiAction_SelectAll"
+        Me.tsmiAction_SelectAll.Size = New System.Drawing.Size(180, 22)
+        Me.tsmiAction_SelectAll.Text = "Select all files"
+        '
+        'tsmiAction_DeSelectAll
+        '
+        Me.tsmiAction_DeSelectAll.Name = "tsmiAction_DeSelectAll"
+        Me.tsmiAction_DeSelectAll.Size = New System.Drawing.Size(180, 22)
+        Me.tsmiAction_DeSelectAll.Text = "Deselect all files"
+        '
         'ofdMain
         '
         Me.ofdMain.FileName = "OpenFileDialog1"
@@ -431,18 +469,6 @@ Partial Class frmMultiFileAction
         '
         Me.tspbMain.Name = "tspbMain"
         Me.tspbMain.Size = New System.Drawing.Size(100, 16)
-        '
-        'cmsMain
-        '
-        Me.cmsMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.cmsMain_ToClipboard})
-        Me.cmsMain.Name = "cmsMain"
-        Me.cmsMain.Size = New System.Drawing.Size(181, 48)
-        '
-        'cmsMain_ToClipboard
-        '
-        Me.cmsMain_ToClipboard.Name = "cmsMain_ToClipboard"
-        Me.cmsMain_ToClipboard.Size = New System.Drawing.Size(180, 22)
-        Me.cmsMain_ToClipboard.Text = "Copy to clipboard"
         '
         'frmMultiFileAction
         '
@@ -474,13 +500,13 @@ Partial Class frmMultiFileAction
         Me.tpFITSHeader.PerformLayout()
         Me.tbCombinedROI.ResumeLayout(False)
         CType(Me.pbImage, System.ComponentModel.ISupportInitialize).EndInit()
+        Me.cmsMain.ResumeLayout(False)
         Me.tbSinglePixelStat.ResumeLayout(False)
         Me.tbSinglePixelStat.PerformLayout()
         Me.msMain.ResumeLayout(False)
         Me.msMain.PerformLayout()
         Me.ssMain.ResumeLayout(False)
         Me.ssMain.PerformLayout()
-        Me.cmsMain.ResumeLayout(False)
         Me.ResumeLayout(False)
         Me.PerformLayout()
 
@@ -525,4 +551,8 @@ Partial Class frmMultiFileAction
     Friend WithEvents tsmiFile_SaveFITSandStats As ToolStripMenuItem
     Friend WithEvents cmsMain As ContextMenuStrip
     Friend WithEvents cmsMain_ToClipboard As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem3 As ToolStripSeparator
+    Friend WithEvents tsmiAction_SelectAll As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem4 As ToolStripSeparator
+    Friend WithEvents tsmiAction_DeSelectAll As ToolStripMenuItem
 End Class

@@ -104,7 +104,7 @@ Partial Class MainForm
         Me.frmTest_HistoInteractive = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTestCode_StreamDeck = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsTest_LibRaw = New System.Windows.Forms.ToolStripMenuItem()
-        Me.SigmaClipToolStripMenuItem = New System.Windows.Forms.ToolStripMenuItem()
+        Me.tsmiTest_SigmaClip = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ALADINCoords = New System.Windows.Forms.ToolStripMenuItem()
         Me.tsmiTools_ChangeHeader = New System.Windows.Forms.ToolStripMenuItem()
@@ -134,6 +134,7 @@ Partial Class MainForm
         Me.tsMain = New System.Windows.Forms.ToolStrip()
         Me.tsb_Open = New System.Windows.Forms.ToolStripButton()
         Me.tsb_Display = New System.Windows.Forms.ToolStripButton()
+        Me.tsmiTest_FITSReadSpeed = New System.Windows.Forms.ToolStripMenuItem()
         Me.msMain.SuspendLayout()
         Me.ssMain.SuspendLayout()
         Me.gbDetails.SuspendLayout()
@@ -151,7 +152,7 @@ Partial Class MainForm
         'msMain
         '
         Me.msMain.ImageScalingSize = New System.Drawing.Size(24, 24)
-        Me.msMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiAnalysis, Me.tsmiProcessing, Me.tsmiTest, Me.tsmiTools, Me.WorkflowToolStripMenuItem})
+        Me.msMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiAnalysis, Me.tsmiProcessing, Me.tsmiTools, Me.WorkflowToolStripMenuItem, Me.tsmiTest})
         Me.msMain.Location = New System.Drawing.Point(0, 0)
         Me.msMain.Name = "msMain"
         Me.msMain.Padding = New System.Windows.Forms.Padding(4, 1, 0, 1)
@@ -545,7 +546,7 @@ Partial Class MainForm
         '
         'tsmiTest
         '
-        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tssmRadCollimation, Me.tsmiTest_ReadNEFFile, Me.tsmiTest_ippiXCorr, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw, Me.SigmaClipToolStripMenuItem})
+        Me.tsmiTest.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.AfiineTranslateToolStripMenuItem, Me.ToolStripMenuItem6, Me.tsmiTest_Focus, Me.tssmRadCollimation, Me.tsmiTest_ReadNEFFile, Me.tsmiTest_ippiXCorr, Me.ToolStripMenuItem9, Me.tsmiTestCode_UseOpenCV, Me.MedianWithinNETToolStripMenuItem, Me.ToolStripMenuItem12, Me.CodeBelowIsNotForHereToolStripMenuItem, Me.CloudWatcherCombinerToolStripMenuItem, Me.GrayPNGToFITSToolStripMenuItem, Me.tsmiTest_AstrometryQuery, Me.frmTest_HistoInteractive, Me.tsmiTestCode_StreamDeck, Me.tsTest_LibRaw, Me.tsmiTest_SigmaClip, Me.tsmiTest_FITSReadSpeed})
         Me.tsmiTest.Name = "tsmiTest"
         Me.tsmiTest.Size = New System.Drawing.Size(68, 22)
         Me.tsmiTest.Text = "Test code"
@@ -649,11 +650,11 @@ Partial Class MainForm
         Me.tsTest_LibRaw.Size = New System.Drawing.Size(274, 22)
         Me.tsTest_LibRaw.Text = "LibRaw access"
         '
-        'SigmaClipToolStripMenuItem
+        'tsmiTest_SigmaClip
         '
-        Me.SigmaClipToolStripMenuItem.Name = "SigmaClipToolStripMenuItem"
-        Me.SigmaClipToolStripMenuItem.Size = New System.Drawing.Size(274, 22)
-        Me.SigmaClipToolStripMenuItem.Text = "Sigma clip"
+        Me.tsmiTest_SigmaClip.Name = "tsmiTest_SigmaClip"
+        Me.tsmiTest_SigmaClip.Size = New System.Drawing.Size(274, 22)
+        Me.tsmiTest_SigmaClip.Text = "Sigma clip"
         '
         'tsmiTools
         '
@@ -684,7 +685,7 @@ Partial Class MainForm
         '
         Me.tsmiTools_TestFile.Name = "tsmiTools_TestFile"
         Me.tsmiTools_TestFile.Size = New System.Drawing.Size(215, 22)
-        Me.tsmiTools_TestFile.Text = "Special test file"
+        Me.tsmiTools_TestFile.Text = "Test file generator"
         '
         'CheckROICutoutToolStripMenuItem
         '
@@ -892,6 +893,12 @@ Partial Class MainForm
         Me.tsb_Display.Size = New System.Drawing.Size(49, 22)
         Me.tsb_Display.Text = "Display"
         '
+        'tsmiTest_FITSReadSpeed
+        '
+        Me.tsmiTest_FITSReadSpeed.Name = "tsmiTest_FITSReadSpeed"
+        Me.tsmiTest_FITSReadSpeed.Size = New System.Drawing.Size(274, 22)
+        Me.tsmiTest_FITSReadSpeed.Text = "FITS read speed"
+        '
         'MainForm
         '
         Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
@@ -1038,6 +1045,7 @@ Partial Class MainForm
     Friend WithEvents tsmiAnalysis_FindStars As ToolStripMenuItem
     Friend WithEvents tsmiProc_Bin2OpenCV As ToolStripMenuItem
     Friend WithEvents tsmiTest_ippiXCorr As ToolStripMenuItem
-    Friend WithEvents SigmaClipToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiTest_SigmaClip As ToolStripMenuItem
     Friend WithEvents tsmiFile_ConvertTo16BitFITS As ToolStripMenuItem
+    Friend WithEvents tsmiTest_FITSReadSpeed As ToolStripMenuItem
 End Class

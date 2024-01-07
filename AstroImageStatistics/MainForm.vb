@@ -2036,7 +2036,7 @@ Public Class MainForm
         MyForm.Show()
     End Sub
 
-    Private Sub SigmaClipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles SigmaClipToolStripMenuItem.Click
+    Private Sub SigmaClipToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles tsmiTest_SigmaClip.Click
         Dim TestClass As New AstroDSP.cSigmaClipped
         Dim Samples(999) As UInt16
         Dim RndGen As New Random
@@ -2046,7 +2046,7 @@ Public Class MainForm
         Samples(4) = 20000
         Samples(66) = 0
         For LoopIdx As Integer = 1 To 10000
-            Dim PixelRemoved As Integer = 0
+            Dim PixelRemoved As UInt16 = 0
             Dim NewMean As Double = TestClass.SigmaClipped_mean(Samples, PixelRemoved)
         Next LoopIdx
         MsgBox("OK")
@@ -2092,6 +2092,81 @@ Public Class MainForm
                 Dim NewData(,) As UInt16 = FileContainer.DataProcessor_Float32.ImageData(0).Data.ToUInt16(A, B)
                 cFITSWriter.Write(sfdMain.FileName, NewData, cFITSWriter.eBitPix.Int16)
         End Select
+
+    End Sub
+
+    Private Sub tsmiTest_FITSReadSpeed_Click(sender As Object, e As EventArgs) Handles tsmiTest_FITSReadSpeed.Click
+
+        Dim FileName As String = "C:\GIT\AstroImageStatistics\AstroImageStatistics\bin\x64\Debug\AsImStatTestImage.fits"
+        'Dim FileName As String = "\\192.168.100.10\astro_misc\TestData\TestImage_UInt16_20000_19000.fits"
+        Dim ROI As New Drawing.Rectangle(1, 1, 20000 - 2, 19000 - 2)
+        Dim FITSReader As New cFITSReader
+        Dim Log As New List(Of String)
+        cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
+        Dim Stopper As New Stopwatch
+        Dim Data(,) As UInt16
+
+        'Load reference data
+        FITSReader.UseExperimentalModes = False
+        Stopper.Reset() : Stopper.Start()
+        Dim RefData(,) As UInt16 = FITSReader.ReadInUInt16(FileName, True, True)
+        Stopper.Stop()
+        Log.Add("Load def data (IPP, direct, all): " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        'Speed test
+        Stopper.Reset() : Stopper.Start()
+        Data = FITSReader.ReadDataContentUInt16_NEW(FileName, 2880, True, 0, 20000, 0, 19000, True)
+        Stopper.Stop()
+        Log.Add("Load with IPP - max speed and low memory mode: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        Dim Differences As Long = RefData.FindDifferences(Data)
+        Log.Add("Differences: " & Differences.ValRegIndep)
+
+        'Load with IPP - full
+        'Data = {} : FITSReader.UseExperimentalModes = True
+        'Stopper.Reset() : Stopper.Start()
+        'Data = FITSReader.ReadInUInt16(FileName, True, True)
+        'Stopper.Stop()
+        'Log.Add("Load with IPP - full in max speed mode: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+
+
+        'Load without IPP - full parallel
+        'Data = {} : FITSReader.UseExperimentalModes = True
+        'Stopper.Reset() : Stopper.Start()
+        'Data = FITSReader.ReadInUInt16(FileName, False, False)
+        'Stopper.Stop()
+        'Log.Add("Load without IPP - full parallel: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        ''Load without IPP - full non-parallel
+        'Data = {} : FITSReader.UseExperimentalModes = False
+        'Stopper.Reset() : Stopper.Start()
+        'Data = FITSReader.ReadInUInt16(FileName, False, False)
+        'Stopper.Stop()
+        'Log.Add("Load without IPP - full non-parallel: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        ''Load with IPP - ROI
+        'Data = {} : FITSReader.UseExperimentalModes = True
+        'Stopper.Reset() : Stopper.Start()
+        'Data = FITSReader.ReadInUInt16(FileName, True, ROI, True)
+        'Stopper.Stop()
+        'Log.Add("Load with IPP - ROI: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        ''Load without IPP - ROI parallel
+        'Data = {} : FITSReader.UseExperimentalModes = True
+        'Stopper.Reset() : Stopper.Start()
+        'Data = FITSReader.ReadInUInt16(FileName, False, ROI, False)
+        'Stopper.Stop()
+        'Log.Add("Load without IPP - ROI parallel: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        ''Load without IPP - ROI non-parallel
+        'Data = {} : FITSReader.UseExperimentalModes = False
+        'Stopper.Reset() : Stopper.Start()
+        'Data = FITSReader.ReadInUInt16(FileName, False, ROI, False)
+        'Stopper.Stop()
+        'Log.Add("Load without IPP - ROI non-parallel: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
+
+        MsgBox(Join(Log.ToArray, System.Environment.NewLine))
 
     End Sub
 
