@@ -1,22 +1,6 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports System.Data.Entity
-Imports System.Runtime.CompilerServices
-Imports System.Windows.Navigation
-Imports AstroImageStatistics.AstroNET.Statistics
-Imports AstroImageStatistics.Ato
-Imports AstroImageStatistics.cLibRaw
-Imports AstroImageStatistics.cStatMultiThread_UInt16
-Imports DocumentFormat.OpenXml.Drawing
-Imports DocumentFormat.OpenXml.Drawing.Charts
-Imports DocumentFormat.OpenXml.Drawing.Diagrams
-Imports DocumentFormat.OpenXml.Office2013.Drawing
-Imports FxResources.System
-Imports MS.Internal.IO.Packaging
-Imports OpenCvSharp.LineIterator
-Imports SixLabors.Fonts.Tables.General
-
 Public Class MainForm
 
     Declare Sub CopyMemory Lib "kernel32" Alias "RtlMoveMemory" (ByVal pDst As IntPtr,
@@ -46,7 +30,7 @@ Public Class MainForm
     '''<returns>Position where the data start.</returns>
     Private Function LoadFileDataOnly(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As cFileProps
 
-        Dim RetVal As New cFileProps
+        Dim RetVal As New cFileProps(FileName)
         Dim FileNameOnly As String = System.IO.Path.GetFileName(FileName)
         Running()
 
@@ -79,7 +63,7 @@ Public Class MainForm
     '''<returns>Position where the data start.</returns>
     Private Function LoadFile(ByVal FileName As String, ByRef Container As AstroNET.Statistics) As cFileProps
 
-        Dim RetVal As New cFileProps
+        Dim RetVal As New cFileProps(FileName)
         Dim FileNameOnly As String = System.IO.Path.GetFileName(FileName)
         Running()
 
@@ -301,22 +285,22 @@ Public Class MainForm
         Disp.HostForm.Width = Me.Width
     End Sub
 
-    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'Get build data
-        Dim BuildDate As String = String.Empty
-        Dim AllResources As String() = System.Reflection.Assembly.GetExecutingAssembly.GetManifestResourceNames
-        For Each Entry As String In AllResources
+        Dim BuildDate = String.Empty
+        Dim AllResources = Reflection.Assembly.GetExecutingAssembly.GetManifestResourceNames
+        For Each Entry In AllResources
             If Entry.EndsWith(".BuildDate.txt") Then
-                BuildDate = " (Build of " & (New System.IO.StreamReader(System.Reflection.Assembly.GetExecutingAssembly.GetManifestResourceStream(Entry)).ReadToEnd.Trim).Replace(",", ".") & ")"
+                BuildDate = " (Build of " & New IO.StreamReader(Reflection.Assembly.GetExecutingAssembly.GetManifestResourceStream(Entry)).ReadToEnd.Trim.Replace(",", ".") & ")"
                 Exit For
             End If
         Next Entry
-        Me.Text &= BuildDate
+        Text &= BuildDate
 
         'Load IPP
-        Dim IPPLoadError As String = String.Empty
-        Dim IPPPathToUse As String = cIntelIPP.SearchDLLToUse(cIntelIPP.PossiblePaths(AIS.DB.MyPath).ToArray, IPPLoadError)
+        Dim IPPLoadError = String.Empty
+        Dim IPPPathToUse = cIntelIPP.SearchDLLToUse(cIntelIPP.PossiblePaths(AIS.DB.MyPath).ToArray, IPPLoadError)
         If String.IsNullOrEmpty(IPPLoadError) = True Then
             AIS.DB.IPP = New cIntelIPP(IPPPathToUse)
             cFITSWriter.UseIPPForWriting = True
@@ -326,12 +310,17 @@ Public Class MainForm
         cFITSWriter.IPPPath = AIS.DB.IPP.IPPPath
         cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
 
+        'Set FITS viewer
+        Dim FileName As String = "FITSWork4.exe"
+        Dim Locations As List(Of String) = Everything.GetExactMatch(FileName, Everything.GetSearchResult(FileName))
+        If Locations.Count > 0 Then AIS.Config.FITSViewer = Locations(0)
+
         'Init drap-and-drop
         DD = New Ato.DragDrop(tbLogOutput, False)
 
     End Sub
 
-    Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles Me.Shown
+    Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
 
         'Init GUI
         pgMain.SelectedObject = AIS.Config
@@ -340,8 +329,8 @@ Public Class MainForm
         'If a file is droped to the EXE (icon), use this as filename
         With My.Application
             If .CommandLineArgs.Count > 0 Then
-                Dim FileName As String = .CommandLineArgs.Item(0)
-                If System.IO.File.Exists(FileName) Then LoadFile(FileName, AIS.DB.LastFile_Data)
+                Dim FileName = .CommandLineArgs.Item(0)
+                If IO.File.Exists(FileName) Then LoadFile(FileName, AIS.DB.LastFile_Data)
             End If
         End With
 
@@ -352,7 +341,7 @@ Public Class MainForm
     End Sub
 
     Private Sub OpenEXELocationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenEXELocationToolStripMenuItem.Click
-        Process.Start(AIS.DB.MyPath)
+        Ato.Utils.StartWithItsEXE(AIS.DB.MyPath)
     End Sub
 
     Private Sub DE()
@@ -372,13 +361,8 @@ Public Class MainForm
     End Sub
 
     Private Sub tsmiFile_OpenLastFile_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenLastFile.Click
-        If System.IO.File.Exists(AIS.DB.LastFile_Name) = True Then
-            Try
-                Process.Start(AIS.DB.LastFile_Name)
-            Catch ex As Exception
-                Log.Log("Error opening <" & AIS.DB.LastFile_Name & ">: <" & ex.Message & ">")
-            End Try
-        End If
+        Dim OpenError As String = AIS.OpenFile(AIS.DB.LastFile_Name)
+        If String.IsNullOrEmpty(OpenError) = False Then Log.Log(OpenError)
     End Sub
 
     Private Sub RowAndColumnStatisticsToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_RowColStat.Click
@@ -815,13 +799,13 @@ Public Class MainForm
 
     End Function
 
-    Private Sub Form1_KeyUp(sender As Object, e As KeyEventArgs) Handles Me.KeyUp
+    Private Sub Form1_KeyUp(sender As Object, e As KeyEventArgs) Handles MyBase.KeyUp
         If e.KeyCode = Keys.F1 Then
             Dim RTFTextBox As New cRTFTextBox
-            Dim AllResources As String() = System.Reflection.Assembly.GetExecutingAssembly.GetManifestResourceNames
-            For Each Entry As String In AllResources
+            Dim AllResources = Reflection.Assembly.GetExecutingAssembly.GetManifestResourceNames
+            For Each Entry In AllResources
                 If Entry.EndsWith(".HelpContent.rtf") Then
-                    RTFTextBox.ShowText(New System.IO.StreamReader(System.Reflection.Assembly.GetExecutingAssembly.GetManifestResourceStream(Entry)).ReadToEnd.Trim)
+                    RTFTextBox.ShowText(New IO.StreamReader(Reflection.Assembly.GetExecutingAssembly.GetManifestResourceStream(Entry)).ReadToEnd.Trim)
                     Exit For
                 End If
             Next Entry
@@ -1787,7 +1771,7 @@ Public Class MainForm
 
         'Tries to fix the special hot-pixel on the QHY600
 
-        Dim AroundStat As New cSingleValueStatistics
+        Dim AroundStat As New Ato.cSingleValueStatistics
         Dim FixedPixelCount As UInt32 = 0
         Dim Limit As UShort = 65534
         Dim SetTo As UShort = CUShort(InputBox("Set to", "0"))
@@ -1905,7 +1889,7 @@ Public Class MainForm
 
     End Sub
 
-    Private Function Bin2MaxOut(ByRef OriginalData As sImgData_UInt16, ByRef MaxSpikeToUse As Double, ByRef BinnedData(,) As UInt16) As Dictionary(Of UInt16, UInt32)
+    Private Function Bin2MaxOut(ByRef OriginalData As cStatMultiThread_UInt16.sImgData_UInt16, ByRef MaxSpikeToUse As Double, ByRef BinnedData(,) As UInt16) As Dictionary(Of UInt16, UInt32)
         Dim RetVal As New Dictionary(Of UInt16, UInt32)
         Dim UInt16_one As UInt16 = 1
         Dim MaxSpikeFound As Double = Double.MinValue
@@ -2064,10 +2048,10 @@ Public Class MainForm
 
         Dim X As String = FileContainer.Dimensions
         Select Case FileContainer.DataType
-            Case eDataType.UInt16
+            Case AstroNET.Statistics.eDataType.UInt16
                 'Is already UInt16 - do nothing
                 MsgBox("File is already 16-bit fixed point!")
-            Case eDataType.UInt32
+            Case AstroNET.Statistics.eDataType.UInt32
                 'Downscale with full range
                 If sfdMain.ShowDialog <> DialogResult.OK Then Exit Sub
                 Dim Data_Min As UInt32 = UInt32.MaxValue
@@ -2079,7 +2063,7 @@ Public Class MainForm
                 Dim B As Double = NewRange_Max - (A * Data_Max)
                 Dim NewData(,) As UInt16 = FileContainer.DataProcessor_UInt32.ImageData(0).Data.ToUInt16(A, B)
                 cFITSWriter.Write(sfdMain.FileName, NewData, cFITSWriter.eBitPix.Int16)
-            Case eDataType.Float32
+            Case AstroNET.Statistics.eDataType.Float32
                 'Downscale with full range
                 If sfdMain.ShowDialog <> DialogResult.OK Then Exit Sub
                 Dim Data_Min As Single = Single.NaN
@@ -2115,7 +2099,7 @@ Public Class MainForm
 
         'Speed test
         Stopper.Reset() : Stopper.Start()
-        Data = FITSReader.ReadDataContentUInt16_NEW(FileName, 2880, True, 0, 20000, 0, 19000, True)
+        'Data = FITSReader.ReadDataContentUInt16_NEW(FileName, 2880, True, 0, 20000, 0, 19000, True)
         Stopper.Stop()
         Log.Add("Load with IPP - max speed and low memory mode: " & Stopper.ElapsedMilliseconds.ValRegIndep & " ms")
 
@@ -2168,6 +2152,11 @@ Public Class MainForm
 
         MsgBox(Join(Log.ToArray, System.Environment.NewLine))
 
+    End Sub
+
+    Private Sub DataGridViewDataSourceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DataGridViewDataSourceToolStripMenuItem.Click
+        Dim X As New frmTestForm
+        X.Show()
     End Sub
 
 End Class

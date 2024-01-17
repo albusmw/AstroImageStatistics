@@ -100,7 +100,7 @@ Public Class frmSaveFile
         'https://stackoverflow.com/questions/9588367/creating-16-bit-grayscale-images-in-wpf
         Dim Width As Integer = Data.GetUpperBound(0) + 1
         Dim Height As Integer = Data.GetUpperBound(1) + 1
-        Dim RetVal As New WriteableBitmap(Width, Height, 96, 96, Windows.Media.PixelFormats.Gray16, Nothing)
+        Dim RetVal As New WriteableBitmap(Width, Height, 96, 96, System.Windows.Media.PixelFormats.Gray16, Nothing)
         Dim ROI As New Int32Rect(0, 0, Width, Height)
         Dim Stride As Integer = (Width * 2)
         RetVal.WritePixels(ROI, Data.Transpose, Stride, 0)

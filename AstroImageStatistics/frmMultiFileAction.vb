@@ -1,15 +1,18 @@
 ﻿Option Explicit On
 Option Strict On
 Imports System.CodeDom.Compiler
+Imports System.Configuration
+Imports System.DirectoryServices.ActiveDirectory
 Imports System.IO
+Imports OpenCvSharp
 
 '''<summary>This form should handle actions that apply to multiple files, e.g. dark statistics, hot pixel search, basic stacking, ...</summary>
 Partial Public Class frmMultiFileAction
 
     '''<summary>Available columns.</summary>
     Private Enum eColumns
-        Process
-        File
+        Process = 0
+        FileName
         DateTime
         NAxis1
         NAxis2
@@ -19,10 +22,16 @@ Partial Public Class frmMultiFileAction
         MonoMax
         MonoMean
         MonoMedian
+        DSS_OverallQuality
+        DSS_SkyBackground
+        DSS_NrStars
     End Enum
 
+
     '''<summary>Files in the list and it's properties.</summary>
-    Private AllListFiles As New Dictionary(Of String, cFileProps)
+    Public AllFiles As New List(Of cFileProps)
+
+    Public adgvBinding As New BindingSource
 
     Private Config As New cConfig
     Private WithEvents Stacker As New cStacker
@@ -38,24 +47,51 @@ Partial Public Class frmMultiFileAction
         End Sub
     End Class
 
-    Private Sub frmMultiFileAction_Load(sender As Object, e As EventArgs) Handles Me.Load
+    '═════════════════════════════════════════════════════════════════════════════
+    'Form load code
+    '═════════════════════════════════════════════════════════════════════════════
+
+    Private Sub frmMultiFileAction_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         'Prepare the GUI and the table
         pgMain.SelectedObject = Config
-        With adgvMain
-            .Columns.Add(New DataGridViewCheckBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Process"
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "File" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "DateTime" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "NAXIS1" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "NAXIS2" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Delta X"
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Delta Y"
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Mono min" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Mono max" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Mono mean" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .Columns.Add(New DataGridViewTextBoxColumn) : .Columns(.ColumnCount - 1).HeaderText = "Mono median" : .Columns(.ColumnCount - 1).ReadOnly = True
-            .ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        End With
+        adgvBinding.DataSource = AllFiles
+        adgvMain.DataSource = adgvBinding
     End Sub
+
+    '═════════════════════════════════════════════════════════════════════════════
+    'List connected to the table and functions related to the list
+    '═════════════════════════════════════════════════════════════════════════════
+
+    '''<summary>Check if the given file name is already in the list of files.</summary>
+    '''<param name="FileName">File to search in the list.</param>
+    '''<returns>TRUE if file is in the list, FALSE else.</returns>
+    Private Function FileInList(ByVal FileName As String) As Boolean
+        If AllFiles.Count = 0 Then Return False
+        For Each Entry As cFileProps In AllFiles
+            If Entry.FileName = FileName Then Return True
+        Next Entry
+        Return False
+    End Function
+
+    '''<summary>Get the index of this file name within the AllFiles list.</summary>
+    Private Function GetFileListIndex(ByVal FileName As String) As Integer
+        If AllFiles.Count = 0 Then Return Nothing
+        For Idx As Integer = 0 To AllFiles.Count - 1
+            If AllFiles(Idx).FileName = FileName Then Return Idx
+        Next Idx
+        Return Nothing
+    End Function
+
+    '''<summary>Return the index of the selected table element in the AllFiles list.</summary>
+    Private Function GetFileListIndex() As Integer
+        Dim FileNameToSearch As String = GetSelectedFileName()
+        For Idx As Integer = 0 To AllFiles.Count - 1
+            If AllFiles(Idx).FileName = FileNameToSearch Then
+                Return Idx
+            End If
+        Next Idx
+        Return -1
+    End Function
 
     '''<summary>Add files to the list.</summary>
     '''<param name="NewFiles">Files that should be added.</param>
@@ -63,11 +99,8 @@ Partial Public Class frmMultiFileAction
         'Handle drag-and-drop for all dropped FIT(s) files
         For Each File As String In NewFiles
             If System.IO.Path.GetExtension(File).ToUpper.StartsWith(".FIT") Then
-                If AllListFiles.ContainsKey(File) = False Then
-                    AllListFiles.Add(File, New cFileProps)
-                    Using BaseIn As New System.IO.StreamReader(File)
-                        Dim FITSHeaderParser As New cFITSHeaderParser(cFITSReader.ReadHeader(BaseIn, AllListFiles(File).DataStartPosition))
-                    End Using
+                If FileInList(File) = False Then
+                    AllFiles.Add(New cFileProps(File))
                 End If
             End If
         Next File
@@ -75,16 +108,16 @@ Partial Public Class frmMultiFileAction
         FITSGrepper.Grep(NewFiles)
         'Add fits header info
         For Each GreppedFile As String In FITSGrepper.AllFileHeaders.Keys
-            AllListFiles(GreppedFile).FITSHeader = FITSGrepper.AllFileHeaders(GreppedFile)
+            AllFiles(GetFileListIndex(GreppedFile)).FITSHeader = FITSGrepper.AllFileHeaders(GreppedFile)
         Next GreppedFile
         'Update table
-        UpdateTable()
+        RefreshTable()
     End Sub
 
     '''<summary>Get all available data formats from the DragEventArgs</summary>
     '''<param name="e">Dragged content.</param>
     '''<returns>All drop content entries.</returns>
-    Private Function GetDropContent(ByRef e As Windows.Forms.DragEventArgs) As Dictionary(Of String, Object)
+    Private Function GetDropContent(ByRef e As System.Windows.Forms.DragEventArgs) As Dictionary(Of String, Object)
         Dim RetVal As New Dictionary(Of String, Object)
         For Each DataContent As String In e.Data.GetFormats
             RetVal.Add(DataContent, e.Data.GetData(DataContent))
@@ -92,9 +125,9 @@ Partial Public Class frmMultiFileAction
         Return RetVal
     End Function
 
-    '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
+    '═════════════════════════════════════════════════════════════════════════════
     ' Logging
-    '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
+    '═════════════════════════════════════════════════════════════════════════════
 
     Private Sub Log(ByVal Text As String)
         Log(Text, False, True)
@@ -162,12 +195,9 @@ Partial Public Class frmMultiFileAction
     '==============================================================================================
 
     '''<summary>Display internal list content in the table</summary>
-    Private Sub UpdateTable()
-        adgvMain.Rows.Clear()
-        For Each File As String In AllListFiles.Keys
-            adgvMain.Rows.Add(New Object() {True, File, AllListFiles(File).DateTime, AllListFiles(File).NAXIS1, AllListFiles(File).NAXIS2, AllListFiles(File).DeltaX.ValRegIndep, AllListFiles(File).DeltaY.ValRegIndep})
-        Next File
-        adgvMain.Columns(eColumns.File).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
+    Private Sub RefreshTable()
+        adgvBinding.ResetBindings(False)
+        adgvMain.Columns(eColumns.FileName).AutoSizeMode = DataGridViewAutoSizeColumnMode.AllCells
     End Sub
 
     Private Function ShiftROI(ByVal ROI As Drawing.Rectangle, ByVal X As Integer, ByVal Y As Integer) As Drawing.Rectangle
@@ -179,13 +209,13 @@ Partial Public Class frmMultiFileAction
 
     Private Sub tsmiFileList_ClearList_Click(sender As Object, e As EventArgs) Handles tsmiFileList_ClearList.Click
         'Clear all items
-        AllListFiles = New Dictionary(Of String, cFileProps)
+        AllFiles = New List(Of cFileProps)
         FITSGrepper = New cFITSGrepper
-        UpdateTable()
+        RefreshTable()
     End Sub
 
     Private Sub tsmiFile_OpenWorkingDir_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenWorkingDir.Click
-        Process.Start(Config.Gen_root)
+        Process.Start("explorer.exe", Config.Gen_root)
     End Sub
 
     Private Sub tsmiAction_Stack_Click(sender As Object, e As EventArgs) Handles tsmiAction_StackSpecial.Click
@@ -194,12 +224,12 @@ Partial Public Class frmMultiFileAction
         Stacker.FileToWrite_Max = IO.Path.Combine(Config.Gen_root, Config.Stat_StatMaxFile)
         Stacker.FileToWrite_Mean = IO.Path.Combine(Config.Gen_root, Config.Stat_StatMeanFile)
         Stacker.FileToWrite_Sigma = IO.Path.Combine(Config.Gen_root, Config.Stat_StatSigmaFile)
-        Stacker.StackFITSFiles(GetCheckedFiles)
+        Stacker.StackFITSFiles(GetListFileNames(True))
     End Sub
 
     Private Sub tsmiAction_Run_Click(sender As Object, e As EventArgs) Handles tsmiAction_Run.Click
 
-        Dim AllCheckedFiles As List(Of String) = GetCheckedFiles()
+        Dim AllCheckedFiles As List(Of cFileProps) = GetListFiles(True)
         Dim FITSReader As New cFITSReader
         Dim CorrRefData(,) As Single = {}
 
@@ -221,27 +251,23 @@ Partial Public Class frmMultiFileAction
             Dim FileCount As Integer = 0
             tspbMain.Maximum = AllCheckedFiles.Count
             tspbMain.Value = 0
-            For Each FileToProcess As String In AllCheckedFiles
+            For Each FileToProcess As cFileProps In AllCheckedFiles
 
                 'Start with this file
                 FileCount += 1
                 Dim CurrentRow As Integer = GetFileRow(FileToProcess)
-                MarkFile(FileToProcess, Color.Red)
+                MarkFile(FileToProcess.FileName, Color.Red)
                 tspbMain.Value = FileCount
                 DE()
 
                 'Read in the file
                 Dim Container As New AstroNET.Statistics(AIS.DB.IPP)
                 Container.ResetAllProcessors()
-                Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileToProcess, True, True)
+                Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileToProcess.FileName, True, True)
 
                 'Calculate statistics
                 If Config.Processing_CalcStatistics = True Then
-                    AllListFiles(FileToProcess).Statistics = Container.ImageStatistics
-                    adgvMain.Rows(CurrentRow).Cells(eColumns.MonoMin).Value = AllListFiles(FileToProcess).Statistics.MonoStatistics_Int.Min.Key.ValRegIndep
-                    adgvMain.Rows(CurrentRow).Cells(eColumns.MonoMax).Value = AllListFiles(FileToProcess).Statistics.MonoStatistics_Int.Max.Key.ValRegIndep
-                    adgvMain.Rows(CurrentRow).Cells(eColumns.MonoMean).Value = AllListFiles(FileToProcess).Statistics.MonoStatistics_Int.Mean.ValRegIndep
-                    adgvMain.Rows(CurrentRow).Cells(eColumns.MonoMedian).Value = AllListFiles(FileToProcess).Statistics.MonoStatistics_Int.Median.ValRegIndep
+                    FileToProcess.Statistics = Container.ImageStatistics
                 End If
 
                 'Calculate alignment
@@ -273,13 +299,13 @@ Partial Public Class frmMultiFileAction
                     End If
 
                     'Store calculated shifts
-                    AllListFiles(FileToProcess).DeltaX = Shift.X : adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaX).Value = AllListFiles(FileToProcess).DeltaX
-                    AllListFiles(FileToProcess).DeltaY = Shift.Y : adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaY).Value = AllListFiles(FileToProcess).DeltaY
+                    adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaX).Value = Shift.X
+                    adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaY).Value = Shift.Y
 
                 End If
 
                 'File done
-                MarkFile(FileToProcess, Color.White)
+                MarkFile(FileToProcess.FileName, Color.White)
                 DE()
 
             Next FileToProcess
@@ -295,59 +321,59 @@ Partial Public Class frmMultiFileAction
 
             Log("Running common ROI calculation ...")
 
-            Dim CutROIs As New Dictionary(Of String, Rectangle)
+            Dim CutROIs As New Dictionary(Of cFileProps, Rectangle)
 
             '1.) We start in the center of each image at a point shifted by the given DeltaX and DeltaY
-            For Each OriginalFile As String In AllCheckedFiles
-                Dim CenterX As Integer = (AllListFiles(OriginalFile).NAXIS1 \ 2) + AllListFiles(OriginalFile).DeltaX
-                Dim CenterY As Integer = (AllListFiles(OriginalFile).NAXIS2 \ 2) + AllListFiles(OriginalFile).DeltaY
+            For Each OriginalFile As cFileProps In AllCheckedFiles
+                Dim CenterX As Integer = CInt((OriginalFile.NAXIS1 \ 2) + OriginalFile.DeltaX)
+                Dim CenterY As Integer = CInt((OriginalFile.NAXIS2 \ 2) + OriginalFile.DeltaY)
                 CutROIs.Add(OriginalFile, New Rectangle(CenterX, CenterY, 0, 0))
             Next OriginalFile
 
             '2.) We move left until any ROI reaches the border
             Do
-                Dim NewROIs As New Dictionary(Of String, Rectangle)
-                For Each FileName As String In CutROIs.Keys
-                    NewROIs.Add(FileName, CutROIs(FileName).ExpandLeft(1))      'Calculate all new ROIs by expanding to the left
-                    If NewROIs(FileName).Left < 0 Then Exit Do
-                    If NewROIs(FileName).Left < Config.CutLimit_Left Then Exit Do
-                Next FileName
+                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
+                For Each File As cFileProps In CutROIs.Keys
+                    NewROIs.Add(File, CutROIs(File).ExpandLeft(1))      'Calculate all new ROIs by expanding to the left
+                    If NewROIs(File).Left < 0 Then Exit Do
+                    If NewROIs(File).Left < Config.CutLimit_Left Then Exit Do
+                Next File
                 'Copy new ROIs if they are valid
                 CutROIs = NewROIs.Clone
             Loop Until 1 = 0
 
             '3.) We move up until any ROI reaches the border
             Do
-                Dim NewROIs As New Dictionary(Of String, Rectangle)
-                For Each FileName As String In CutROIs.Keys
-                    NewROIs.Add(FileName, CutROIs(FileName).ExpandTop(1))      'Calculate all new ROIs by expanding to the top
-                    If NewROIs(FileName).Top < 0 Then Exit Do
-                    If NewROIs(FileName).Top < Config.CutLimit_Top Then Exit Do
-                Next FileName
+                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
+                For Each File As cFileProps In CutROIs.Keys
+                    NewROIs.Add(File, CutROIs(File).ExpandTop(1))      'Calculate all new ROIs by expanding to the top
+                    If NewROIs(File).Top < 0 Then Exit Do
+                    If NewROIs(File).Top < Config.CutLimit_Top Then Exit Do
+                Next File
                 'Copy new ROIs if they are valid
                 CutROIs = NewROIs.Clone
             Loop Until 1 = 0
 
             '4.) We increase the width until any ROI reaches the border
             Do
-                Dim NewROIs As New Dictionary(Of String, Rectangle)
-                For Each FileName As String In CutROIs.Keys
-                    NewROIs.Add(FileName, CutROIs(FileName).ExpandRight(1))      'Calculate all new ROIs by expanding to the right
-                    If NewROIs(FileName).Right > AllListFiles(FileName).NAXIS1 Then Exit Do
-                    If NewROIs(FileName).Right > Config.CutLimit_Right Then Exit Do
-                Next FileName
+                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
+                For Each File As cFileProps In CutROIs.Keys
+                    NewROIs.Add(File, CutROIs(File).ExpandRight(1))      'Calculate all new ROIs by expanding to the right
+                    If NewROIs(File).Right > File.NAXIS1 Then Exit Do
+                    If NewROIs(File).Right > Config.CutLimit_Right Then Exit Do
+                Next File
                 'Copy new ROIs if they are valid
                 CutROIs = NewROIs.Clone
             Loop Until 1 = 0
 
             '5.) We increase the heigth until any ROI reaches the border
             Do
-                Dim NewROIs As New Dictionary(Of String, Rectangle)
-                For Each FileName As String In CutROIs.Keys
-                    NewROIs.Add(FileName, CutROIs(FileName).ExpandBottom(1))      'Calculate all new ROIs by expanding to the bottom
-                    If NewROIs(FileName).Bottom > AllListFiles(FileName).NAXIS2 Then Exit Do
-                    If NewROIs(FileName).Bottom > Config.CutLimit_Bottom Then Exit Do
-                Next FileName
+                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
+                For Each File As cFileProps In CutROIs.Keys
+                    NewROIs.Add(File, CutROIs(File).ExpandBottom(1))      'Calculate all new ROIs by expanding to the bottom
+                    If NewROIs(File).Bottom > File.NAXIS2 Then Exit Do
+                    If NewROIs(File).Bottom > Config.CutLimit_Bottom Then Exit Do
+                Next File
                 'Copy new ROIs if they are valid
                 CutROIs = NewROIs.Clone
             Loop Until 1 = 0
@@ -357,12 +383,12 @@ Partial Public Class frmMultiFileAction
             'Last.) Generate new files
             Dim FileIdx As Integer = -1
             Dim AlignFolder As String = String.Empty
-            For Each FileToProcess As String In AllCheckedFiles
+            For Each FileToProcess As cFileProps In AllCheckedFiles
                 FileIdx += 1
-                MarkFile(FileToProcess, Color.Red)
+                MarkFile(FileToProcess.FileName, Color.Red)
                 DE()
                 'Load defined ROI
-                Dim FileROI As UInt16(,) = FITSReader.ReadInUInt16(FileToProcess, True, CutROIs(FileToProcess), True)
+                Dim FileROI As UInt16(,) = FITSReader.ReadInUInt16(FileToProcess.FileName, True, CutROIs(FileToProcess), True)
                 'Stack file (if requested)
                 If Config.Processing_CalcStackedFile = True Then
                     Dim DataAsUInt32(,) As UInt32 = {} : AIS.DB.IPP.Convert(FileROI, DataAsUInt32)
@@ -374,15 +400,17 @@ Partial Public Class frmMultiFileAction
                 End If
                 'Generate folder
                 If FileIdx = 0 Then
-                    AlignFolder = System.IO.Path.Combine(Config.Gen_root, System.IO.Path.GetFileNameWithoutExtension(FileToProcess) & "_aligned")
+                    AlignFolder = System.IO.Path.Combine(Config.Gen_root, System.IO.Path.GetFileNameWithoutExtension(FileToProcess.FileName) & "_aligned")
                     If System.IO.Directory.Exists(AlignFolder) = False Then System.IO.Directory.CreateDirectory(AlignFolder)
                 End If
                 'Store aligned file (if selected)
                 If Config.Processing_StoreAlignedFiles = True Then
-                    Dim NewFile As String = System.IO.Path.Combine(AlignFolder, System.IO.Path.GetFileName(FileToProcess))
+                    Dim NewFile As String = System.IO.Path.Combine(AlignFolder, System.IO.Path.GetFileName(FileToProcess.FileName))
                     cFITSWriter.Write(NewFile, FileROI, cFITSWriter.eBitPix.Int16)
+                    Log("Stored file <" & FileToProcess.FileName & "> as aligned version in <" & NewFile & ">")
+                    Log("   (CutROIs: " & CutROIs(FileToProcess).Describe)
                 End If
-                MarkFile(FileToProcess, Color.Green)
+                MarkFile(FileToProcess.FileName, Color.Green)
             Next FileToProcess
 
         End If
@@ -393,7 +421,7 @@ Partial Public Class frmMultiFileAction
 
         If Config.Processing_CalcSigmaClip = True Then
 
-            Log("Running sigma-clipping processing ...")
+            Log("Running sigma-clipping processing (# of files: <" & SigmaClipROIs.Count.ValRegIndep & "> ...")
             Dim NAXIS1 As Integer = SigmaClipROIs(0).Matrix.GetUpperBound(0) - 1
             Dim NAXIS2 As Integer = SigmaClipROIs(0).Matrix.GetUpperBound(1) - 1
             Dim Calculated(NAXIS1 - 1, NAXIS2 - 1) As Double
@@ -424,7 +452,7 @@ Partial Public Class frmMultiFileAction
                     End If
                 Next Idx1
             Next Idx
-            Dim TotalPixel As Long = SigmaClipROIs.Count * NAXIS1 * NAXIS2
+            Dim TotalPixel As Long = CLng(SigmaClipROIs.Count) * CLng(NAXIS1 * NAXIS2)
             Dim PixelClipped As UInt32 = 0
             For Each Key As UInt16 In ClipStatistics.Keys
                 TotalPixel += ClipStatistics(Key)
@@ -491,23 +519,23 @@ Partial Public Class frmMultiFileAction
             Case "CutLimit_Right"
                 Config.CutLimit_Right += Math.Sign(e.Delta) * 5
             Case "ROIDisplay_X"
-                Config.ROIDisplay_X += Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps
+                Config.ROIDisplay_X += Math.Sign(e.Delta) * Config.ROIDisplay_PositionAndSize
                 CalcAndDisplayCombinedROI()
             Case "ROIDisplay_Y"
-                Config.ROIDisplay_Y += Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps
+                Config.ROIDisplay_Y += Math.Sign(e.Delta) * Config.ROIDisplay_PositionAndSize
                 CalcAndDisplayCombinedROI()
             Case "ROIDisplay_Width"
-                Config.ROIDisplay_Width += Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps
+                Config.ROIDisplay_Width += Math.Sign(e.Delta) * Config.ROIDisplay_PositionAndSize
                 CalcAndDisplayCombinedROI()
             Case "ROIDisplay_Height"
-                Config.ROIDisplay_Height += Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps
+                Config.ROIDisplay_Height += Math.Sign(e.Delta) * Config.ROIDisplay_PositionAndSize
                 CalcAndDisplayCombinedROI()
             Case "Stat_SinglePixelX"
-                Config.Stat_SinglePixelX += Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps
+                Config.Stat_SinglePixelX += Math.Sign(e.Delta) * Config.ROIDisplay_DeltaXYStep
                 If Config.Stat_SinglePixelX < 0 Then Config.Stat_SinglePixelX = 0
                 RunSinglePixelStat(New Point(Config.Stat_SinglePixelX, Config.Stat_SinglePixelY))
             Case "Stat_SinglePixelY"
-                Config.Stat_SinglePixelY += Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps
+                Config.Stat_SinglePixelY += Math.Sign(e.Delta) * Config.ROIDisplay_DeltaXYStep
                 If Config.Stat_SinglePixelY < 0 Then Config.Stat_SinglePixelY = 0
                 RunSinglePixelStat(New Point(Config.Stat_SinglePixelX, Config.Stat_SinglePixelY))
         End Select
@@ -536,12 +564,12 @@ Partial Public Class frmMultiFileAction
     '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
     Private Sub adgvMain_DragEnter(sender As Object, e As DragEventArgs) Handles adgvMain.DragEnter
-        e.Effect = Windows.Forms.DragDropEffects.None
+        e.Effect = System.Windows.Forms.DragDropEffects.None
         Dim DropContent As Dictionary(Of String, Object) = GetDropContent(e)
         'File
-        If e.Data.GetDataPresent(Windows.Forms.DataFormats.FileDrop) Then
-            If CType(e.Data.GetData(Windows.Forms.DataFormats.FileDrop), String()).Length >= 1 Then
-                e.Effect = Windows.Forms.DragDropEffects.All
+        If e.Data.GetDataPresent(System.Windows.Forms.DataFormats.FileDrop) Then
+            If CType(e.Data.GetData(System.Windows.Forms.DataFormats.FileDrop), String()).Length >= 1 Then
+                e.Effect = System.Windows.Forms.DragDropEffects.All
             End If
         End If
     End Sub
@@ -578,13 +606,11 @@ Partial Public Class frmMultiFileAction
     End Sub
 
     Private Sub adgvMain_RowEnter(sender As Object, e As DataGridViewCellEventArgs) Handles adgvMain.RowEnter
-        'Move focus to a certain row
-        Dim SelectedFile As String = GetSelectedFileName(e)
         'Display the FITS header information
         If Config.Processing_DisplayFITSHeader Then
             Dim TextToDisplay As New List(Of String)
-            TextToDisplay.Add("FITS header of file <" & SelectedFile & ">")
-            TextToDisplay.AddRange(cFITSHeaderParser.GetListToDisplay(AllListFiles(SelectedFile).FITSHeader))
+            TextToDisplay.Add("FITS header of file <" & AllFiles(GetFileListIndex).FileName & ">")
+            TextToDisplay.AddRange(cFITSHeaderParser.GetListToDisplay(AllFiles(GetFileListIndex).FITSHeader))
             tbFITSHeader.Text = Join(TextToDisplay.ToArray, System.Environment.NewLine)
         End If
         'Display ROI
@@ -594,30 +620,27 @@ Partial Public Class frmMultiFileAction
     Private Sub adgvMain_MouseWheel(sender As Object, e As MouseEventArgs) Handles adgvMain.MouseWheel
         'Scroll mouse wheel
         If adgvMain.SelectedCells.Count = 0 Then Exit Sub
-        Dim SelectedFile As String = GetSelectedFileName()
         Select Case adgvMain.SelectedCells(0).ColumnIndex
             Case eColumns.DeltaX
-                'Delta X
-                AllListFiles(SelectedFile).DeltaX += (Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps)
-                adgvMain.SelectedCells(0).Value = AllListFiles(SelectedFile).DeltaX
+                'Delta X -> change the cell value, the update of the ROI value is done in the CellValueChanged event
+                adgvMain.SelectedCells(0).Value = AllFiles(GetFileListIndex).DeltaX + (Math.Sign(e.Delta) * Config.ROIDisplay_DeltaXYStep)
             Case eColumns.DeltaY
-                'Delta Y
-                AllListFiles(SelectedFile).DeltaY += (Math.Sign(e.Delta) * Config.Stack_ROIDisplay_MouseWheelSteps)
-                adgvMain.SelectedCells(0).Value = AllListFiles(SelectedFile).DeltaY
+                'Delta Y -> change the cell value, the update of the ROI value is done in the CellValueChanged event
+                adgvMain.SelectedCells(0).Value = AllFiles(GetFileListIndex).DeltaY + (Math.Sign(e.Delta) * Config.ROIDisplay_DeltaXYStep)
         End Select
     End Sub
 
     Private Sub adgvMain_CellValueChanged(sender As Object, e As DataGridViewCellEventArgs) Handles adgvMain.CellValueChanged
+        'React on changed cell values
         If adgvMain.SelectedCells.Count = 0 Then Exit Sub
-        Dim SelectedFile As String = GetSelectedFileName()
         Select Case adgvMain.SelectedCells(0).ColumnIndex
             Case eColumns.DeltaX
                 'Delta X
-                AllListFiles(SelectedFile).DeltaX = CInt(adgvMain.SelectedCells(0).Value)
+                AllFiles(GetFileListIndex).DeltaX = CInt(adgvMain.SelectedCells(0).Value)
                 CalcAndDisplayCombinedROI()
             Case eColumns.DeltaY
                 'Delta Y
-                AllListFiles(SelectedFile).DeltaY = CInt(adgvMain.SelectedCells(0).Value)
+                AllFiles(GetFileListIndex).DeltaY = CInt(adgvMain.SelectedCells(0).Value)
                 CalcAndDisplayCombinedROI()
         End Select
     End Sub
@@ -635,21 +658,33 @@ Partial Public Class frmMultiFileAction
     ' Functions with no form handle
     '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
-    '''<summary>Get all checked files.</summary>
-    Private Function GetCheckedFiles() As List(Of String)
-        Dim CheckedFiles As New List(Of String)
-        For Idx As Integer = 0 To adgvMain.RowCount - 1
-            Dim Use As Boolean = CType(adgvMain.Rows(Idx).Cells(0).Value, Boolean)
-            Dim FileName As String = CStr(adgvMain.Rows(Idx).Cells(1).Value)
-            If Use Then CheckedFiles.Add(FileName)
-        Next Idx
+    '''<summary>Get all list files.</summary>
+    Private Function GetListFiles(ByVal CheckedOnly As Boolean) As List(Of cFileProps)
+        Dim CheckedFiles As New List(Of cFileProps)
+        For Each Item As cFileProps In AllFiles
+            If Item.Process Then CheckedFiles.Add(Item)
+        Next Item
         Return CheckedFiles
     End Function
 
+    '''<summary>Get all file names.</summary>
+    Private Function GetListFileNames(ByVal CheckedOnly As Boolean) As List(Of String)
+        Dim RetVal As New List(Of String)
+        For Each Entry As cFileProps In AllFiles
+            If Entry.Process Then RetVal.Add(Entry.FileName)
+        Next
+        Return RetVal
+    End Function
+
     '''<summary>Get the row for the selected file.</summary>
-    Private Function GetFileRow(ByVal FileName As String) As Integer
-        For Idx As Integer = 0 To adgvMain.RowCount - 1
-            If FileName = CStr(adgvMain.Rows(Idx).Cells(1).Value) Then Return Idx
+    Private Function GetFileRow(ByVal FileToMark As cFileProps) As Integer
+        Return GetFileRow(FileToMark.FileName)
+    End Function
+
+    '''<summary>Get the row for the selected file.</summary>
+    Private Function GetFileRow(ByVal FileToMark As String) As Integer
+        For Idx As Integer = 0 To AllFiles.Count
+            If FileToMark = CStr(adgvMain.Rows(Idx).Cells(eColumns.FileName).Value) Then Return Idx
         Next Idx
         Return -1
     End Function
@@ -658,6 +693,8 @@ Partial Public Class frmMultiFileAction
     Private Sub CalcAndDisplayCombinedROI()
 
         If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Off Then Exit Sub
+        If Config.ROIDisplay_Height <= 0 Then Exit Sub
+        If Config.ROIDisplay_Width <= 0 Then Exit Sub
 
         Dim UseIPP As Boolean = True
         Dim ForceDirect As Boolean = False
@@ -667,13 +704,13 @@ Partial Public Class frmMultiFileAction
         Dim FITSReader As New cFITSReader
 
         'Get all files or only the selected file
-        Dim FilesToLoad As New List(Of String)
+        Dim FilesToLoad As New List(Of cFileProps)
         If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Single Then
             'Display only active file
-            FilesToLoad.Add(GetSelectedFileName)
+            FilesToLoad.Add(AllFiles(GetFileListIndex(GetSelectedFileName)))
         Else
             'Display all checked files
-            FilesToLoad.AddRange(GetCheckedFiles)
+            FilesToLoad.AddRange(GetListFiles(True))
         End If
 
         'Sum up all images
@@ -682,12 +719,12 @@ Partial Public Class frmMultiFileAction
         If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Mosaik Then
             StarImageSum_UInt16 = CalculateMosaik(FilesToLoad)
         Else
-            For Each File As String In FilesToLoad
-                Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = AllListFiles(File).DeltaX
-                Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = AllListFiles(File).DeltaY
+            For Each File As cFileProps In FilesToLoad
+                Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = CInt(File.DeltaX)
+                Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = CInt(File.DeltaY)
                 Data.ResetAllProcessors()
                 Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
-                Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File, UseIPP, ROI, ForceDirect)
+                Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File.FileName, UseIPP, ROI, ForceDirect)
                 Select Case Config.ROIDisplay_Mode
                     Case cConfig.eROIDisplay.Single
                         StarImageSum_UInt16 = Data.DataProcessor_UInt16.ImageData(0).Data
@@ -735,7 +772,7 @@ Partial Public Class frmMultiFileAction
 
     End Sub
 
-    Private Function CalculateMosaik(ByVal FilesToLoad As List(Of String)) As UInt16(,)
+    Private Function CalculateMosaik(ByVal FilesToLoad As List(Of cFileProps)) As UInt16(,)
 
         Dim Tile_border As Integer = 3
         Dim Display_blur As Integer = 1
@@ -755,11 +792,11 @@ Partial Public Class frmMultiFileAction
         Dim WidthPtr As Integer = 0 : Dim WidthIdx As Integer = 0
         Dim HeightPtr As Integer = 0
 
-        For Each File As String In FilesToLoad
-            Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = AllListFiles(File).DeltaX
-            Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = AllListFiles(File).DeltaY
+        For Each File As cFileProps In FilesToLoad
+            Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = CInt(File.DeltaX)
+            Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = CInt(File.DeltaY)
             Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
-            Dim SingleFileTile(,) As UInt16 = FITSReader.ReadInUInt16(File, UseIPP, ROI, ForceDirect)
+            Dim SingleFileTile(,) As UInt16 = FITSReader.ReadInUInt16(File.FileName, UseIPP, ROI, ForceDirect)
             If Display_blur > 1 Then cOpenCvSharp.MedianBlur(SingleFileTile, Display_blur)
             Try
                 For X As Integer = 0 To Config.ROIDisplay_Width - 1
@@ -786,7 +823,7 @@ Partial Public Class frmMultiFileAction
     Private Sub MarkFile(ByVal FileName As String, ByVal Color As Color)
         Dim CurrentRow As Integer = GetFileRow(FileName)
         If CurrentRow = -1 Then Exit Sub
-        adgvMain.Rows(CurrentRow).Cells(eColumns.File).Style.BackColor = Color
+        adgvMain.Rows(CurrentRow).Cells(eColumns.FileName).Style.BackColor = Color
         DE()
     End Sub
 
@@ -796,12 +833,16 @@ Partial Public Class frmMultiFileAction
 
     '''<summary>Return the selected file name in the table.</summary>
     Private Function GetSelectedFileName() As String
-        Return CStr(adgvMain.Rows(adgvMain.SelectedCells(0).RowIndex).Cells(eColumns.File).Value)
+        Try
+            Return CStr(adgvMain.Rows(adgvMain.SelectedCells(0).RowIndex).Cells(eColumns.FileName).Value)
+        Catch ex As Exception
+            Return String.Empty
+        End Try
     End Function
 
     '''<summary>Return the selected file name in the table.</summary>
     Private Function GetSelectedFileName(e As DataGridViewCellEventArgs) As String
-        Return CStr(adgvMain.Rows(e.RowIndex).Cells(eColumns.File).Value)
+        Return CStr(adgvMain.Rows(e.RowIndex).Cells(eColumns.FileName).Value)
     End Function
 
     Private Sub tbPosX_MouseWheel(sender As Object, e As MouseEventArgs)
@@ -830,10 +871,10 @@ Partial Public Class frmMultiFileAction
 
         'Get all pixel
         Dim StringValues As New List(Of String)
-        For Each File As String In GetCheckedFiles()
-            Dim PixelValueFast As UInt16 = GetOnePixel(File, AllListFiles(File).DataStartPosition, AllListFiles(File).NAXIS1, Pixel.X, Pixel.Y)
+        For Each Item As cFileProps In GetListFiles(True)
+            Dim PixelValueFast As UInt16 = GetOnePixel(Item.FileName, Item.DataStartPosition, Item.NAXIS1, Pixel.X, Pixel.Y)
             AllPixel.Add(PixelValueFast)
-        Next File
+        Next Item
 
         Return AllPixel.ToArray
 
@@ -862,7 +903,7 @@ Partial Public Class frmMultiFileAction
 
     Private Sub tsmiFile_SaveAllFilesHisto_Click(sender As Object, e As EventArgs) Handles tsmiFile_SaveAllFilesHisto.Click
 
-        Dim AllCheckedFiles As List(Of String) = GetCheckedFiles()
+        Dim AllCheckedFiles As List(Of cFileProps) = GetListFiles(True)
 
         With sfdMain
             .Filter = "EXCEL file (*.xlsx)|*.xlsx"
@@ -873,14 +914,14 @@ Partial Public Class frmMultiFileAction
         Dim AllADUValues As New List(Of Long)
         Dim FileList As New List(Of String)
         FileList.Add("ADU value")
-        For Each SingleFile As String In AllCheckedFiles
-            FileList.Add(System.IO.Path.GetFileNameWithoutExtension(SingleFile))
-            If AllListFiles(SingleFile).Statistics.Count > 0 Then
-                For Each ADUValue As Long In AllListFiles(SingleFile).Statistics.MonochromHistogram_Int.Keys
+        For Each Item As cFileProps In AllCheckedFiles
+            FileList.Add(System.IO.Path.GetFileNameWithoutExtension(Item.FileName))
+            If Item.Statistics.Count > 0 Then
+                For Each ADUValue As Long In Item.Statistics.MonochromHistogram_Int.Keys
                     If AllADUValues.Contains(ADUValue) = False Then AllADUValues.Add(ADUValue)
                 Next ADUValue
             End If
-        Next SingleFile
+        Next Item
         AllADUValues.Sort()
 
         Using workbook As New ClosedXML.Excel.XLWorkbook
@@ -890,9 +931,9 @@ Partial Public Class frmMultiFileAction
             For Each ADUValue As Long In AllADUValues
                 Dim Values As New List(Of Object)
                 Values.Add(ADUValue)
-                For Each SingleFile As String In AllCheckedFiles
-                    If AllListFiles(SingleFile).Statistics.MonochromHistogram_Int.ContainsKey(ADUValue) Then Values.Add(AllListFiles(SingleFile).Statistics.MonochromHistogram_Int(ADUValue)) Else Values.Add(String.Empty)
-                Next SingleFile
+                For Each Item As cFileProps In AllCheckedFiles
+                    If Item.Statistics.MonochromHistogram_Int.ContainsKey(ADUValue) Then Values.Add(Item.Statistics.MonochromHistogram_Int(ADUValue)) Else Values.Add(String.Empty)
+                Next Item
                 XY.Add(Values.ToArray)
             Next ADUValue
             Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Histogram")
@@ -913,7 +954,7 @@ Partial Public Class frmMultiFileAction
 
     Private Sub tsmiFile_SaveFITSandStats_Click(sender As Object, e As EventArgs) Handles tsmiFile_SaveFITSandStats.Click
 
-        Dim AllCheckedFiles As List(Of String) = GetCheckedFiles()
+        Dim AllCheckedFiles As List(Of cFileProps) = GetListFiles(True)
 
         With sfdMain
             .Filter = "EXCEL file (*.xlsx)|*.xlsx"
@@ -923,74 +964,111 @@ Partial Public Class frmMultiFileAction
         'Generate a list of all FITS keys and statistics including the maximum entry length
         Dim FoundFitsKeywords As New Dictionary(Of eFITSKeywords, Integer)
         Dim FoundStatParameters As New List(Of String)
-        For Each FileName As String In AllCheckedFiles
-            For Each Key As eFITSKeywords In AllListFiles(FileName).FITSHeader.Keys
-                Dim HeaderValue As String = CStr(AllListFiles(FileName).FITSHeader(Key))
+        For Each Item As cFileProps In AllFiles
+            For Each Key As eFITSKeywords In Item.FITSHeader.Keys
+                Dim HeaderValue As String = CStr(Item.FITSHeader(Key))
                 If FoundFitsKeywords.ContainsKey(Key) = False Then FoundFitsKeywords.Add(Key, -1)
                 If FoundFitsKeywords(Key) < HeaderValue.Length Then
                     FoundFitsKeywords(Key) = HeaderValue.Length
                 End If
             Next Key
-            If AllListFiles(FileName).Statistics.Count > 0 Then
-                For Each StatParameter As String In AllListFiles(FileName).Statistics.MonoStatistics_Int.AllStats.Keys
+            If Item.Statistics.Count > 0 Then
+                For Each StatParameter As String In Item.Statistics.MonoStatistics_Int.AllStats.Keys
                     If FoundStatParameters.Contains(StatParameter) = False Then FoundStatParameters.Add(StatParameter)
                 Next StatParameter
             End If
-        Next FileName
+        Next Item
 
         Using workbook As New ClosedXML.Excel.XLWorkbook
 
             Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Overview")
-            Dim FileIdx As Integer = 1
+            Dim HeaderRow As Integer = 1
+            Dim RowIdx As Integer = 1
             Dim KeyIdx As Integer = 1
 
-            'Add header
+            '═════════════════════════════════════════════════════════════════════════════
+            'Build EXCEL header
+            '═════════════════════════════════════════════════════════════════════════════
+
+            'FITS keywords
             For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
                 KeyIdx += 1
-                worksheet.Cell(FileIdx, KeyIdx).Value = Key.ToString
+                worksheet.Cell(HeaderRow, KeyIdx).Value = Key.ToString
             Next Key
+
+            'Statistic parameters
             For Each StatParameter As String In FoundStatParameters
                 KeyIdx += 1
-                worksheet.Cell(FileIdx, KeyIdx).Value = StatParameter
+                worksheet.Cell(HeaderRow, KeyIdx).Value = StatParameter
             Next StatParameter
-            FileIdx += 1
 
-            'Add all files
-            For Each FileName As String In AllCheckedFiles
+            'Parameters edited in MultiFileAction
+            KeyIdx += 1 : worksheet.Cell(HeaderRow, KeyIdx).Value = "Use"
+            KeyIdx += 1 : worksheet.Cell(HeaderRow, KeyIdx).Value = "DeltaX"
+            KeyIdx += 1 : worksheet.Cell(HeaderRow, KeyIdx).Value = "DeltaY"
+            KeyIdx += 1 : worksheet.Cell(HeaderRow, KeyIdx).Value = "DSS - quality"
+            KeyIdx += 1 : worksheet.Cell(HeaderRow, KeyIdx).Value = "DSS - background"
+            KeyIdx += 1 : worksheet.Cell(HeaderRow, KeyIdx).Value = "DSS - stars"
+
+            '═════════════════════════════════════════════════════════════════════════════
+            'Build entries for all files
+            '═════════════════════════════════════════════════════════════════════════════
+
+            'Add all checked files
+            For Each Item As cFileProps In AllCheckedFiles
+                RowIdx += 1
                 KeyIdx = 1
-                worksheet.Cell(FileIdx, KeyIdx).Value = FileName
+                worksheet.Cell(RowIdx, KeyIdx).Value = Item.FileName
                 'Add all FITS headers
                 For Each Key As eFITSKeywords In FoundFitsKeywords.Keys
                     KeyIdx += 1
                     'Add the found entry or no entry
-                    If AllListFiles(FileName).FITSHeader.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).SetTypedValue(AllListFiles(FileName).FITSHeader(Key))
+                    If Item.FITSHeader.ContainsKey(Key) Then
+                        worksheet.Cell(RowIdx, KeyIdx).SetTypedValue(Item.FITSHeader(Key))
                     Else
-                        worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
+                        worksheet.Cell(RowIdx, KeyIdx).Value = "XXXXXX"
                     End If
                 Next Key
                 'Add all statistics values
                 For Each Key As String In FoundStatParameters
                     KeyIdx += 1
-                    If AllListFiles(FileName).Statistics.MonoStatistics_Int.AllStats.ContainsKey(Key) Then
-                        worksheet.Cell(FileIdx, KeyIdx).SetTypedValue(AllListFiles(FileName).Statistics.MonoStatistics_Int.AllStats(Key))
+                    If Item.Statistics.MonoStatistics_Int.AllStats.ContainsKey(Key) Then
+                        worksheet.Cell(RowIdx, KeyIdx).SetTypedValue(Item.Statistics.MonoStatistics_Int.AllStats(Key))
                     Else
-                        worksheet.Cell(FileIdx, KeyIdx).Value = "XXXXXX"
+                        worksheet.Cell(RowIdx, KeyIdx).Value = "XXXXXX"
                     End If
-
                 Next Key
-                FileIdx += 1
-            Next FileName
+                'Add all MultiFileAction values
+                KeyIdx += 1 : worksheet.Cell(RowIdx, KeyIdx).Value = "X"
+                KeyIdx += 1 : worksheet.Cell(RowIdx, KeyIdx).Value = Item.DeltaX
+                KeyIdx += 1 : worksheet.Cell(RowIdx, KeyIdx).Value = Item.DeltaY
+            Next Item
+
+            '═════════════════════════════════════════════════════════════════════════════
+            'Check which values are all the same
+            '═════════════════════════════════════════════════════════════════════════════
 
             'Auto-adjust all collumns
             For Each col In worksheet.ColumnsUsed
-                col.AdjustToContents()
+                'Get all column values and remove first entry (header)
+                Dim AllEntries As New List(Of String)
+                For Each Entry As ClosedXML.Excel.IXLCell In col.CellsUsed
+                    AllEntries.Add(Entry.GetValue(Of String))
+                Next Entry
+                AllEntries.RemoveAt(0)
+                'If there is only 1 same element, hide, else adjust to content
+                If AllEntries.Distinct.Count = 1 Then
+                    col.Hide()
+                Else
+                    col.AdjustToContents()
+                End If
+
             Next col
 
             'Save and open
             Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
             workbook.SaveAs(FileToGenerate)
-            Process.Start(FileToGenerate)
+            Ato.Utils.StartWithItsEXE(FileToGenerate)
 
         End Using
 
@@ -1015,11 +1093,74 @@ Partial Public Class frmMultiFileAction
 
     Private Sub SetCheckValue(ByVal Value As Boolean)
         For Each Row As DataGridViewRow In adgvMain.Rows
-            Row.Cells(0).Value = Value
+            Row.Cells(eColumns.Process).Value = Value
         Next Row
     End Sub
 
-    Private Sub tsmiAction_Click(sender As Object, e As EventArgs) Handles tsmiAction.Click
+    Private Sub tsmiAction_DSSParam_Click(sender As Object, e As EventArgs) Handles tsmiAction_DSSParam.Click
+
+        'Read DeepSkyStacker (DSS) info if available
+        For Idx As Integer = 0 To AllFiles.Count - 1
+            Dim CurrentRow As Integer = GetFileRow(AllFiles(Idx))
+            Dim FileDirectory As String = System.IO.Path.GetDirectoryName(AllFiles(Idx).FileName)
+            'Load .info.txt file
+            Dim InfoFile As String = System.IO.Path.Combine(FileDirectory, System.IO.Path.GetFileNameWithoutExtension(AllFiles(Idx).FileName) & ".info.txt")
+            If System.IO.File.Exists(InfoFile) Then
+                ParseInfoFile(InfoFile, AllFiles(Idx).NrStars, AllFiles(Idx).OverallQuality, AllFiles(Idx).SkyBackground)
+            End If
+            'Load .stackinfo.txt (the stack info) for this file (parsed multiple times but is fast so left like this ...)
+            Dim StackInfoFiles As New List(Of String)(System.IO.Directory.GetFiles(FileDirectory, "*.stackinfo.txt"))
+            If StackInfoFiles.Count > 0 Then
+                Dim StackInfo As String() = ParseStackInfo(StackInfoFiles.First, AllFiles(Idx).FileName)
+                If StackInfo.Length > 1 Then
+                    AllFiles(Idx).DeltaX = -StackInfo(0).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0) - 1).ValRegIndep
+                    AllFiles(Idx).DeltaY = -StackInfo(16).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0)).ValRegIndep
+                End If
+            End If
+        Next Idx
+        RefreshTable
 
     End Sub
+
+    Private Sub ParseInfoFile(ByVal InfoFile As String, ByRef NrStars As Integer, ByRef OverallQuality As Double, ByRef SkyBackground As Double)
+        NrStars = -1
+        OverallQuality = Double.NaN
+        SkyBackground = Double.NaN
+        Dim FileContent As String() = System.IO.File.ReadAllLines(InfoFile)
+        For Each Line As String In FileContent
+            If Line.StartsWith("OverallQuality") Then OverallQuality = Line.Replace("OverallQuality", String.Empty).Replace("=", String.Empty).Replace(" ", String.Empty).Trim.ValRegIndep
+            If Line.StartsWith("SkyBackground") Then SkyBackground = Line.Replace("SkyBackground", String.Empty).Replace("=", String.Empty).Replace(" ", String.Empty).Trim.ValRegIndep
+            If Line.StartsWith("NrStars") Then NrStars = CInt(Line.Replace("NrStars", String.Empty).Replace("=", String.Empty).Replace(" ", String.Empty).Trim)
+        Next
+    End Sub
+
+    '''<summary>Get the DSS parameters calculated for the specified file.</summary>
+    '''<param name="StackInfoFile">StackInfo file.</param>
+    '''<param name="FileToSearch">Single file to search in the StackInfo file.</param>
+    Private Function ParseStackInfo(ByVal StackInfoFile As String, ByVal FileToSearch As String) As String()
+        Dim StackInfo As String = String.Empty
+        FileToSearch = System.IO.Path.GetFullPath(FileToSearch)
+        Dim FileContent As String() = System.IO.File.ReadAllLines(StackInfoFile)
+        Dim Idx As Integer = -1
+        Do
+            Idx += 1
+            If System.IO.Path.GetFullPath(FileContent(Idx)) = FileToSearch Then
+                Do
+                    Idx += 1
+                    If FileContent(Idx).StartsWith("Bicubic") Then
+                        StackInfo = FileContent(Idx)
+                        Exit Do
+                    End If
+                Loop Until 1 = 0
+            End If
+            If String.IsNullOrEmpty(StackInfo) = False Then Exit Do
+        Loop Until Idx = FileContent.GetUpperBound(0)
+        StackInfo = StackInfo.Replace("Bicubic", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty)
+        Return Split(StackInfo, ",")
+    End Function
+
+    Private Sub cmsTable_OpenFile_Click(sender As Object, e As EventArgs) Handles cmsTable_OpenFile.Click
+        AIS.OpenFile(GetSelectedFileName)
+    End Sub
+
 End Class

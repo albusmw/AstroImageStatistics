@@ -22,501 +22,523 @@ Partial Class frmMultiFileAction
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.components = New System.ComponentModel.Container()
+        components = New ComponentModel.Container()
         Dim resources As System.ComponentModel.ComponentResourceManager = New System.ComponentModel.ComponentResourceManager(GetType(frmMultiFileAction))
-        Me.adgvMain = New Zuby.ADGV.AdvancedDataGridView()
-        Me.scMain = New System.Windows.Forms.SplitContainer()
-        Me.scButtom = New System.Windows.Forms.SplitContainer()
-        Me.tcMain = New System.Windows.Forms.TabControl()
-        Me.TabPage2 = New System.Windows.Forms.TabPage()
-        Me.pgMain = New System.Windows.Forms.PropertyGrid()
-        Me.gbAspects = New System.Windows.Forms.GroupBox()
-        Me.tcAspect = New System.Windows.Forms.TabControl()
-        Me.tpFITSHeader = New System.Windows.Forms.TabPage()
-        Me.tbFITSHeader = New System.Windows.Forms.TextBox()
-        Me.tbCombinedROI = New System.Windows.Forms.TabPage()
-        Me.pbImage = New AstroImageStatistics.PictureBoxEx()
-        Me.cmsMain = New System.Windows.Forms.ContextMenuStrip(Me.components)
-        Me.cmsMain_ToClipboard = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tbSinglePixelStat = New System.Windows.Forms.TabPage()
-        Me.tbPixelStat = New System.Windows.Forms.TextBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.tbLog = New System.Windows.Forms.TextBox()
-        Me.msMain = New System.Windows.Forms.MenuStrip()
-        Me.tsmiFile = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiFile_AddFiles = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiFile_OpenWorkingDir = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem1 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiFile_SaveAllFilesHisto = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiFile_SaveFITSandStats = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem3 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiFile_Exit = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiFileList = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiFileList_ClearList = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAction = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAction_Run = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem2 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiAction_ClearLog = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAction_StackSpecial = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAction_Mode = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAction_Mode_StoreAlignedFiles = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ToolStripMenuItem4 = New System.Windows.Forms.ToolStripSeparator()
-        Me.tsmiAction_SelectAll = New System.Windows.Forms.ToolStripMenuItem()
-        Me.tsmiAction_DeSelectAll = New System.Windows.Forms.ToolStripMenuItem()
-        Me.ofdMain = New System.Windows.Forms.OpenFileDialog()
-        Me.ssMain = New System.Windows.Forms.StatusStrip()
-        Me.tspbMain = New System.Windows.Forms.ToolStripProgressBar()
-        Me.sfdMain = New System.Windows.Forms.SaveFileDialog()
-        CType(Me.adgvMain, System.ComponentModel.ISupportInitialize).BeginInit()
-        CType(Me.scMain, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.scMain.Panel1.SuspendLayout()
-        Me.scMain.Panel2.SuspendLayout()
-        Me.scMain.SuspendLayout()
-        CType(Me.scButtom, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.scButtom.Panel1.SuspendLayout()
-        Me.scButtom.Panel2.SuspendLayout()
-        Me.scButtom.SuspendLayout()
-        Me.tcMain.SuspendLayout()
-        Me.TabPage2.SuspendLayout()
-        Me.gbAspects.SuspendLayout()
-        Me.tcAspect.SuspendLayout()
-        Me.tpFITSHeader.SuspendLayout()
-        Me.tbCombinedROI.SuspendLayout()
-        CType(Me.pbImage, System.ComponentModel.ISupportInitialize).BeginInit()
-        Me.cmsMain.SuspendLayout()
-        Me.tbSinglePixelStat.SuspendLayout()
-        Me.msMain.SuspendLayout()
-        Me.ssMain.SuspendLayout()
-        Me.SuspendLayout()
-        '
-        'adgvMain
-        '
-        Me.adgvMain.AllowDrop = True
-        Me.adgvMain.AllowUserToAddRows = False
-        Me.adgvMain.AllowUserToDeleteRows = False
-        Me.adgvMain.AllowUserToOrderColumns = True
-        Me.adgvMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.adgvMain.AutoSizeColumnsMode = System.Windows.Forms.DataGridViewAutoSizeColumnsMode.AllCells
-        Me.adgvMain.ColumnHeadersHeightSizeMode = System.Windows.Forms.DataGridViewColumnHeadersHeightSizeMode.AutoSize
-        Me.adgvMain.FilterAndSortEnabled = True
-        Me.adgvMain.FilterStringChangedInvokeBeforeDatasourceUpdate = True
-        Me.adgvMain.Location = New System.Drawing.Point(7, 3)
-        Me.adgvMain.MultiSelect = False
-        Me.adgvMain.Name = "adgvMain"
-        Me.adgvMain.RightToLeft = System.Windows.Forms.RightToLeft.No
-        Me.adgvMain.RowHeadersVisible = False
-        Me.adgvMain.ShowEditingIcon = False
-        Me.adgvMain.ShowRowErrors = False
-        Me.adgvMain.Size = New System.Drawing.Size(1310, 293)
-        Me.adgvMain.SortStringChangedInvokeBeforeDatasourceUpdate = True
-        Me.adgvMain.TabIndex = 1
-        '
-        'scMain
-        '
-        Me.scMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.scMain.Location = New System.Drawing.Point(12, 27)
-        Me.scMain.Name = "scMain"
-        Me.scMain.Orientation = System.Windows.Forms.Orientation.Horizontal
-        '
-        'scMain.Panel1
-        '
-        Me.scMain.Panel1.Controls.Add(Me.adgvMain)
-        '
-        'scMain.Panel2
-        '
-        Me.scMain.Panel2.Controls.Add(Me.scButtom)
-        Me.scMain.Size = New System.Drawing.Size(1320, 868)
-        Me.scMain.SplitterDistance = 299
-        Me.scMain.TabIndex = 2
-        '
-        'scButtom
-        '
-        Me.scButtom.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.scButtom.Location = New System.Drawing.Point(3, 3)
-        Me.scButtom.Name = "scButtom"
-        '
-        'scButtom.Panel1
-        '
-        Me.scButtom.Panel1.Controls.Add(Me.tcMain)
-        '
-        'scButtom.Panel2
-        '
-        Me.scButtom.Panel2.Controls.Add(Me.gbAspects)
-        Me.scButtom.Panel2.Controls.Add(Me.Label1)
-        Me.scButtom.Panel2.Controls.Add(Me.tbLog)
-        Me.scButtom.Size = New System.Drawing.Size(1317, 562)
-        Me.scButtom.SplitterDistance = 395
-        Me.scButtom.TabIndex = 1
-        '
-        'tcMain
-        '
-        Me.tcMain.Controls.Add(Me.TabPage2)
-        Me.tcMain.Dock = System.Windows.Forms.DockStyle.Fill
-        Me.tcMain.Location = New System.Drawing.Point(0, 0)
-        Me.tcMain.Name = "tcMain"
-        Me.tcMain.SelectedIndex = 0
-        Me.tcMain.Size = New System.Drawing.Size(395, 562)
-        Me.tcMain.TabIndex = 0
-        '
-        'TabPage2
-        '
-        Me.TabPage2.Controls.Add(Me.pgMain)
-        Me.TabPage2.Location = New System.Drawing.Point(4, 22)
-        Me.TabPage2.Name = "TabPage2"
-        Me.TabPage2.Padding = New System.Windows.Forms.Padding(3)
-        Me.TabPage2.Size = New System.Drawing.Size(387, 536)
-        Me.TabPage2.TabIndex = 1
-        Me.TabPage2.Text = "Configure"
-        Me.TabPage2.UseVisualStyleBackColor = True
-        '
-        'pgMain
-        '
-        Me.pgMain.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pgMain.Location = New System.Drawing.Point(6, 6)
-        Me.pgMain.Name = "pgMain"
-        Me.pgMain.Size = New System.Drawing.Size(375, 524)
-        Me.pgMain.TabIndex = 0
-        '
-        'gbAspects
-        '
-        Me.gbAspects.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.gbAspects.Controls.Add(Me.tcAspect)
-        Me.gbAspects.Location = New System.Drawing.Point(3, 3)
-        Me.gbAspects.Name = "gbAspects"
-        Me.gbAspects.Size = New System.Drawing.Size(912, 374)
-        Me.gbAspects.TabIndex = 6
-        Me.gbAspects.TabStop = False
-        Me.gbAspects.Text = "Aspect"
-        '
-        'tcAspect
-        '
-        Me.tcAspect.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tcAspect.Controls.Add(Me.tpFITSHeader)
-        Me.tcAspect.Controls.Add(Me.tbCombinedROI)
-        Me.tcAspect.Controls.Add(Me.tbSinglePixelStat)
-        Me.tcAspect.Location = New System.Drawing.Point(6, 19)
-        Me.tcAspect.Name = "tcAspect"
-        Me.tcAspect.SelectedIndex = 0
-        Me.tcAspect.Size = New System.Drawing.Size(906, 349)
-        Me.tcAspect.TabIndex = 0
-        '
-        'tpFITSHeader
-        '
-        Me.tpFITSHeader.BackColor = System.Drawing.SystemColors.Control
-        Me.tpFITSHeader.Controls.Add(Me.tbFITSHeader)
-        Me.tpFITSHeader.Location = New System.Drawing.Point(4, 22)
-        Me.tpFITSHeader.Name = "tpFITSHeader"
-        Me.tpFITSHeader.Padding = New System.Windows.Forms.Padding(3)
-        Me.tpFITSHeader.Size = New System.Drawing.Size(898, 323)
-        Me.tpFITSHeader.TabIndex = 0
-        Me.tpFITSHeader.Text = "FITS header"
-        '
-        'tbFITSHeader
-        '
-        Me.tbFITSHeader.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbFITSHeader.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbFITSHeader.Location = New System.Drawing.Point(2, 6)
-        Me.tbFITSHeader.Multiline = True
-        Me.tbFITSHeader.Name = "tbFITSHeader"
-        Me.tbFITSHeader.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.tbFITSHeader.Size = New System.Drawing.Size(890, 314)
-        Me.tbFITSHeader.TabIndex = 2
-        Me.tbFITSHeader.WordWrap = False
-        '
-        'tbCombinedROI
-        '
-        Me.tbCombinedROI.BackColor = System.Drawing.SystemColors.Control
-        Me.tbCombinedROI.Controls.Add(Me.pbImage)
-        Me.tbCombinedROI.Location = New System.Drawing.Point(4, 22)
-        Me.tbCombinedROI.Name = "tbCombinedROI"
-        Me.tbCombinedROI.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbCombinedROI.Size = New System.Drawing.Size(898, 323)
-        Me.tbCombinedROI.TabIndex = 1
-        Me.tbCombinedROI.Text = "(Combined) ROI"
-        '
-        'pbImage
-        '
-        Me.pbImage.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.pbImage.BackColor = System.Drawing.Color.FromArgb(CType(CType(255, Byte), Integer), CType(CType(192, Byte), Integer), CType(CType(128, Byte), Integer))
-        Me.pbImage.ContextMenuStrip = Me.cmsMain
-        Me.pbImage.InterpolationMode = System.Drawing.Drawing2D.InterpolationMode.NearestNeighbor
-        Me.pbImage.Location = New System.Drawing.Point(3, 6)
-        Me.pbImage.Name = "pbImage"
-        Me.pbImage.Size = New System.Drawing.Size(889, 314)
-        Me.pbImage.SizeMode = System.Windows.Forms.PictureBoxSizeMode.Zoom
-        Me.pbImage.TabIndex = 5
-        Me.pbImage.TabStop = False
-        '
-        'cmsMain
-        '
-        Me.cmsMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.cmsMain_ToClipboard})
-        Me.cmsMain.Name = "cmsMain"
-        Me.cmsMain.Size = New System.Drawing.Size(170, 26)
-        '
-        'cmsMain_ToClipboard
-        '
-        Me.cmsMain_ToClipboard.Name = "cmsMain_ToClipboard"
-        Me.cmsMain_ToClipboard.Size = New System.Drawing.Size(169, 22)
-        Me.cmsMain_ToClipboard.Text = "Copy to clipboard"
-        '
-        'tbSinglePixelStat
-        '
-        Me.tbSinglePixelStat.BackColor = System.Drawing.SystemColors.Control
-        Me.tbSinglePixelStat.Controls.Add(Me.tbPixelStat)
-        Me.tbSinglePixelStat.Location = New System.Drawing.Point(4, 22)
-        Me.tbSinglePixelStat.Name = "tbSinglePixelStat"
-        Me.tbSinglePixelStat.Padding = New System.Windows.Forms.Padding(3)
-        Me.tbSinglePixelStat.Size = New System.Drawing.Size(898, 323)
-        Me.tbSinglePixelStat.TabIndex = 2
-        Me.tbSinglePixelStat.Text = "Single pixel statistics"
-        '
-        'tbPixelStat
-        '
-        Me.tbPixelStat.Anchor = CType((((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Bottom) _
-            Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbPixelStat.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbPixelStat.Location = New System.Drawing.Point(6, 6)
-        Me.tbPixelStat.Multiline = True
-        Me.tbPixelStat.Name = "tbPixelStat"
-        Me.tbPixelStat.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.tbPixelStat.Size = New System.Drawing.Size(886, 311)
-        Me.tbPixelStat.TabIndex = 4
-        Me.tbPixelStat.WordWrap = False
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left), System.Windows.Forms.AnchorStyles)
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(12, 380)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(25, 13)
-        Me.Label1.TabIndex = 1
-        Me.Label1.Text = "Log"
-        '
-        'tbLog
-        '
-        Me.tbLog.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbLog.Font = New System.Drawing.Font("Courier New", 8.25!, System.Drawing.FontStyle.Regular, System.Drawing.GraphicsUnit.Point, CType(0, Byte))
-        Me.tbLog.Location = New System.Drawing.Point(3, 396)
-        Me.tbLog.Multiline = True
-        Me.tbLog.Name = "tbLog"
-        Me.tbLog.ScrollBars = System.Windows.Forms.ScrollBars.Both
-        Me.tbLog.Size = New System.Drawing.Size(912, 162)
-        Me.tbLog.TabIndex = 0
-        Me.tbLog.WordWrap = False
-        '
-        'msMain
-        '
-        Me.msMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile, Me.tsmiFileList, Me.tsmiAction})
-        Me.msMain.Location = New System.Drawing.Point(0, 0)
-        Me.msMain.Name = "msMain"
-        Me.msMain.Size = New System.Drawing.Size(1344, 24)
-        Me.msMain.TabIndex = 3
-        Me.msMain.Text = "MenuStrip1"
-        '
-        'tsmiFile
-        '
-        Me.tsmiFile.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFile_AddFiles, Me.tsmiFile_OpenWorkingDir, Me.ToolStripMenuItem1, Me.tsmiFile_SaveAllFilesHisto, Me.tsmiFile_SaveFITSandStats, Me.ToolStripMenuItem3, Me.tsmiFile_Exit})
-        Me.tsmiFile.Name = "tsmiFile"
-        Me.tsmiFile.Size = New System.Drawing.Size(37, 20)
-        Me.tsmiFile.Text = "File"
-        '
-        'tsmiFile_AddFiles
-        '
-        Me.tsmiFile_AddFiles.Name = "tsmiFile_AddFiles"
-        Me.tsmiFile_AddFiles.Size = New System.Drawing.Size(226, 22)
-        Me.tsmiFile_AddFiles.Text = "Add file(s)"
-        '
-        'tsmiFile_OpenWorkingDir
-        '
-        Me.tsmiFile_OpenWorkingDir.Name = "tsmiFile_OpenWorkingDir"
-        Me.tsmiFile_OpenWorkingDir.Size = New System.Drawing.Size(226, 22)
-        Me.tsmiFile_OpenWorkingDir.Text = "Open working directory"
-        '
-        'ToolStripMenuItem1
-        '
-        Me.ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        Me.ToolStripMenuItem1.Size = New System.Drawing.Size(223, 6)
-        '
-        'tsmiFile_SaveAllFilesHisto
-        '
-        Me.tsmiFile_SaveAllFilesHisto.Name = "tsmiFile_SaveAllFilesHisto"
-        Me.tsmiFile_SaveAllFilesHisto.Size = New System.Drawing.Size(226, 22)
-        Me.tsmiFile_SaveAllFilesHisto.Text = "Save all-files histogram (XLS)"
-        '
-        'tsmiFile_SaveFITSandStats
-        '
-        Me.tsmiFile_SaveFITSandStats.Name = "tsmiFile_SaveFITSandStats"
-        Me.tsmiFile_SaveFITSandStats.Size = New System.Drawing.Size(226, 22)
-        Me.tsmiFile_SaveFITSandStats.Text = "Save FITS and statistics (XLS)"
-        '
-        'ToolStripMenuItem3
-        '
-        Me.ToolStripMenuItem3.Name = "ToolStripMenuItem3"
-        Me.ToolStripMenuItem3.Size = New System.Drawing.Size(223, 6)
-        '
-        'tsmiFile_Exit
-        '
-        Me.tsmiFile_Exit.Name = "tsmiFile_Exit"
-        Me.tsmiFile_Exit.Size = New System.Drawing.Size(226, 22)
-        Me.tsmiFile_Exit.Text = "Exit"
-        '
-        'tsmiFileList
-        '
-        Me.tsmiFileList.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiFileList_ClearList})
-        Me.tsmiFileList.Name = "tsmiFileList"
-        Me.tsmiFileList.Size = New System.Drawing.Size(55, 20)
-        Me.tsmiFileList.Text = "File list"
-        '
-        'tsmiFileList_ClearList
-        '
-        Me.tsmiFileList_ClearList.Name = "tsmiFileList_ClearList"
-        Me.tsmiFileList_ClearList.Size = New System.Drawing.Size(119, 22)
-        Me.tsmiFileList_ClearList.Text = "Clear list"
-        '
-        'tsmiAction
-        '
-        Me.tsmiAction.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAction_Run, Me.ToolStripMenuItem2, Me.tsmiAction_ClearLog, Me.tsmiAction_StackSpecial, Me.tsmiAction_Mode, Me.ToolStripMenuItem4, Me.tsmiAction_SelectAll, Me.tsmiAction_DeSelectAll})
-        Me.tsmiAction.Name = "tsmiAction"
-        Me.tsmiAction.Size = New System.Drawing.Size(59, 20)
-        Me.tsmiAction.Text = "Actions"
-        '
-        'tsmiAction_Run
-        '
-        Me.tsmiAction_Run.Name = "tsmiAction_Run"
-        Me.tsmiAction_Run.Size = New System.Drawing.Size(180, 22)
-        Me.tsmiAction_Run.Text = "Run"
-        '
-        'ToolStripMenuItem2
-        '
-        Me.ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        Me.ToolStripMenuItem2.Size = New System.Drawing.Size(177, 6)
-        '
-        'tsmiAction_ClearLog
-        '
-        Me.tsmiAction_ClearLog.Name = "tsmiAction_ClearLog"
-        Me.tsmiAction_ClearLog.Size = New System.Drawing.Size(180, 22)
-        Me.tsmiAction_ClearLog.Text = "Clear log"
-        '
-        'tsmiAction_StackSpecial
-        '
-        Me.tsmiAction_StackSpecial.Name = "tsmiAction_StackSpecial"
-        Me.tsmiAction_StackSpecial.Size = New System.Drawing.Size(180, 22)
-        Me.tsmiAction_StackSpecial.Text = "Stack (special code)"
-        '
-        'tsmiAction_Mode
-        '
-        Me.tsmiAction_Mode.DropDownItems.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tsmiAction_Mode_StoreAlignedFiles})
-        Me.tsmiAction_Mode.Name = "tsmiAction_Mode"
-        Me.tsmiAction_Mode.Size = New System.Drawing.Size(180, 22)
-        Me.tsmiAction_Mode.Text = "Set mode"
-        '
-        'tsmiAction_Mode_StoreAlignedFiles
-        '
-        Me.tsmiAction_Mode_StoreAlignedFiles.Name = "tsmiAction_Mode_StoreAlignedFiles"
-        Me.tsmiAction_Mode_StoreAlignedFiles.Size = New System.Drawing.Size(167, 22)
-        Me.tsmiAction_Mode_StoreAlignedFiles.Text = "Store aligned files"
-        '
-        'ToolStripMenuItem4
-        '
-        Me.ToolStripMenuItem4.Name = "ToolStripMenuItem4"
-        Me.ToolStripMenuItem4.Size = New System.Drawing.Size(177, 6)
-        '
-        'tsmiAction_SelectAll
-        '
-        Me.tsmiAction_SelectAll.Name = "tsmiAction_SelectAll"
-        Me.tsmiAction_SelectAll.Size = New System.Drawing.Size(180, 22)
-        Me.tsmiAction_SelectAll.Text = "Select all files"
-        '
-        'tsmiAction_DeSelectAll
-        '
-        Me.tsmiAction_DeSelectAll.Name = "tsmiAction_DeSelectAll"
-        Me.tsmiAction_DeSelectAll.Size = New System.Drawing.Size(180, 22)
-        Me.tsmiAction_DeSelectAll.Text = "Deselect all files"
-        '
-        'ofdMain
-        '
-        Me.ofdMain.FileName = "OpenFileDialog1"
-        '
-        'ssMain
-        '
-        Me.ssMain.Items.AddRange(New System.Windows.Forms.ToolStripItem() {Me.tspbMain})
-        Me.ssMain.Location = New System.Drawing.Point(0, 909)
-        Me.ssMain.Name = "ssMain"
-        Me.ssMain.Size = New System.Drawing.Size(1344, 22)
-        Me.ssMain.TabIndex = 4
-        Me.ssMain.Text = "StatusStrip1"
-        '
-        'tspbMain
-        '
-        Me.tspbMain.Name = "tspbMain"
-        Me.tspbMain.Size = New System.Drawing.Size(100, 16)
-        '
-        'frmMultiFileAction
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(1344, 931)
-        Me.Controls.Add(Me.ssMain)
-        Me.Controls.Add(Me.scMain)
-        Me.Controls.Add(Me.msMain)
-        Me.Icon = CType(resources.GetObject("$this.Icon"), System.Drawing.Icon)
-        Me.MainMenuStrip = Me.msMain
-        Me.Name = "frmMultiFileAction"
-        Me.Text = "Multi-file action"
-        CType(Me.adgvMain, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.scMain.Panel1.ResumeLayout(False)
-        Me.scMain.Panel2.ResumeLayout(False)
-        CType(Me.scMain, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.scMain.ResumeLayout(False)
-        Me.scButtom.Panel1.ResumeLayout(False)
-        Me.scButtom.Panel2.ResumeLayout(False)
-        Me.scButtom.Panel2.PerformLayout()
-        CType(Me.scButtom, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.scButtom.ResumeLayout(False)
-        Me.tcMain.ResumeLayout(False)
-        Me.TabPage2.ResumeLayout(False)
-        Me.gbAspects.ResumeLayout(False)
-        Me.tcAspect.ResumeLayout(False)
-        Me.tpFITSHeader.ResumeLayout(False)
-        Me.tpFITSHeader.PerformLayout()
-        Me.tbCombinedROI.ResumeLayout(False)
-        CType(Me.pbImage, System.ComponentModel.ISupportInitialize).EndInit()
-        Me.cmsMain.ResumeLayout(False)
-        Me.tbSinglePixelStat.ResumeLayout(False)
-        Me.tbSinglePixelStat.PerformLayout()
-        Me.msMain.ResumeLayout(False)
-        Me.msMain.PerformLayout()
-        Me.ssMain.ResumeLayout(False)
-        Me.ssMain.PerformLayout()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        adgvMain = New Zuby.ADGV.AdvancedDataGridView()
+        cmsTable = New ContextMenuStrip(components)
+        cmsTable_OpenFile = New ToolStripMenuItem()
+        scMain = New SplitContainer()
+        scButtom = New SplitContainer()
+        pgMain = New PropertyGrid()
+        scBottomRight = New SplitContainer()
+        gbAspects = New GroupBox()
+        tcAspect = New TabControl()
+        tpFITSHeader = New TabPage()
+        tbFITSHeader = New TextBox()
+        tbCombinedROI = New TabPage()
+        pbImage = New PictureBoxEx()
+        cmsMain = New ContextMenuStrip(components)
+        cmsMain_ToClipboard = New ToolStripMenuItem()
+        tbSinglePixelStat = New TabPage()
+        tbPixelStat = New TextBox()
+        tbLog = New TextBox()
+        Label1 = New Label()
+        msMain = New MenuStrip()
+        tsmiFile = New ToolStripMenuItem()
+        tsmiFile_AddFiles = New ToolStripMenuItem()
+        tsmiFile_OpenWorkingDir = New ToolStripMenuItem()
+        ToolStripMenuItem1 = New ToolStripSeparator()
+        tsmiFile_SaveAllFilesHisto = New ToolStripMenuItem()
+        tsmiFile_SaveFITSandStats = New ToolStripMenuItem()
+        ToolStripMenuItem3 = New ToolStripSeparator()
+        tsmiFile_Exit = New ToolStripMenuItem()
+        tsmiFileList = New ToolStripMenuItem()
+        tsmiFileList_ClearList = New ToolStripMenuItem()
+        tsmiAction = New ToolStripMenuItem()
+        tsmiAction_Run = New ToolStripMenuItem()
+        ToolStripMenuItem2 = New ToolStripSeparator()
+        tsmiAction_ClearLog = New ToolStripMenuItem()
+        tsmiAction_StackSpecial = New ToolStripMenuItem()
+        tsmiAction_Mode = New ToolStripMenuItem()
+        tsmiAction_Mode_StoreAlignedFiles = New ToolStripMenuItem()
+        ToolStripMenuItem4 = New ToolStripSeparator()
+        tsmiAction_SelectAll = New ToolStripMenuItem()
+        tsmiAction_DeSelectAll = New ToolStripMenuItem()
+        tsmiAction_DSSParam = New ToolStripMenuItem()
+        ofdMain = New OpenFileDialog()
+        ssMain = New StatusStrip()
+        tspbMain = New ToolStripProgressBar()
+        sfdMain = New SaveFileDialog()
+        CType(adgvMain, ComponentModel.ISupportInitialize).BeginInit()
+        cmsTable.SuspendLayout()
+        CType(scMain, ComponentModel.ISupportInitialize).BeginInit()
+        scMain.Panel1.SuspendLayout()
+        scMain.Panel2.SuspendLayout()
+        scMain.SuspendLayout()
+        CType(scButtom, ComponentModel.ISupportInitialize).BeginInit()
+        scButtom.Panel1.SuspendLayout()
+        scButtom.Panel2.SuspendLayout()
+        scButtom.SuspendLayout()
+        CType(scBottomRight, ComponentModel.ISupportInitialize).BeginInit()
+        scBottomRight.Panel1.SuspendLayout()
+        scBottomRight.Panel2.SuspendLayout()
+        scBottomRight.SuspendLayout()
+        gbAspects.SuspendLayout()
+        tcAspect.SuspendLayout()
+        tpFITSHeader.SuspendLayout()
+        tbCombinedROI.SuspendLayout()
+        CType(pbImage, ComponentModel.ISupportInitialize).BeginInit()
+        cmsMain.SuspendLayout()
+        tbSinglePixelStat.SuspendLayout()
+        msMain.SuspendLayout()
+        ssMain.SuspendLayout()
+        SuspendLayout()
+        ' 
+        ' adgvMain
+        ' 
+        adgvMain.AllowDrop = True
+        adgvMain.AllowUserToAddRows = False
+        adgvMain.AllowUserToDeleteRows = False
+        adgvMain.AllowUserToOrderColumns = True
+        adgvMain.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        adgvMain.AutoSizeColumnsMode = DataGridViewAutoSizeColumnsMode.AllCells
+        adgvMain.ColumnHeadersHeightSizeMode = DataGridViewColumnHeadersHeightSizeMode.AutoSize
+        adgvMain.ContextMenuStrip = cmsTable
+        adgvMain.FilterAndSortEnabled = True
+        adgvMain.FilterStringChangedInvokeBeforeDatasourceUpdate = True
+        adgvMain.Location = New Point(4, 3)
+        adgvMain.Margin = New Padding(4, 3, 4, 3)
+        adgvMain.MultiSelect = False
+        adgvMain.Name = "adgvMain"
+        adgvMain.RightToLeft = RightToLeft.No
+        adgvMain.RowHeadersVisible = False
+        adgvMain.ShowEditingIcon = False
+        adgvMain.ShowRowErrors = False
+        adgvMain.Size = New Size(1530, 338)
+        adgvMain.SortStringChangedInvokeBeforeDatasourceUpdate = True
+        adgvMain.TabIndex = 1
+        adgvMain.VirtualMode = True
+        ' 
+        ' cmsTable
+        ' 
+        cmsTable.Items.AddRange(New ToolStripItem() {cmsTable_OpenFile})
+        cmsTable.Name = "cmsTable"
+        cmsTable.Size = New Size(123, 26)
+        ' 
+        ' cmsTable_OpenFile
+        ' 
+        cmsTable_OpenFile.Name = "cmsTable_OpenFile"
+        cmsTable_OpenFile.Size = New Size(122, 22)
+        cmsTable_OpenFile.Text = "Open file"
+        ' 
+        ' scMain
+        ' 
+        scMain.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        scMain.Location = New Point(14, 31)
+        scMain.Margin = New Padding(4, 3, 4, 3)
+        scMain.Name = "scMain"
+        scMain.Orientation = Orientation.Horizontal
+        ' 
+        ' scMain.Panel1
+        ' 
+        scMain.Panel1.Controls.Add(adgvMain)
+        ' 
+        ' scMain.Panel2
+        ' 
+        scMain.Panel2.Controls.Add(scButtom)
+        scMain.Size = New Size(1540, 1002)
+        scMain.SplitterDistance = 345
+        scMain.SplitterWidth = 5
+        scMain.TabIndex = 2
+        ' 
+        ' scButtom
+        ' 
+        scButtom.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        scButtom.Location = New Point(4, 3)
+        scButtom.Margin = New Padding(4, 3, 4, 3)
+        scButtom.Name = "scButtom"
+        ' 
+        ' scButtom.Panel1
+        ' 
+        scButtom.Panel1.Controls.Add(pgMain)
+        ' 
+        ' scButtom.Panel2
+        ' 
+        scButtom.Panel2.Controls.Add(scBottomRight)
+        scButtom.Size = New Size(1536, 644)
+        scButtom.SplitterDistance = 460
+        scButtom.SplitterWidth = 5
+        scButtom.TabIndex = 1
+        ' 
+        ' pgMain
+        ' 
+        pgMain.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        pgMain.Location = New Point(4, 3)
+        pgMain.Margin = New Padding(4, 3, 4, 3)
+        pgMain.Name = "pgMain"
+        pgMain.Size = New Size(452, 638)
+        pgMain.TabIndex = 0
+        ' 
+        ' scBottomRight
+        ' 
+        scBottomRight.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        scBottomRight.Location = New Point(3, 3)
+        scBottomRight.Name = "scBottomRight"
+        scBottomRight.Orientation = Orientation.Horizontal
+        ' 
+        ' scBottomRight.Panel1
+        ' 
+        scBottomRight.Panel1.Controls.Add(gbAspects)
+        ' 
+        ' scBottomRight.Panel2
+        ' 
+        scBottomRight.Panel2.Controls.Add(tbLog)
+        scBottomRight.Panel2.Controls.Add(Label1)
+        scBottomRight.Size = New Size(1062, 638)
+        scBottomRight.SplitterDistance = 318
+        scBottomRight.TabIndex = 7
+        ' 
+        ' gbAspects
+        ' 
+        gbAspects.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        gbAspects.Controls.Add(tcAspect)
+        gbAspects.Location = New Point(5, 3)
+        gbAspects.Margin = New Padding(4, 3, 4, 3)
+        gbAspects.Name = "gbAspects"
+        gbAspects.Padding = New Padding(4, 3, 4, 3)
+        gbAspects.Size = New Size(1053, 312)
+        gbAspects.TabIndex = 6
+        gbAspects.TabStop = False
+        gbAspects.Text = "Aspect"
+        ' 
+        ' tcAspect
+        ' 
+        tcAspect.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        tcAspect.Controls.Add(tpFITSHeader)
+        tcAspect.Controls.Add(tbCombinedROI)
+        tcAspect.Controls.Add(tbSinglePixelStat)
+        tcAspect.Location = New Point(7, 22)
+        tcAspect.Margin = New Padding(4, 3, 4, 3)
+        tcAspect.Name = "tcAspect"
+        tcAspect.SelectedIndex = 0
+        tcAspect.Size = New Size(1046, 283)
+        tcAspect.TabIndex = 0
+        ' 
+        ' tpFITSHeader
+        ' 
+        tpFITSHeader.BackColor = SystemColors.Control
+        tpFITSHeader.Controls.Add(tbFITSHeader)
+        tpFITSHeader.Location = New Point(4, 24)
+        tpFITSHeader.Margin = New Padding(4, 3, 4, 3)
+        tpFITSHeader.Name = "tpFITSHeader"
+        tpFITSHeader.Padding = New Padding(4, 3, 4, 3)
+        tpFITSHeader.Size = New Size(1038, 255)
+        tpFITSHeader.TabIndex = 0
+        tpFITSHeader.Text = "FITS header"
+        ' 
+        ' tbFITSHeader
+        ' 
+        tbFITSHeader.Dock = DockStyle.Fill
+        tbFITSHeader.Font = New Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbFITSHeader.Location = New Point(4, 3)
+        tbFITSHeader.Margin = New Padding(4, 3, 4, 3)
+        tbFITSHeader.Multiline = True
+        tbFITSHeader.Name = "tbFITSHeader"
+        tbFITSHeader.ScrollBars = ScrollBars.Both
+        tbFITSHeader.Size = New Size(1030, 249)
+        tbFITSHeader.TabIndex = 2
+        tbFITSHeader.WordWrap = False
+        ' 
+        ' tbCombinedROI
+        ' 
+        tbCombinedROI.BackColor = SystemColors.Control
+        tbCombinedROI.Controls.Add(pbImage)
+        tbCombinedROI.Location = New Point(4, 24)
+        tbCombinedROI.Margin = New Padding(4, 3, 4, 3)
+        tbCombinedROI.Name = "tbCombinedROI"
+        tbCombinedROI.Padding = New Padding(4, 3, 4, 3)
+        tbCombinedROI.Size = New Size(1039, 256)
+        tbCombinedROI.TabIndex = 1
+        tbCombinedROI.Text = "(Combined) ROI"
+        ' 
+        ' pbImage
+        ' 
+        pbImage.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        pbImage.BackColor = Color.FromArgb(CByte(255), CByte(192), CByte(128))
+        pbImage.ContextMenuStrip = cmsMain
+        pbImage.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
+        pbImage.Location = New Point(4, 7)
+        pbImage.Margin = New Padding(4, 3, 4, 3)
+        pbImage.Name = "pbImage"
+        pbImage.Size = New Size(1029, 245)
+        pbImage.SizeMode = PictureBoxSizeMode.Zoom
+        pbImage.TabIndex = 5
+        pbImage.TabStop = False
+        ' 
+        ' cmsMain
+        ' 
+        cmsMain.Items.AddRange(New ToolStripItem() {cmsMain_ToClipboard})
+        cmsMain.Name = "cmsMain"
+        cmsMain.Size = New Size(170, 26)
+        ' 
+        ' cmsMain_ToClipboard
+        ' 
+        cmsMain_ToClipboard.Name = "cmsMain_ToClipboard"
+        cmsMain_ToClipboard.Size = New Size(169, 22)
+        cmsMain_ToClipboard.Text = "Copy to clipboard"
+        ' 
+        ' tbSinglePixelStat
+        ' 
+        tbSinglePixelStat.BackColor = SystemColors.Control
+        tbSinglePixelStat.Controls.Add(tbPixelStat)
+        tbSinglePixelStat.Location = New Point(4, 24)
+        tbSinglePixelStat.Margin = New Padding(4, 3, 4, 3)
+        tbSinglePixelStat.Name = "tbSinglePixelStat"
+        tbSinglePixelStat.Padding = New Padding(4, 3, 4, 3)
+        tbSinglePixelStat.Size = New Size(1039, 256)
+        tbSinglePixelStat.TabIndex = 2
+        tbSinglePixelStat.Text = "Single pixel statistics"
+        ' 
+        ' tbPixelStat
+        ' 
+        tbPixelStat.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        tbPixelStat.Font = New Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbPixelStat.Location = New Point(7, 7)
+        tbPixelStat.Margin = New Padding(4, 3, 4, 3)
+        tbPixelStat.Multiline = True
+        tbPixelStat.Name = "tbPixelStat"
+        tbPixelStat.ScrollBars = ScrollBars.Both
+        tbPixelStat.Size = New Size(1025, 241)
+        tbPixelStat.TabIndex = 4
+        tbPixelStat.WordWrap = False
+        ' 
+        ' tbLog
+        ' 
+        tbLog.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        tbLog.Font = New Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
+        tbLog.Location = New Point(4, 24)
+        tbLog.Margin = New Padding(4, 3, 4, 3)
+        tbLog.Multiline = True
+        tbLog.Name = "tbLog"
+        tbLog.ScrollBars = ScrollBars.Both
+        tbLog.Size = New Size(1054, 289)
+        tbLog.TabIndex = 0
+        tbLog.WordWrap = False
+        ' 
+        ' Label1
+        ' 
+        Label1.AutoSize = True
+        Label1.Location = New Point(5, 6)
+        Label1.Margin = New Padding(4, 0, 4, 0)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(27, 15)
+        Label1.TabIndex = 1
+        Label1.Text = "Log"
+        ' 
+        ' msMain
+        ' 
+        msMain.Items.AddRange(New ToolStripItem() {tsmiFile, tsmiFileList, tsmiAction})
+        msMain.Location = New Point(0, 0)
+        msMain.Name = "msMain"
+        msMain.Padding = New Padding(7, 2, 0, 2)
+        msMain.Size = New Size(1568, 24)
+        msMain.TabIndex = 3
+        msMain.Text = "MenuStrip1"
+        ' 
+        ' tsmiFile
+        ' 
+        tsmiFile.DropDownItems.AddRange(New ToolStripItem() {tsmiFile_AddFiles, tsmiFile_OpenWorkingDir, ToolStripMenuItem1, tsmiFile_SaveAllFilesHisto, tsmiFile_SaveFITSandStats, ToolStripMenuItem3, tsmiFile_Exit})
+        tsmiFile.Name = "tsmiFile"
+        tsmiFile.Size = New Size(37, 20)
+        tsmiFile.Text = "File"
+        ' 
+        ' tsmiFile_AddFiles
+        ' 
+        tsmiFile_AddFiles.Name = "tsmiFile_AddFiles"
+        tsmiFile_AddFiles.Size = New Size(226, 22)
+        tsmiFile_AddFiles.Text = "Add file(s)"
+        ' 
+        ' tsmiFile_OpenWorkingDir
+        ' 
+        tsmiFile_OpenWorkingDir.Name = "tsmiFile_OpenWorkingDir"
+        tsmiFile_OpenWorkingDir.Size = New Size(226, 22)
+        tsmiFile_OpenWorkingDir.Text = "Open working directory"
+        ' 
+        ' ToolStripMenuItem1
+        ' 
+        ToolStripMenuItem1.Name = "ToolStripMenuItem1"
+        ToolStripMenuItem1.Size = New Size(223, 6)
+        ' 
+        ' tsmiFile_SaveAllFilesHisto
+        ' 
+        tsmiFile_SaveAllFilesHisto.Name = "tsmiFile_SaveAllFilesHisto"
+        tsmiFile_SaveAllFilesHisto.Size = New Size(226, 22)
+        tsmiFile_SaveAllFilesHisto.Text = "Save all-files histogram (XLS)"
+        ' 
+        ' tsmiFile_SaveFITSandStats
+        ' 
+        tsmiFile_SaveFITSandStats.Name = "tsmiFile_SaveFITSandStats"
+        tsmiFile_SaveFITSandStats.Size = New Size(226, 22)
+        tsmiFile_SaveFITSandStats.Text = "Save FITS and statistics (XLS)"
+        ' 
+        ' ToolStripMenuItem3
+        ' 
+        ToolStripMenuItem3.Name = "ToolStripMenuItem3"
+        ToolStripMenuItem3.Size = New Size(223, 6)
+        ' 
+        ' tsmiFile_Exit
+        ' 
+        tsmiFile_Exit.Name = "tsmiFile_Exit"
+        tsmiFile_Exit.Size = New Size(226, 22)
+        tsmiFile_Exit.Text = "Exit"
+        ' 
+        ' tsmiFileList
+        ' 
+        tsmiFileList.DropDownItems.AddRange(New ToolStripItem() {tsmiFileList_ClearList})
+        tsmiFileList.Name = "tsmiFileList"
+        tsmiFileList.Size = New Size(55, 20)
+        tsmiFileList.Text = "File list"
+        ' 
+        ' tsmiFileList_ClearList
+        ' 
+        tsmiFileList_ClearList.Name = "tsmiFileList_ClearList"
+        tsmiFileList_ClearList.Size = New Size(119, 22)
+        tsmiFileList_ClearList.Text = "Clear list"
+        ' 
+        ' tsmiAction
+        ' 
+        tsmiAction.DropDownItems.AddRange(New ToolStripItem() {tsmiAction_Run, ToolStripMenuItem2, tsmiAction_ClearLog, tsmiAction_StackSpecial, tsmiAction_Mode, ToolStripMenuItem4, tsmiAction_SelectAll, tsmiAction_DeSelectAll, tsmiAction_DSSParam})
+        tsmiAction.Name = "tsmiAction"
+        tsmiAction.Size = New Size(59, 20)
+        tsmiAction.Text = "Actions"
+        ' 
+        ' tsmiAction_Run
+        ' 
+        tsmiAction_Run.Name = "tsmiAction_Run"
+        tsmiAction_Run.Size = New Size(185, 22)
+        tsmiAction_Run.Text = "Run"
+        ' 
+        ' ToolStripMenuItem2
+        ' 
+        ToolStripMenuItem2.Name = "ToolStripMenuItem2"
+        ToolStripMenuItem2.Size = New Size(182, 6)
+        ' 
+        ' tsmiAction_ClearLog
+        ' 
+        tsmiAction_ClearLog.Name = "tsmiAction_ClearLog"
+        tsmiAction_ClearLog.Size = New Size(185, 22)
+        tsmiAction_ClearLog.Text = "Clear log"
+        ' 
+        ' tsmiAction_StackSpecial
+        ' 
+        tsmiAction_StackSpecial.Name = "tsmiAction_StackSpecial"
+        tsmiAction_StackSpecial.Size = New Size(185, 22)
+        tsmiAction_StackSpecial.Text = "Stack (special code)"
+        ' 
+        ' tsmiAction_Mode
+        ' 
+        tsmiAction_Mode.DropDownItems.AddRange(New ToolStripItem() {tsmiAction_Mode_StoreAlignedFiles})
+        tsmiAction_Mode.Name = "tsmiAction_Mode"
+        tsmiAction_Mode.Size = New Size(185, 22)
+        tsmiAction_Mode.Text = "Set mode"
+        ' 
+        ' tsmiAction_Mode_StoreAlignedFiles
+        ' 
+        tsmiAction_Mode_StoreAlignedFiles.Name = "tsmiAction_Mode_StoreAlignedFiles"
+        tsmiAction_Mode_StoreAlignedFiles.Size = New Size(167, 22)
+        tsmiAction_Mode_StoreAlignedFiles.Text = "Store aligned files"
+        ' 
+        ' ToolStripMenuItem4
+        ' 
+        ToolStripMenuItem4.Name = "ToolStripMenuItem4"
+        ToolStripMenuItem4.Size = New Size(182, 6)
+        ' 
+        ' tsmiAction_SelectAll
+        ' 
+        tsmiAction_SelectAll.Name = "tsmiAction_SelectAll"
+        tsmiAction_SelectAll.Size = New Size(185, 22)
+        tsmiAction_SelectAll.Text = "Select all files"
+        ' 
+        ' tsmiAction_DeSelectAll
+        ' 
+        tsmiAction_DeSelectAll.Name = "tsmiAction_DeSelectAll"
+        tsmiAction_DeSelectAll.Size = New Size(185, 22)
+        tsmiAction_DeSelectAll.Text = "Deselect all files"
+        ' 
+        ' tsmiAction_DSSParam
+        ' 
+        tsmiAction_DSSParam.Name = "tsmiAction_DSSParam"
+        tsmiAction_DSSParam.Size = New Size(185, 22)
+        tsmiAction_DSSParam.Text = "Read DSS parameters"
+        ' 
+        ' ofdMain
+        ' 
+        ofdMain.FileName = "OpenFileDialog1"
+        ' 
+        ' ssMain
+        ' 
+        ssMain.Items.AddRange(New ToolStripItem() {tspbMain})
+        ssMain.Location = New Point(0, 1050)
+        ssMain.Name = "ssMain"
+        ssMain.Padding = New Padding(1, 0, 16, 0)
+        ssMain.Size = New Size(1568, 24)
+        ssMain.TabIndex = 4
+        ssMain.Text = "StatusStrip1"
+        ' 
+        ' tspbMain
+        ' 
+        tspbMain.Name = "tspbMain"
+        tspbMain.Size = New Size(117, 18)
+        ' 
+        ' frmMultiFileAction
+        ' 
+        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleMode = AutoScaleMode.Font
+        ClientSize = New Size(1568, 1074)
+        Controls.Add(ssMain)
+        Controls.Add(scMain)
+        Controls.Add(msMain)
+        Icon = CType(resources.GetObject("$this.Icon"), Icon)
+        MainMenuStrip = msMain
+        Margin = New Padding(4, 3, 4, 3)
+        Name = "frmMultiFileAction"
+        Text = "Multi-file action"
+        CType(adgvMain, ComponentModel.ISupportInitialize).EndInit()
+        cmsTable.ResumeLayout(False)
+        scMain.Panel1.ResumeLayout(False)
+        scMain.Panel2.ResumeLayout(False)
+        CType(scMain, ComponentModel.ISupportInitialize).EndInit()
+        scMain.ResumeLayout(False)
+        scButtom.Panel1.ResumeLayout(False)
+        scButtom.Panel2.ResumeLayout(False)
+        CType(scButtom, ComponentModel.ISupportInitialize).EndInit()
+        scButtom.ResumeLayout(False)
+        scBottomRight.Panel1.ResumeLayout(False)
+        scBottomRight.Panel2.ResumeLayout(False)
+        scBottomRight.Panel2.PerformLayout()
+        CType(scBottomRight, ComponentModel.ISupportInitialize).EndInit()
+        scBottomRight.ResumeLayout(False)
+        gbAspects.ResumeLayout(False)
+        tcAspect.ResumeLayout(False)
+        tpFITSHeader.ResumeLayout(False)
+        tpFITSHeader.PerformLayout()
+        tbCombinedROI.ResumeLayout(False)
+        CType(pbImage, ComponentModel.ISupportInitialize).EndInit()
+        cmsMain.ResumeLayout(False)
+        tbSinglePixelStat.ResumeLayout(False)
+        tbSinglePixelStat.PerformLayout()
+        msMain.ResumeLayout(False)
+        msMain.PerformLayout()
+        ssMain.ResumeLayout(False)
+        ssMain.PerformLayout()
+        ResumeLayout(False)
+        PerformLayout()
 
     End Sub
 
     Friend WithEvents adgvMain As Zuby.ADGV.AdvancedDataGridView
     Friend WithEvents scMain As SplitContainer
     Friend WithEvents scButtom As SplitContainer
-    Friend WithEvents tcMain As TabControl
-    Friend WithEvents TabPage2 As TabPage
     Friend WithEvents tbLog As TextBox
     Friend WithEvents msMain As MenuStrip
     Friend WithEvents tsmiFile As ToolStripMenuItem
@@ -555,4 +577,8 @@ Partial Class frmMultiFileAction
     Friend WithEvents tsmiAction_SelectAll As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem4 As ToolStripSeparator
     Friend WithEvents tsmiAction_DeSelectAll As ToolStripMenuItem
+    Friend WithEvents tsmiAction_DSSParam As ToolStripMenuItem
+    Friend WithEvents scBottomRight As SplitContainer
+    Friend WithEvents cmsTable As ContextMenuStrip
+    Friend WithEvents cmsTable_OpenFile As ToolStripMenuItem
 End Class

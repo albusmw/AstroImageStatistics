@@ -237,10 +237,16 @@ Partial Public Class frmMultiFileAction
         Public Property ROIDisplay_Height As Integer = 200
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("i) ROI shift mouse wheel steps")>
-        <ComponentModel.Description("ROI shift mouse wheel steps")>
+        <ComponentModel.DisplayName("i) ROI position and size mouse wheel steps")>
+        <ComponentModel.Description("ROI position and size mouse wheel steps")>
         <ComponentModel.DefaultValue(5)>
-        Public Property Stack_ROIDisplay_MouseWheelSteps As Integer = 5
+        Public Property ROIDisplay_PositionAndSize As Integer = 5
+
+        <ComponentModel.Category(Cat_ROIDisplay)>
+        <ComponentModel.DisplayName("j) ROI position and size mouse wheel steps")>
+        <ComponentModel.Description("ROI position and size mouse wheel steps")>
+        <ComponentModel.DefaultValue(5)>
+        Public Property ROIDisplay_DeltaXYStep As Integer = 1
 
         '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
         ' Statistics
