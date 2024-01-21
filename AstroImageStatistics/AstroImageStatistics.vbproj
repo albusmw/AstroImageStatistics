@@ -9,12 +9,9 @@
     <UseWPF>true</UseWPF>
     <ImportWindowsDesktopTargets>true</ImportWindowsDesktopTargets>
     <Platforms>x64</Platforms>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationIcon>Statistics.ico</ApplicationIcon>
-  </PropertyGroup>
-  <PropertyGroup>
-    <ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+	<ApplicationIcon>Statistics.ico</ApplicationIcon>
+	<ApplicationManifest>My Project\app.manifest</ApplicationManifest>
+	<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ss:fffZ"))</SourceRevisionId>
   </PropertyGroup>
   <ItemGroup>
     <Import Include="System.Drawing" />
@@ -153,7 +150,7 @@
       <Link>atomics\SQLT.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\Utils.vb">
-      <Link>common\Utils.vb</Link>
+      <Link>atomics\Utils.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>
@@ -299,14 +296,8 @@
     </Reference>
   </ItemGroup>
   <PropertyGroup>
-    <PreBuildEvent>echo %25date%25 %25time%25 &gt; "$(ProjectDir)\BuildDate.txt"</PreBuildEvent>
-  </PropertyGroup>
-  <PropertyGroup>
-    <PostBuildEvent>del "$(ProjectDir)\BuildDate.txt"</PostBuildEvent>
     <AssemblyTitle>AstroImageStatistics</AssemblyTitle>
     <Product>AstroImageStatistics</Product>
-    <Copyright>Copyright ©  2020</Copyright>
-    <AssemblyVersion>1.0.0.0</AssemblyVersion>
-    <FileVersion>1.0.0.0</FileVersion>
+    <Copyright>Copyright ©  2024</Copyright>
   </PropertyGroup>
 </Project>

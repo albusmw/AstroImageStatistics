@@ -1117,11 +1117,7 @@ Partial Public Class frmMultiFileAction
             'Load .stackinfo.txt (the stack info) for this file (parsed multiple times but is fast so left like this ...)
             Dim StackInfoFiles As New List(Of String)(System.IO.Directory.GetFiles(FileDirectory, "*.stackinfo.txt"))
             If StackInfoFiles.Count > 0 Then
-                Dim StackInfo As String() = ParseStackInfo(StackInfoFiles.First, AllFiles(Idx).FileName)
-                If StackInfo.Length > 1 Then
-                    AllFiles(Idx).DeltaX = -StackInfo(0).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0) - 1).ValRegIndep
-                    AllFiles(Idx).DeltaY = -StackInfo(16).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0)).ValRegIndep
-                End If
+                ParseStackInfo(StackInfoFiles.First, AllFiles(Idx).FileName, AllFiles(Idx).DeltaX, AllFiles(Idx).DeltaY)
             End If
         Next Idx
         RefreshTable()
@@ -1143,27 +1139,45 @@ Partial Public Class frmMultiFileAction
     '''<summary>Get the DSS parameters calculated for the specified file.</summary>
     '''<param name="StackInfoFile">StackInfo file.</param>
     '''<param name="FileToSearch">Single file to search in the StackInfo file.</param>
-    Private Function ParseStackInfo(ByVal StackInfoFile As String, ByVal FileToSearch As String) As String()
-        Dim StackInfo As String = String.Empty
+    Private Sub ParseStackInfo(ByVal StackInfoFile As String, ByVal FileToSearch As String, ByRef DeltaX As Double, ByRef DeltaY As Double)
+        DeltaX = Double.NaN
+        DeltaY = Double.NaN
+        Dim StackInfo As String() = Array.Empty(Of String)()
         FileToSearch = System.IO.Path.GetFullPath(FileToSearch)
         Dim FileContent As String() = System.IO.File.ReadAllLines(StackInfoFile)
         Dim Idx As Integer = -1
+        Dim b0Pos As Integer = -1
         Do
             Idx += 1
             If System.IO.Path.GetFullPath(FileContent(Idx)) = FileToSearch Then
+                'File entry found -> search for the transformation parameter
                 Do
                     Idx += 1
+                    If FileContent(Idx).StartsWith("Bilinear") Then
+                        StackInfo = Split(FileContent(Idx).Replace("Bilinear", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty), ",")
+                        b0Pos = 4
+                        Exit Do
+                    End If
+                    If FileContent(Idx).StartsWith("Bisquared") Then
+                        StackInfo = Split(FileContent(Idx).Replace("Bisquared", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty), ",")
+                        b0Pos = 8
+                        Exit Do
+                    End If
                     If FileContent(Idx).StartsWith("Bicubic") Then
-                        StackInfo = FileContent(Idx)
+                        StackInfo = Split(FileContent(Idx).Replace("Bicubic", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty), ",")
+                        b0Pos = 16
                         Exit Do
                     End If
                 Loop Until 1 = 0
+                If b0Pos > -1 Then
+                    'Transformation parameter found -> calclate delta and exit
+                    DeltaX = -StackInfo(0).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0) - 1).ValRegIndep
+                    DeltaY = -StackInfo(b0Pos).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0)).ValRegIndep
+                    Exit Do
+                End If
             End If
-            If String.IsNullOrEmpty(StackInfo) = False Then Exit Do
         Loop Until Idx = FileContent.GetUpperBound(0)
-        StackInfo = StackInfo.Replace("Bicubic", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty)
-        Return Split(StackInfo, ",")
-    End Function
+    End Sub
 
     Private Sub cmsTable_OpenFile_Click(sender As Object, e As EventArgs) Handles cmsTable_OpenFile.Click
         AIS.OpenFile(GetSelectedFileName)
