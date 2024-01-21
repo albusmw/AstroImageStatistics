@@ -206,11 +206,17 @@ Partial Public Class frmMultiFileAction
         Public Property ROIDisplay_UseDeltaXY As Boolean = True
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("d) Color mode")>
+        <ComponentModel.DisplayName("c) Color mode")>
         <ComponentModel.Description("Color mode")>
         <ComponentModel.TypeConverter(GetType(ComponentModelEx.EnumDesciptionConverter))>
         <ComponentModel.DefaultValue(eMaps.Hot)>
         Public Property Stack_ROIDisplay_ColorMode As eMaps = eMaps.FalseColor
+
+        <ComponentModel.Category(Cat_ROIDisplay)>
+        <ComponentModel.DisplayName("d) Mosaik border width")>
+        <ComponentModel.Description("Width [pixel] of the ROI image border between the tiles")>
+        <ComponentModel.DefaultValue(3)>
+        Public Property ROIDisplay_MosaikBorderWidth As Integer = 3
 
         <ComponentModel.Category(Cat_ROIDisplay)>
         <ComponentModel.DisplayName("e) Base X")>
@@ -243,10 +249,12 @@ Partial Public Class frmMultiFileAction
         Public Property ROIDisplay_PositionAndSize As Integer = 5
 
         <ComponentModel.Category(Cat_ROIDisplay)>
-        <ComponentModel.DisplayName("j) ROI position and size mouse wheel steps")>
-        <ComponentModel.Description("ROI position and size mouse wheel steps")>
-        <ComponentModel.DefaultValue(5)>
+        <ComponentModel.DisplayName("j) Table DeltaXY mouse wheel step size")>
+        <ComponentModel.Description("Table DeltaXY mouse wheel step size")>
+        <ComponentModel.DefaultValue(1)>
         Public Property ROIDisplay_DeltaXYStep As Integer = 1
+
+
 
         '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
         ' Statistics

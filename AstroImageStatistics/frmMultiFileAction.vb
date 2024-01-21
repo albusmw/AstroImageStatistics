@@ -714,10 +714,11 @@ Partial Public Class frmMultiFileAction
         End If
 
         'Sum up all images
-        Dim StarImageSum_UInt16(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
-        Dim StarImageSum_UInt32(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt32
+        Dim ROIImage_UInt16(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
+        Dim ROIImage_UInt32(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt32
         If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Mosaik Then
-            StarImageSum_UInt16 = CalculateMosaik(FilesToLoad)
+            'Calculate mosaik (each ROI individual, no sum-up)
+            ROIImage_UInt16 = CalculateMosaik(FilesToLoad, Config.ROIDisplay_MosaikBorderWidth)
         Else
             For Each File As cFileProps In FilesToLoad
                 Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = CInt(File.DeltaX)
@@ -727,13 +728,13 @@ Partial Public Class frmMultiFileAction
                 Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File.FileName, UseIPP, ROI, ForceDirect)
                 Select Case Config.ROIDisplay_Mode
                     Case cConfig.eROIDisplay.Single
-                        StarImageSum_UInt16 = Data.DataProcessor_UInt16.ImageData(0).Data
+                        ROIImage_UInt16 = Data.DataProcessor_UInt16.ImageData(0).Data
                     Case cConfig.eROIDisplay.Stacked_max
-                        AIS.DB.IPP.MaxEvery(Data.DataProcessor_UInt16.ImageData(0).Data, StarImageSum_UInt16)
+                        AIS.DB.IPP.MaxEvery(Data.DataProcessor_UInt16.ImageData(0).Data, ROIImage_UInt16)
                     Case cConfig.eROIDisplay.Stacked_mean
-                        For Idx1 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(0)
-                            For Idx2 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(1)
-                                StarImageSum_UInt32(Idx1, Idx2) += Data.DataProcessor_UInt16.ImageData(0).Data(Idx1, Idx2)
+                        For Idx1 As Integer = 0 To ROIImage_UInt32.GetUpperBound(0)
+                            For Idx2 As Integer = 0 To ROIImage_UInt32.GetUpperBound(1)
+                                ROIImage_UInt32(Idx1, Idx2) += Data.DataProcessor_UInt16.ImageData(0).Data(Idx1, Idx2)
                             Next Idx2
                         Next Idx1
                 End Select
@@ -744,15 +745,14 @@ Partial Public Class frmMultiFileAction
         Dim ImageToDisplay(Config.ROIDisplay_Width - 1, Config.ROIDisplay_Height - 1) As UInt16
         Select Case Config.ROIDisplay_Mode
             Case cConfig.eROIDisplay.Single, cConfig.eROIDisplay.Stacked_max, cConfig.eROIDisplay.Mosaik
-                ImageToDisplay = StarImageSum_UInt16.CreateCopy
+                ImageToDisplay = ROIImage_UInt16.CreateCopy
             Case cConfig.eROIDisplay.Stacked_mean
                 Dim StarImageSum_Min As UInt32 = UInt32.MaxValue
                 Dim StarImageSum_Max As UInt32 = UInt32.MinValue
-                AIS.DB.IPP.MinMax(StarImageSum_UInt32, StarImageSum_Min, StarImageSum_Max)
-
-                For Idx1 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(0)
-                    For Idx2 As Integer = 0 To StarImageSum_UInt32.GetUpperBound(1)
-                        ImageToDisplay(Idx1, Idx2) = ScaleToUInt16(StarImageSum_UInt32(Idx1, Idx2), StarImageSum_Min, StarImageSum_Max)
+                AIS.DB.IPP.MinMax(ROIImage_UInt32, StarImageSum_Min, StarImageSum_Max)
+                For Idx1 As Integer = 0 To ROIImage_UInt32.GetUpperBound(0)
+                    For Idx2 As Integer = 0 To ROIImage_UInt32.GetUpperBound(1)
+                        ImageToDisplay(Idx1, Idx2) = ScaleToUInt16(ROIImage_UInt32(Idx1, Idx2), StarImageSum_Min, StarImageSum_Max)
                     Next Idx2
                 Next Idx1
         End Select
@@ -772,9 +772,12 @@ Partial Public Class frmMultiFileAction
 
     End Sub
 
-    Private Function CalculateMosaik(ByVal FilesToLoad As List(Of cFileProps)) As UInt16(,)
+    '''<summary>Calculate a mosaik image from several ROI's of the files.</summary>
+    '''<param name="FilesToLoad">List of FITS files (UInt16 mode only) to load.</param>
+    '''<param name="TileBorderWidth">Width [pixel] of the tile borders.</param>
+    '''<returns></returns>
+    Private Function CalculateMosaik(ByVal FilesToLoad As List(Of cFileProps), ByVal TileBorderWidth As Integer) As UInt16(,)
 
-        Dim Tile_border As Integer = 3
         Dim Display_blur As Integer = 1
         Dim UseIPP As Boolean = True
         Dim ForceDirect As Boolean = False
@@ -783,14 +786,14 @@ Partial Public Class frmMultiFileAction
 
         Dim MosaikWidth As Integer = CInt(Math.Ceiling(Math.Sqrt(FilesToLoad.Count)))              'Number of tiles in X direction
         Dim MosaikHeight As Integer = CInt(Math.Ceiling(FilesToLoad.Count / MosaikWidth))          'Number of tiles in Y direction
-        Dim TileBorderWidth As Integer = Tile_border * (MosaikWidth - 1)
-        Dim TileBorderHeight As Integer = Tile_border * (MosaikHeight - 1)
+        Dim TileBorderPixel_X As Integer = TileBorderWidth * (MosaikWidth - 1)
+        Dim TileBorderPixel_Y As Integer = TileBorderWidth * (MosaikHeight - 1)
 
-        Dim MosaikImage((MosaikWidth * Config.ROIDisplay_Width) + TileBorderWidth - 1, (MosaikHeight * Config.ROIDisplay_Height) + TileBorderHeight - 1) As UInt16
+        Dim MosaikImage((MosaikWidth * Config.ROIDisplay_Width) + TileBorderPixel_X - 1, (MosaikHeight * Config.ROIDisplay_Height) + TileBorderPixel_Y - 1) As UInt16
 
         'Compose the mosaik
-        Dim WidthPtr As Integer = 0 : Dim WidthIdx As Integer = 0
-        Dim HeightPtr As Integer = 0
+        Dim MosaikBasePtr_X As Integer = 0 : Dim MosaikElement_X As Integer = 0
+        Dim MosaikBasePtr_Y As Integer = 0
 
         For Each File As cFileProps In FilesToLoad
             Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = CInt(File.DeltaX)
@@ -801,17 +804,20 @@ Partial Public Class frmMultiFileAction
             Try
                 For X As Integer = 0 To Config.ROIDisplay_Width - 1
                     For Y As Integer = 0 To Config.ROIDisplay_Height - 1
-                        MosaikImage(WidthPtr + X, HeightPtr + Y) = SingleFileTile(X, Y)
+                        MosaikImage(MosaikBasePtr_X + X, MosaikBasePtr_Y + Y) = SingleFileTile(X, Y)
                     Next Y
                 Next X
             Catch ex As Exception
                 'Log this error ...
             End Try
-            WidthPtr += Config.ROIDisplay_Width + Tile_border : WidthIdx += 1
-            If WidthIdx >= MosaikWidth Then
-                HeightPtr += Config.ROIDisplay_Height + Tile_border
-                WidthPtr = 0
-                WidthIdx = 0
+            'Move to the next tile
+            MosaikBasePtr_X += Config.ROIDisplay_Width + TileBorderWidth
+            MosaikElement_X += 1
+            'Jump to next row if required
+            If MosaikElement_X >= MosaikWidth Then
+                MosaikBasePtr_Y += Config.ROIDisplay_Height + TileBorderWidth
+                MosaikBasePtr_X = 0
+                MosaikElement_X = 0
             End If
         Next File
 
@@ -1118,7 +1124,7 @@ Partial Public Class frmMultiFileAction
                 End If
             End If
         Next Idx
-        RefreshTable
+        RefreshTable()
 
     End Sub
 
