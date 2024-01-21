@@ -288,15 +288,7 @@ Public Class MainForm
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'Get build data
-        Dim BuildDate = String.Empty
-        Dim AllResources = Reflection.Assembly.GetExecutingAssembly.GetManifestResourceNames
-        For Each Entry In AllResources
-            If Entry.EndsWith(".BuildDate.txt") Then
-                BuildDate = " (Build of " & New IO.StreamReader(Reflection.Assembly.GetExecutingAssembly.GetManifestResourceStream(Entry)).ReadToEnd.Trim.Replace(",", ".") & ")"
-                Exit For
-            End If
-        Next Entry
-        Text &= BuildDate
+        Text &= Ato.Utils.GetBuildDate
 
         'Load IPP
         Dim IPPLoadError = String.Empty
