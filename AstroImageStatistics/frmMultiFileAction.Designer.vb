@@ -28,6 +28,7 @@ Partial Class frmMultiFileAction
         cmsTable = New ContextMenuStrip(components)
         cmsTable_OpenFile = New ToolStripMenuItem()
         scMain = New SplitContainer()
+        tbStars = New ListBox()
         scButtom = New SplitContainer()
         pgMain = New PropertyGrid()
         scBottomRight = New SplitContainer()
@@ -114,7 +115,7 @@ Partial Class frmMultiFileAction
         adgvMain.RowHeadersVisible = False
         adgvMain.ShowEditingIcon = False
         adgvMain.ShowRowErrors = False
-        adgvMain.Size = New Size(1530, 338)
+        adgvMain.Size = New Size(1151, 338)
         adgvMain.SortStringChangedInvokeBeforeDatasourceUpdate = True
         adgvMain.TabIndex = 1
         adgvMain.VirtualMode = True
@@ -141,6 +142,7 @@ Partial Class frmMultiFileAction
         ' 
         ' scMain.Panel1
         ' 
+        scMain.Panel1.Controls.Add(tbStars)
         scMain.Panel1.Controls.Add(adgvMain)
         ' 
         ' scMain.Panel2
@@ -150,6 +152,18 @@ Partial Class frmMultiFileAction
         scMain.SplitterDistance = 345
         scMain.SplitterWidth = 5
         scMain.TabIndex = 2
+        ' 
+        ' tbStars
+        ' 
+        tbStars.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Right
+        tbStars.FormattingEnabled = True
+        tbStars.IntegralHeight = False
+        tbStars.ItemHeight = 15
+        tbStars.Items.AddRange(New Object() {"--- no stars loaded from DSS ---"})
+        tbStars.Location = New Point(1162, 3)
+        tbStars.Name = "tbStars"
+        tbStars.Size = New Size(375, 339)
+        tbStars.TabIndex = 2
         ' 
         ' scButtom
         ' 
@@ -165,7 +179,7 @@ Partial Class frmMultiFileAction
         ' scButtom.Panel2
         ' 
         scButtom.Panel2.Controls.Add(scBottomRight)
-        scButtom.Size = New Size(1536, 644)
+        scButtom.Size = New Size(1536, 642)
         scButtom.SplitterDistance = 460
         scButtom.SplitterWidth = 5
         scButtom.TabIndex = 1
@@ -176,7 +190,7 @@ Partial Class frmMultiFileAction
         pgMain.Location = New Point(4, 3)
         pgMain.Margin = New Padding(4, 3, 4, 3)
         pgMain.Name = "pgMain"
-        pgMain.Size = New Size(452, 638)
+        pgMain.Size = New Size(452, 636)
         pgMain.TabIndex = 0
         ' 
         ' scBottomRight
@@ -194,8 +208,8 @@ Partial Class frmMultiFileAction
         ' 
         scBottomRight.Panel2.Controls.Add(tbLog)
         scBottomRight.Panel2.Controls.Add(Label1)
-        scBottomRight.Size = New Size(1062, 638)
-        scBottomRight.SplitterDistance = 318
+        scBottomRight.Size = New Size(1060, 636)
+        scBottomRight.SplitterDistance = 316
         scBottomRight.TabIndex = 7
         ' 
         ' gbAspects
@@ -206,7 +220,7 @@ Partial Class frmMultiFileAction
         gbAspects.Margin = New Padding(4, 3, 4, 3)
         gbAspects.Name = "gbAspects"
         gbAspects.Padding = New Padding(4, 3, 4, 3)
-        gbAspects.Size = New Size(1053, 312)
+        gbAspects.Size = New Size(1051, 310)
         gbAspects.TabIndex = 6
         gbAspects.TabStop = False
         gbAspects.Text = "Aspect"
@@ -221,7 +235,7 @@ Partial Class frmMultiFileAction
         tcAspect.Margin = New Padding(4, 3, 4, 3)
         tcAspect.Name = "tcAspect"
         tcAspect.SelectedIndex = 0
-        tcAspect.Size = New Size(1046, 283)
+        tcAspect.Size = New Size(1044, 281)
         tcAspect.TabIndex = 0
         ' 
         ' tpFITSHeader
@@ -232,7 +246,7 @@ Partial Class frmMultiFileAction
         tpFITSHeader.Margin = New Padding(4, 3, 4, 3)
         tpFITSHeader.Name = "tpFITSHeader"
         tpFITSHeader.Padding = New Padding(4, 3, 4, 3)
-        tpFITSHeader.Size = New Size(1038, 255)
+        tpFITSHeader.Size = New Size(1036, 253)
         tpFITSHeader.TabIndex = 0
         tpFITSHeader.Text = "FITS header"
         ' 
@@ -245,7 +259,7 @@ Partial Class frmMultiFileAction
         tbFITSHeader.Multiline = True
         tbFITSHeader.Name = "tbFITSHeader"
         tbFITSHeader.ScrollBars = ScrollBars.Both
-        tbFITSHeader.Size = New Size(1030, 249)
+        tbFITSHeader.Size = New Size(1028, 247)
         tbFITSHeader.TabIndex = 2
         tbFITSHeader.WordWrap = False
         ' 
@@ -257,7 +271,7 @@ Partial Class frmMultiFileAction
         tbCombinedROI.Margin = New Padding(4, 3, 4, 3)
         tbCombinedROI.Name = "tbCombinedROI"
         tbCombinedROI.Padding = New Padding(4, 3, 4, 3)
-        tbCombinedROI.Size = New Size(1039, 256)
+        tbCombinedROI.Size = New Size(1037, 254)
         tbCombinedROI.TabIndex = 1
         tbCombinedROI.Text = "(Combined) ROI"
         ' 
@@ -270,7 +284,7 @@ Partial Class frmMultiFileAction
         pbImage.Location = New Point(4, 7)
         pbImage.Margin = New Padding(4, 3, 4, 3)
         pbImage.Name = "pbImage"
-        pbImage.Size = New Size(1029, 245)
+        pbImage.Size = New Size(1027, 243)
         pbImage.SizeMode = PictureBoxSizeMode.Zoom
         pbImage.TabIndex = 5
         pbImage.TabStop = False
@@ -295,7 +309,7 @@ Partial Class frmMultiFileAction
         tbSinglePixelStat.Margin = New Padding(4, 3, 4, 3)
         tbSinglePixelStat.Name = "tbSinglePixelStat"
         tbSinglePixelStat.Padding = New Padding(4, 3, 4, 3)
-        tbSinglePixelStat.Size = New Size(1039, 256)
+        tbSinglePixelStat.Size = New Size(1037, 254)
         tbSinglePixelStat.TabIndex = 2
         tbSinglePixelStat.Text = "Single pixel statistics"
         ' 
@@ -308,7 +322,7 @@ Partial Class frmMultiFileAction
         tbPixelStat.Multiline = True
         tbPixelStat.Name = "tbPixelStat"
         tbPixelStat.ScrollBars = ScrollBars.Both
-        tbPixelStat.Size = New Size(1025, 241)
+        tbPixelStat.Size = New Size(1023, 239)
         tbPixelStat.TabIndex = 4
         tbPixelStat.WordWrap = False
         ' 
@@ -321,7 +335,7 @@ Partial Class frmMultiFileAction
         tbLog.Multiline = True
         tbLog.Name = "tbLog"
         tbLog.ScrollBars = ScrollBars.Both
-        tbLog.Size = New Size(1054, 289)
+        tbLog.Size = New Size(1052, 289)
         tbLog.TabIndex = 0
         tbLog.WordWrap = False
         ' 
@@ -581,4 +595,5 @@ Partial Class frmMultiFileAction
     Friend WithEvents scBottomRight As SplitContainer
     Friend WithEvents cmsTable As ContextMenuStrip
     Friend WithEvents cmsTable_OpenFile As ToolStripMenuItem
+    Friend WithEvents tbStars As ListBox
 End Class

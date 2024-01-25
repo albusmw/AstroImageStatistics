@@ -24,6 +24,7 @@
     <Compile Include="..\..\MyFramework\AsImProc.vb">
       <Link>MyFramework\AsImProc.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\ASCOMDynamic.vb" Link="MyLib\ASCOMDynamic.vb" />
     <Compile Include="..\..\MyLib\AstroDSP.vb">
       <Link>MyLib\AstroDSP.vb</Link>
     </Compile>
@@ -36,6 +37,7 @@
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\DSSFileParser.vb" Link="MyLib\DSSFileParser.vb" />
     <Compile Include="..\..\MyLib\Extensions.vb">
       <Link>MyLib\Extensions.vb</Link>
     </Compile>

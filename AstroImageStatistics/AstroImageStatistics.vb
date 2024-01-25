@@ -6,6 +6,7 @@ Public Class AstroImageStatistics_Fun
 
     '''<summary>Plate solve the passed file,</summary>
     '''<returns>Error code; empty string on no error.</returns>
+    <Runtime.Versioning.SupportedOSPlatform("windows")>
     Public Shared Function PlateSolve(ByVal FileToRun As String, ByVal PlateSolve2Path As String, ByVal PlateSolve2HoldOpen As Integer, ByRef SolverLog As String()) As String
 
         Dim Solver As New cPlateSolve
@@ -37,7 +38,7 @@ Public Class AstroImageStatistics_Fun
         Dim File_Dec_JNow As Double = AstroParser.ParseDeclination(File_Dec_JNow_string)
         Dim File_RA_J2000 As Double = Double.NaN
         Dim File_Dec_J2000 As Double = Double.NaN
-        JNowToJ2000(File_RA_JNow, File_Dec_JNow, File_RA_J2000, File_Dec_J2000)
+        ASCOMDynamic.JNowToJ2000(File_RA_JNow, File_Dec_JNow, Now, File_RA_J2000, File_Dec_J2000)
 
         'Run plate solve
         Dim ErrorCode1 As String = String.Empty
@@ -57,7 +58,7 @@ Public Class AstroImageStatistics_Fun
         Dim RadToGrad As Double = (180 / Math.PI)
         Dim JNow_RA_solved As Double = Double.NaN
         Dim JNow_Dec_solved As Double = Double.NaN
-        J2000ToJNow(Solver.SolvedRA * RadToH, Solver.SolvedDec * RadToGrad, JNow_RA_solved, JNow_Dec_solved)
+        ASCOMDynamic.J2000ToJNow(Solver.SolvedRA * RadToH, Solver.SolvedDec * RadToGrad, Now, JNow_RA_solved, JNow_Dec_solved)
 
         Dim Output As New List(Of String)
         Output.Add("Start with        RA <" & Ato.AstroCalc.FormatHMS(File_RA_JNow) & ">, DEC <" & Ato.AstroCalc.Format360Degree(File_Dec_JNow) & "> (JNow file string)")
@@ -167,31 +168,5 @@ Public Class AstroImageStatistics_Fun
         Return RetVal.SortDictionaryInverse
 
     End Function
-
-    '''<summary>Convert JNow to J2000 epoch.</summary>
-    '''<param name="JNowRA">RA in apparent co-ordinates [hours].</param>
-    '''<param name="JNowDec">DEC in apparent co-ordinates [deg].</param>
-    '''<param name="J2000RA">J2000 Right Ascension [hours].</param>
-    '''<param name="J2000Dec">J2000 Declination [deg].</param>
-    '''<seealso cref="https://ascom-standards.org/Help/Developer/html/T_ASCOM_Astrometry_Transform_Transform.htm"/>
-    Public Shared Sub JNowToJ2000(ByVal JNowRA As Double, ByVal JNowDec As Double, ByRef J2000RA As Double, ByRef J2000Dec As Double)
-        Dim X As New ASCOM.Astrometry.Transform.Transform
-        Dim NowUTC As DateTime = Now.ToUniversalTime
-        X.JulianDateUTC = (New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(NowUTC.Year), CShort(NowUTC.Month), CShort(NowUTC.Day), NowUTC.Hour)
-        X.SetApparent(JNowRA, JNowDec)
-        J2000RA = X.RAJ2000
-        J2000Dec = X.DecJ2000
-    End Sub
-
-    '''<summary>Convert J2000 to JNow epoch.</summary>
-    '''<seealso cref="https://ascom-standards.org/Help/Developer/html/T_ASCOM_Astrometry_Transform_Transform.htm"/>
-    Public Shared Sub J2000ToJNow(ByVal J2000RA As Double, ByVal J2000Dec As Double, ByRef JNowRA As Double, ByRef JNowDec As Double)
-        Dim X As New ASCOM.Astrometry.Transform.Transform
-        Dim NowUTC As DateTime = Now.ToUniversalTime
-        X.JulianDateUTC = (New ASCOM.Astrometry.NOVAS.NOVAS31).JulianDate(CShort(NowUTC.Year), CShort(NowUTC.Month), CShort(NowUTC.Day), NowUTC.Hour)
-        X.SetJ2000(J2000RA, J2000Dec)
-        JNowRA = X.RAApparent
-        JNowDec = X.DECApparent
-    End Sub
 
 End Class

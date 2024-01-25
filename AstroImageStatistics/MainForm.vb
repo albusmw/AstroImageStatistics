@@ -310,6 +310,10 @@ Public Class MainForm
         'Init drap-and-drop
         DD = New Ato.DragDrop(tbLogOutput, False)
 
+        'Test
+        Dim X As New ASCOMDynamic
+        X.CallTest()
+
     End Sub
 
     Private Sub MainForm_Shown(sender As Object, e As EventArgs) Handles MyBase.Shown
@@ -928,7 +932,7 @@ Public Class MainForm
         'Data from QHYCapture (10Micron) are in JNow, so convert to J2000 for PlateSolve
         Dim File_RA_J2000 As Double = Double.NaN
         Dim File_Dec_J2000 As Double = Double.NaN
-        AstroImageStatistics_Fun.JNowToJ2000(AstroParser.ParseRA(File_RA_JNow), AstroParser.ParseDeclination(File_Dec_JNow), File_RA_J2000, File_Dec_J2000)
+        ASCOMDynamic.JNowToJ2000(AstroParser.ParseRA(File_RA_JNow), AstroParser.ParseDeclination(File_Dec_JNow), File_RA_J2000, File_Dec_J2000)
 
         Dim AladinCall As String = Ato.AstroCalc.FormatHMS(File_RA_J2000) & " " & Ato.AstroCalc.Format360Degree(File_Dec_J2000)
 

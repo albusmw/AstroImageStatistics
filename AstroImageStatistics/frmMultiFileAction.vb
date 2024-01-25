@@ -721,8 +721,8 @@ Partial Public Class frmMultiFileAction
             ROIImage_UInt16 = CalculateMosaik(FilesToLoad, Config.ROIDisplay_MosaikBorderWidth)
         Else
             For Each File As cFileProps In FilesToLoad
-                Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = CInt(File.DeltaX)
-                Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = CInt(File.DeltaY)
+                Dim DeltaX As Integer = 0 : If (Config.ROIDisplay_UseDeltaXY) And (Double.IsNaN(File.DeltaX) = False) Then DeltaX = CInt(File.DeltaX)
+                Dim DeltaY As Integer = 0 : If (Config.ROIDisplay_UseDeltaXY) And (Double.IsNaN(File.DeltaY) = False) Then DeltaY = CInt(File.DeltaY)
                 Data.ResetAllProcessors()
                 Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
                 Data.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(File.FileName, UseIPP, ROI, ForceDirect)
@@ -1046,8 +1046,8 @@ Partial Public Class frmMultiFileAction
                 Next Key
                 'Add all MultiFileAction values
                 KeyIdx += 1 : worksheet.Cell(RowIdx, KeyIdx).Value = "X"
-                KeyIdx += 1 : worksheet.Cell(RowIdx, KeyIdx).Value = Item.DeltaX
-                KeyIdx += 1 : worksheet.Cell(RowIdx, KeyIdx).Value = Item.DeltaY
+                KeyIdx += 1 : If Double.IsNaN(Item.DeltaX) = False Then worksheet.Cell(RowIdx, KeyIdx).Value = Item.DeltaX
+                KeyIdx += 1 : If Double.IsNaN(Item.DeltaY) = False Then worksheet.Cell(RowIdx, KeyIdx).Value = Item.DeltaY
             Next Item
 
             '═════════════════════════════════════════════════════════════════════════════
@@ -1112,75 +1112,38 @@ Partial Public Class frmMultiFileAction
             'Load .info.txt file
             Dim InfoFile As String = System.IO.Path.Combine(FileDirectory, System.IO.Path.GetFileNameWithoutExtension(AllFiles(Idx).FileName) & ".info.txt")
             If System.IO.File.Exists(InfoFile) Then
-                ParseInfoFile(InfoFile, AllFiles(Idx).NrStars, AllFiles(Idx).OverallQuality, AllFiles(Idx).SkyBackground)
+                Dim Stars As List(Of DSSFileParser.sStarInfo) = DSSFileParser.ParseInfoFile(InfoFile, AllFiles(Idx).NrStars, AllFiles(Idx).OverallQuality, AllFiles(Idx).SkyBackground)
+                If tbStars.Items.Count = 1 Then
+                    tbStars.Items.Clear()
+                    For Each Entry As DSSFileParser.sStarInfo In Stars
+                        tbStars.Items.Add(Entry.ToString)
+                    Next Entry
+                End If
             End If
             'Load .stackinfo.txt (the stack info) for this file (parsed multiple times but is fast so left like this ...)
             Dim StackInfoFiles As New List(Of String)(System.IO.Directory.GetFiles(FileDirectory, "*.stackinfo.txt"))
             If StackInfoFiles.Count > 0 Then
-                ParseStackInfo(StackInfoFiles.First, AllFiles(Idx).FileName, AllFiles(Idx).DeltaX, AllFiles(Idx).DeltaY)
+                DSSFileParser.ParseStackInfo(StackInfoFiles.First, AllFiles(Idx).FileName, AllFiles(Idx).DeltaX, AllFiles(Idx).DeltaY)
             End If
         Next Idx
         RefreshTable()
 
     End Sub
 
-    Private Sub ParseInfoFile(ByVal InfoFile As String, ByRef NrStars As Integer, ByRef OverallQuality As Double, ByRef SkyBackground As Double)
-        NrStars = -1
-        OverallQuality = Double.NaN
-        SkyBackground = Double.NaN
-        Dim FileContent As String() = System.IO.File.ReadAllLines(InfoFile)
-        For Each Line As String In FileContent
-            If Line.StartsWith("OverallQuality") Then OverallQuality = Line.Replace("OverallQuality", String.Empty).Replace("=", String.Empty).Replace(" ", String.Empty).Trim.ValRegIndep
-            If Line.StartsWith("SkyBackground") Then SkyBackground = Line.Replace("SkyBackground", String.Empty).Replace("=", String.Empty).Replace(" ", String.Empty).Trim.ValRegIndep
-            If Line.StartsWith("NrStars") Then NrStars = CInt(Line.Replace("NrStars", String.Empty).Replace("=", String.Empty).Replace(" ", String.Empty).Trim)
-        Next
-    End Sub
-
-    '''<summary>Get the DSS parameters calculated for the specified file.</summary>
-    '''<param name="StackInfoFile">StackInfo file.</param>
-    '''<param name="FileToSearch">Single file to search in the StackInfo file.</param>
-    Private Sub ParseStackInfo(ByVal StackInfoFile As String, ByVal FileToSearch As String, ByRef DeltaX As Double, ByRef DeltaY As Double)
-        DeltaX = Double.NaN
-        DeltaY = Double.NaN
-        Dim StackInfo As String() = Array.Empty(Of String)()
-        FileToSearch = System.IO.Path.GetFullPath(FileToSearch)
-        Dim FileContent As String() = System.IO.File.ReadAllLines(StackInfoFile)
-        Dim Idx As Integer = -1
-        Dim b0Pos As Integer = -1
-        Do
-            Idx += 1
-            If System.IO.Path.GetFullPath(FileContent(Idx)) = FileToSearch Then
-                'File entry found -> search for the transformation parameter
-                Do
-                    Idx += 1
-                    If FileContent(Idx).StartsWith("Bilinear") Then
-                        StackInfo = Split(FileContent(Idx).Replace("Bilinear", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty), ",")
-                        b0Pos = 4
-                        Exit Do
-                    End If
-                    If FileContent(Idx).StartsWith("Bisquared") Then
-                        StackInfo = Split(FileContent(Idx).Replace("Bisquared", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty), ",")
-                        b0Pos = 8
-                        Exit Do
-                    End If
-                    If FileContent(Idx).StartsWith("Bicubic") Then
-                        StackInfo = Split(FileContent(Idx).Replace("Bicubic", String.Empty).Replace("(", String.Empty).Replace(")", String.Empty), ",")
-                        b0Pos = 16
-                        Exit Do
-                    End If
-                Loop Until 1 = 0
-                If b0Pos > -1 Then
-                    'Transformation parameter found -> calclate delta and exit
-                    DeltaX = -StackInfo(0).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0) - 1).ValRegIndep
-                    DeltaY = -StackInfo(b0Pos).ValRegIndep * StackInfo(StackInfo.GetUpperBound(0)).ValRegIndep
-                    Exit Do
-                End If
-            End If
-        Loop Until Idx = FileContent.GetUpperBound(0)
-    End Sub
-
     Private Sub cmsTable_OpenFile_Click(sender As Object, e As EventArgs) Handles cmsTable_OpenFile.Click
         AIS.OpenFile(GetSelectedFileName)
+    End Sub
+
+    Private Sub tbStars_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tbStars.SelectedIndexChanged
+        Try
+            Dim CurrentEntry As String() = CStr(tbStars.SelectedItem).Split(":")
+            Config.ROIDisplay_X = CInt(CurrentEntry(0).ValRegIndep) - (Config.ROIDisplay_Width \ 2)
+            Config.ROIDisplay_Y = CInt(CurrentEntry(1).ValRegIndep) - (Config.ROIDisplay_Height \ 2)
+            CalcAndDisplayCombinedROI()
+        Catch ex As Exception
+            'Do nothing ...
+        End Try
+
     End Sub
 
 End Class
