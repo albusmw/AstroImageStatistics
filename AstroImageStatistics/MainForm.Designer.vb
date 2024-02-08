@@ -102,7 +102,6 @@ Partial Class MainForm
         ToolStripMenuItem6 = New ToolStripSeparator()
         tsmiTest_Focus = New ToolStripMenuItem()
         tssmRadCollimation = New ToolStripMenuItem()
-        tsmiTest_ReadNEFFile = New ToolStripMenuItem()
         tsmiTest_ippiXCorr = New ToolStripMenuItem()
         ToolStripMenuItem9 = New ToolStripSeparator()
         tsmiTestCode_UseOpenCV = New ToolStripMenuItem()
@@ -110,13 +109,16 @@ Partial Class MainForm
         ToolStripMenuItem12 = New ToolStripSeparator()
         CodeBelowIsNotForHereToolStripMenuItem = New ToolStripMenuItem()
         CloudWatcherCombinerToolStripMenuItem = New ToolStripMenuItem()
-        GrayPNGToFITSToolStripMenuItem = New ToolStripMenuItem()
         tsmiTest_AstrometryQuery = New ToolStripMenuItem()
         frmTest_HistoInteractive = New ToolStripMenuItem()
         tsmiTestCode_StreamDeck = New ToolStripMenuItem()
-        tsTest_LibRaw = New ToolStripMenuItem()
         tsmiTest_SigmaClip = New ToolStripMenuItem()
         tsmiTest_FITSReadSpeed = New ToolStripMenuItem()
+        DataGridViewDataSourceToolStripMenuItem = New ToolStripMenuItem()
+        tsmiTest_RAWReader = New ToolStripMenuItem()
+        tsmiTest_RAWReader_NEF = New ToolStripMenuItem()
+        tsmiTest_RAWReader_LibRawDLL = New ToolStripMenuItem()
+        tsmiTest_RAWReader_GrayPNGToFits = New ToolStripMenuItem()
         ofdMain = New OpenFileDialog()
         tbLogOutput = New TextBox()
         ssMain = New StatusStrip()
@@ -135,7 +137,6 @@ Partial Class MainForm
         tsMain = New ToolStrip()
         tsb_Open = New ToolStripButton()
         tsb_Display = New ToolStripButton()
-        DataGridViewDataSourceToolStripMenuItem = New ToolStripMenuItem()
         msMain.SuspendLayout()
         ssMain.SuspendLayout()
         gbDetails.SuspendLayout()
@@ -614,7 +615,7 @@ Partial Class MainForm
         ' 
         ' tsmiTest
         ' 
-        tsmiTest.DropDownItems.AddRange(New ToolStripItem() {AfiineTranslateToolStripMenuItem, ToolStripMenuItem6, tsmiTest_Focus, tssmRadCollimation, tsmiTest_ReadNEFFile, tsmiTest_ippiXCorr, ToolStripMenuItem9, tsmiTestCode_UseOpenCV, MedianWithinNETToolStripMenuItem, ToolStripMenuItem12, CodeBelowIsNotForHereToolStripMenuItem, CloudWatcherCombinerToolStripMenuItem, GrayPNGToFITSToolStripMenuItem, tsmiTest_AstrometryQuery, frmTest_HistoInteractive, tsmiTestCode_StreamDeck, tsTest_LibRaw, tsmiTest_SigmaClip, tsmiTest_FITSReadSpeed, DataGridViewDataSourceToolStripMenuItem})
+        tsmiTest.DropDownItems.AddRange(New ToolStripItem() {AfiineTranslateToolStripMenuItem, ToolStripMenuItem6, tsmiTest_Focus, tssmRadCollimation, tsmiTest_ippiXCorr, ToolStripMenuItem9, tsmiTestCode_UseOpenCV, MedianWithinNETToolStripMenuItem, ToolStripMenuItem12, CodeBelowIsNotForHereToolStripMenuItem, CloudWatcherCombinerToolStripMenuItem, tsmiTest_AstrometryQuery, frmTest_HistoInteractive, tsmiTestCode_StreamDeck, tsmiTest_SigmaClip, tsmiTest_FITSReadSpeed, DataGridViewDataSourceToolStripMenuItem, tsmiTest_RAWReader})
         tsmiTest.Name = "tsmiTest"
         tsmiTest.Size = New Size(68, 22)
         tsmiTest.Text = "Test code"
@@ -641,12 +642,6 @@ Partial Class MainForm
         tssmRadCollimation.Name = "tssmRadCollimation"
         tssmRadCollimation.Size = New Size(274, 22)
         tssmRadCollimation.Text = "Radial statistics and collimation"
-        ' 
-        ' tsmiTest_ReadNEFFile
-        ' 
-        tsmiTest_ReadNEFFile.Name = "tsmiTest_ReadNEFFile"
-        tsmiTest_ReadNEFFile.Size = New Size(274, 22)
-        tsmiTest_ReadNEFFile.Text = "NEF reading"
         ' 
         ' tsmiTest_ippiXCorr
         ' 
@@ -688,12 +683,6 @@ Partial Class MainForm
         CloudWatcherCombinerToolStripMenuItem.Size = New Size(274, 22)
         CloudWatcherCombinerToolStripMenuItem.Text = "CloudWatcher combiner"
         ' 
-        ' GrayPNGToFITSToolStripMenuItem
-        ' 
-        GrayPNGToFITSToolStripMenuItem.Name = "GrayPNGToFITSToolStripMenuItem"
-        GrayPNGToFITSToolStripMenuItem.Size = New Size(274, 22)
-        GrayPNGToFITSToolStripMenuItem.Text = "Gray PNG to FITS"
-        ' 
         ' tsmiTest_AstrometryQuery
         ' 
         tsmiTest_AstrometryQuery.Name = "tsmiTest_AstrometryQuery"
@@ -712,12 +701,6 @@ Partial Class MainForm
         tsmiTestCode_StreamDeck.Size = New Size(274, 22)
         tsmiTestCode_StreamDeck.Text = "StreamDeck"
         ' 
-        ' tsTest_LibRaw
-        ' 
-        tsTest_LibRaw.Name = "tsTest_LibRaw"
-        tsTest_LibRaw.Size = New Size(274, 22)
-        tsTest_LibRaw.Text = "LibRaw access"
-        ' 
         ' tsmiTest_SigmaClip
         ' 
         tsmiTest_SigmaClip.Name = "tsmiTest_SigmaClip"
@@ -729,6 +712,37 @@ Partial Class MainForm
         tsmiTest_FITSReadSpeed.Name = "tsmiTest_FITSReadSpeed"
         tsmiTest_FITSReadSpeed.Size = New Size(274, 22)
         tsmiTest_FITSReadSpeed.Text = "FITS read speed"
+        ' 
+        ' DataGridViewDataSourceToolStripMenuItem
+        ' 
+        DataGridViewDataSourceToolStripMenuItem.Name = "DataGridViewDataSourceToolStripMenuItem"
+        DataGridViewDataSourceToolStripMenuItem.Size = New Size(274, 22)
+        DataGridViewDataSourceToolStripMenuItem.Text = "DataGridView data source"
+        ' 
+        ' tsmiTest_RAWReader
+        ' 
+        tsmiTest_RAWReader.DropDownItems.AddRange(New ToolStripItem() {tsmiTest_RAWReader_NEF, tsmiTest_RAWReader_LibRawDLL, tsmiTest_RAWReader_GrayPNGToFits})
+        tsmiTest_RAWReader.Name = "tsmiTest_RAWReader"
+        tsmiTest_RAWReader.Size = New Size(274, 22)
+        tsmiTest_RAWReader.Text = "File format converter and RAW reader"
+        ' 
+        ' tsmiTest_RAWReader_NEF
+        ' 
+        tsmiTest_RAWReader_NEF.Name = "tsmiTest_RAWReader_NEF"
+        tsmiTest_RAWReader_NEF.Size = New Size(180, 22)
+        tsmiTest_RAWReader_NEF.Text = "NEF reading"
+        ' 
+        ' tsmiTest_RAWReader_LibRawDLL
+        ' 
+        tsmiTest_RAWReader_LibRawDLL.Name = "tsmiTest_RAWReader_LibRawDLL"
+        tsmiTest_RAWReader_LibRawDLL.Size = New Size(180, 22)
+        tsmiTest_RAWReader_LibRawDLL.Text = "LibRaw DLL "
+        ' 
+        ' tsmiTest_RAWReader_GrayPNGToFits
+        ' 
+        tsmiTest_RAWReader_GrayPNGToFits.Name = "tsmiTest_RAWReader_GrayPNGToFits"
+        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(180, 22)
+        tsmiTest_RAWReader_GrayPNGToFits.Text = "Gray PNG to FITS"
         ' 
         ' ofdMain
         ' 
@@ -898,12 +912,6 @@ Partial Class MainForm
         tsb_Display.Size = New Size(49, 22)
         tsb_Display.Text = "Display"
         ' 
-        ' DataGridViewDataSourceToolStripMenuItem
-        ' 
-        DataGridViewDataSourceToolStripMenuItem.Name = "DataGridViewDataSourceToolStripMenuItem"
-        DataGridViewDataSourceToolStripMenuItem.Size = New Size(274, 22)
-        DataGridViewDataSourceToolStripMenuItem.Text = "DataGridView data source"
-        ' 
         ' MainForm
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
@@ -982,7 +990,6 @@ Partial Class MainForm
     Friend WithEvents scLeft As SplitContainer
     Friend WithEvents ToolStripMenuItem8 As ToolStripSeparator
     Friend WithEvents tsmiSaveAllFilesStat As ToolStripMenuItem
-    Friend WithEvents tsmiTest_ReadNEFFile As ToolStripMenuItem
     Friend WithEvents tsmiSetPixelToValue As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem9 As ToolStripSeparator
     Friend WithEvents tsmiTestCode_UseOpenCV As ToolStripMenuItem
@@ -1028,7 +1035,6 @@ Partial Class MainForm
     Friend WithEvents ToolStripMenuItem13 As ToolStripSeparator
     Friend WithEvents FixRADECErrorToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents SubtractMedianToolStripMenuItem As ToolStripMenuItem
-    Friend WithEvents GrayPNGToFITSToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsmiTest_AstrometryQuery As ToolStripMenuItem
     Friend WithEvents ToolStripStatusLabel1 As ToolStripStatusLabel
     Friend WithEvents tspbMultiFile As ToolStripProgressBar
@@ -1040,7 +1046,6 @@ Partial Class MainForm
     Friend WithEvents frmTest_HistoInteractive As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem14 As ToolStripSeparator
     Friend WithEvents tsmiTestCode_StreamDeck As ToolStripMenuItem
-    Friend WithEvents tsTest_LibRaw As ToolStripMenuItem
     Friend WithEvents tsmiProcessing_Stack As ToolStripMenuItem
     Friend WithEvents tssmRadCollimation As ToolStripMenuItem
     Friend WithEvents MultifileActionToolStripMenuItem As ToolStripMenuItem
@@ -1054,4 +1059,8 @@ Partial Class MainForm
     Friend WithEvents tsmiFile_ConvertTo16BitFITS As ToolStripMenuItem
     Friend WithEvents tsmiTest_FITSReadSpeed As ToolStripMenuItem
     Friend WithEvents DataGridViewDataSourceToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiTest_RAWReader As ToolStripMenuItem
+    Friend WithEvents tsmiTest_RAWReader_NEF As ToolStripMenuItem
+    Friend WithEvents tsmiTest_RAWReader_LibRawDLL As ToolStripMenuItem
+    Friend WithEvents tsmiTest_RAWReader_GrayPNGToFits As ToolStripMenuItem
 End Class

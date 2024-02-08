@@ -34,6 +34,7 @@
     <Compile Include="..\..\MyLib\CodeUtils.vb">
       <Link>MyLib\CodeUtils.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\COMInterop.vb" Link="MyLib\COMInterop.vb" />
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
     </Compile>
