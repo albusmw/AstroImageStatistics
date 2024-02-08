@@ -818,14 +818,6 @@ Public Class MainForm
         End Using
     End Sub
 
-    Private Sub tsmiTest_ReadNEFFile_Click(sender As Object, e As EventArgs) Handles tsmiTest_ReadNEFFile.Click
-
-        Dim Reader As New cNEFReader
-        Dim ReturnArgument As String = Reader.Read("\\192.168.100.10\astro\2020_07_20 (NeoWise)\DSC_0286.NEF")
-        MsgBox(ReturnArgument)
-
-    End Sub
-
     Private Sub tsmiSetPixelToValue_Click(sender As Object, e As EventArgs) Handles tsmiSetPixelToValue.Click
 
         Dim FixedPixelCount As UInt32 = 0
@@ -1560,64 +1552,6 @@ Public Class MainForm
         End If
     End Sub
 
-    Private Sub GrayPNGToFITSToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles GrayPNGToFITSToolStripMenuItem.Click
-
-        With ofdMain
-            .Filter = "PNG files (*.png)|*.png"
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-        End With
-
-        Dim PNG As Bitmap = Nothing
-        Using FileIn As New System.IO.FileStream(ofdMain.FileName, IO.FileMode.Open)
-            PNG = New Bitmap(Image.FromStream(FileIn))
-        End Using
-
-        'Create converted data
-        Dim BitPix As Integer = cFITSWriter.eBitPix.Int16
-        Dim ImageData(PNG.Width - 1, PNG.Height - 1) As UInt16
-        For Idx1 As Integer = 0 To ImageData.GetUpperBound(1)
-            For Idx2 As Integer = 0 To ImageData.GetUpperBound(0)
-                ImageData(Idx2, Idx1) = PNG.GetPixel(Idx2, Idx1).R
-            Next Idx2
-        Next Idx1
-
-        'Load all header elements
-        Dim Header As New Dictionary(Of eFITSKeywords, Object)
-        Header.Add(eFITSKeywords.SIMPLE, "T")
-        Header.Add(eFITSKeywords.BITPIX, BitPix)
-        Header.Add(eFITSKeywords.NAXIS, 2)
-        Header.Add(eFITSKeywords.NAXIS1, ImageData.GetUpperBound(0) + 1)
-        Header.Add(eFITSKeywords.NAXIS2, ImageData.GetUpperBound(1) + 1)
-        Header.Add(eFITSKeywords.BZERO, 32768)
-        Header.Add(eFITSKeywords.BSCALE, 1)
-
-        With sfdMain
-            .Filter = "FITS file (*.fits)|*.FITS"
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-        End With
-
-        Dim BaseOut As New System.IO.StreamWriter(sfdMain.FileName)
-        Dim BytesOut As New System.IO.BinaryWriter(BaseOut.BaseStream)
-
-        'Write header
-        BaseOut.Write(cFITSWriter.CreateFITSHeader(Header))
-        BaseOut.Flush()
-
-        'Write content
-        For Idx1 As Integer = 0 To ImageData.GetUpperBound(1)
-            For Idx2 As Integer = 0 To ImageData.GetUpperBound(0)
-                BytesOut.Write(GetBytes_BitPix16(CType(ImageData(Idx2, Idx1) - 32768, Int16)))
-            Next Idx2
-        Next Idx1
-
-        'Finish
-        BytesOut.Flush()
-        BaseOut.Close()
-
-        MsgBox("OK")
-
-    End Sub
-
     Private Function GetBytes_BitPix16(ByVal Value As Int16) As Byte()
         Dim RetVal As Byte() = BitConverter.GetBytes(Value)
         Return New Byte() {RetVal(1), RetVal(0)}
@@ -1714,19 +1648,6 @@ Public Class MainForm
 
     Private Sub StreamDeckHandler(sender As Object, e As OpenMacroBoard.SDK.KeyEventArgs)
         MsgBox("Press <" & e.Key.ToString.Trim & "> " & CStr(IIf(e.IsDown = True, "DOWN", "UP")))
-    End Sub
-
-    Private Sub tsTest_LibRaw_Click(sender As Object, e As EventArgs) Handles tsTest_LibRaw.Click
-        'https://github.com/laheller/SharpLibraw/blob/master/LibRAWDemo/Program.cs
-        Dim TestImage As String = "C:\!Work\Testbilder\FujiX100s.RAF"
-        Dim DLLPtr As IntPtr = cLibRaw.libraw_init(cLibRaw.LibRaw_init_flags.LIBRAW_OPTIONS_NONE)
-        MsgBox(System.Runtime.InteropServices.Marshal.PtrToStringAnsi(cLibRaw.libraw_version))
-        Dim AllCam As List(Of String) = cLibRaw.GetAllSupportedCameras
-        Dim OpenError As cLibRaw.LibRaw_errors = cLibRaw.libraw_open_file(DLLPtr, TestImage)
-        MsgBox(Join(cLibRaw.DisplayCommonInfo(DLLPtr).ToArray, System.Environment.NewLine))
-        Dim param As cLibRaw.libraw_iparams_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_iparams_t)(cLibRaw.libraw_get_iparams(DLLPtr))
-        Dim paramEx As cLibRaw.libraw_imgother_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_imgother_t)(cLibRaw.libraw_get_imgother(DLLPtr))
-        cLibRaw.libraw_close(DLLPtr)
     End Sub
 
     Private Sub tsmiTools_TestFile_Click(sender As Object, e As EventArgs) Handles tsmiTools_TestFile.Click
@@ -2153,6 +2074,92 @@ Public Class MainForm
     Private Sub DataGridViewDataSourceToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles DataGridViewDataSourceToolStripMenuItem.Click
         Dim X As New frmTestForm
         X.Show()
+    End Sub
+
+    Private Sub tsmiTest_RAWReader_NEF_Click(sender As Object, e As EventArgs) Handles tsmiTest_RAWReader_NEF.Click
+        With ofdMain
+            .Filter = "Nikon RAW file (*.NEF)|*.NEF"
+            .Multiselect = False
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+        Dim Reader As New cNEFReader
+        Dim ReturnArgument As String = Reader.Read(ofdMain.FileName)
+        MsgBox(ReturnArgument)
+    End Sub
+
+    Private Sub tsmiTest_RAWReader_LibRawDLL_Click(sender As Object, e As EventArgs) Handles tsmiTest_RAWReader_LibRawDLL.Click
+        'https://github.com/laheller/SharpLibraw/blob/master/LibRAWDemo/Program.cs
+        With ofdMain
+            .Filter = "Nikon RAW file (*.NEF)|*.NEF"
+            .Multiselect = False
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+        Dim DLLPtr As IntPtr = cLibRaw.libraw_init(cLibRaw.LibRaw_init_flags.LIBRAW_OPTIONS_NONE)
+        MsgBox(System.Runtime.InteropServices.Marshal.PtrToStringAnsi(cLibRaw.libraw_version))
+        Dim AllCam As List(Of String) = cLibRaw.GetAllSupportedCameras
+        Dim OpenError As cLibRaw.LibRaw_errors = cLibRaw.libraw_open_file(DLLPtr, ofdMain.FileName)
+        MsgBox(Join(cLibRaw.DisplayCommonInfo(DLLPtr).ToArray, System.Environment.NewLine))
+        Dim param As cLibRaw.libraw_iparams_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_iparams_t)(cLibRaw.libraw_get_iparams(DLLPtr))
+        Dim paramEx As cLibRaw.libraw_imgother_t = System.Runtime.InteropServices.Marshal.PtrToStructure(Of cLibRaw.libraw_imgother_t)(cLibRaw.libraw_get_imgother(DLLPtr))
+        cLibRaw.libraw_close(DLLPtr)
+    End Sub
+
+    Private Sub tsmiTest_RAWReader_GrayPNGToFits_Click(sender As Object, e As EventArgs) Handles tsmiTest_RAWReader_GrayPNGToFits.Click
+
+        With ofdMain
+            .Filter = "PNG files (*.png)|*.png"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
+        Dim PNG As Bitmap = Nothing
+        Using FileIn As New System.IO.FileStream(ofdMain.FileName, IO.FileMode.Open)
+            PNG = New Bitmap(Image.FromStream(FileIn))
+        End Using
+
+        'Create converted data
+        Dim BitPix As Integer = cFITSWriter.eBitPix.Int16
+        Dim ImageData(PNG.Width - 1, PNG.Height - 1) As UInt16
+        For Idx1 As Integer = 0 To ImageData.GetUpperBound(1)
+            For Idx2 As Integer = 0 To ImageData.GetUpperBound(0)
+                ImageData(Idx2, Idx1) = PNG.GetPixel(Idx2, Idx1).R
+            Next Idx2
+        Next Idx1
+
+        'Load all header elements
+        Dim Header As New Dictionary(Of eFITSKeywords, Object)
+        Header.Add(eFITSKeywords.SIMPLE, "T")
+        Header.Add(eFITSKeywords.BITPIX, BitPix)
+        Header.Add(eFITSKeywords.NAXIS, 2)
+        Header.Add(eFITSKeywords.NAXIS1, ImageData.GetUpperBound(0) + 1)
+        Header.Add(eFITSKeywords.NAXIS2, ImageData.GetUpperBound(1) + 1)
+        Header.Add(eFITSKeywords.BZERO, 32768)
+        Header.Add(eFITSKeywords.BSCALE, 1)
+
+        With sfdMain
+            .Filter = "FITS file (*.fits)|*.FITS"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+
+        Dim BaseOut As New System.IO.StreamWriter(sfdMain.FileName)
+        Dim BytesOut As New System.IO.BinaryWriter(BaseOut.BaseStream)
+
+        'Write header
+        BaseOut.Write(cFITSWriter.CreateFITSHeader(Header))
+        BaseOut.Flush()
+
+        'Write content
+        For Idx1 As Integer = 0 To ImageData.GetUpperBound(1)
+            For Idx2 As Integer = 0 To ImageData.GetUpperBound(0)
+                BytesOut.Write(GetBytes_BitPix16(CType(ImageData(Idx2, Idx1) - 32768, Int16)))
+            Next Idx2
+        Next Idx1
+
+        'Finish
+        BytesOut.Flush()
+        BaseOut.Close()
+
+        MsgBox("OK")
+
     End Sub
 
 End Class
