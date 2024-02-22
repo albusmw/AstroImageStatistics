@@ -87,29 +87,14 @@ Public Class frmSaveFile
                     SavedFiles.Add(FileName & " - PNG 8-bit")
                 Case 6
                     'PNG 16-bit
-                    PNG16Bit(.ImageData(0).Data, FileName)
+                    FileIO.PNG16Bit(.ImageData(0).Data, FileName)
                     SavedFiles.Add(FileName & " - PNG 16-bit")
             End Select
         End With
         tbSaveFileName.Text = FileName
     End Sub
 
-    '''<summary>Save the passed data as 16-bit PNG grayscale</summary>
-    Private Sub PNG16Bit(ByRef Data(,) As UInt16, ByVal FileName As String)
-        'Works and tested
-        'https://stackoverflow.com/questions/9588367/creating-16-bit-grayscale-images-in-wpf
-        Dim Width As Integer = Data.GetUpperBound(0) + 1
-        Dim Height As Integer = Data.GetUpperBound(1) + 1
-        Dim RetVal As New WriteableBitmap(Width, Height, 96, 96, System.Windows.Media.PixelFormats.Gray16, Nothing)
-        Dim ROI As New Int32Rect(0, 0, Width, Height)
-        Dim Stride As Integer = (Width * 2)
-        RetVal.WritePixels(ROI, Data.Transpose, Stride, 0)
-        Dim Encoder As New System.Windows.Media.Imaging.PngBitmapEncoder
-        Encoder.Frames.Add(BitmapFrame.Create(RetVal))
-        Using Writter As System.IO.Stream = System.IO.File.Create(FileName)
-            Encoder.Save(Writter)
-        End Using
-    End Sub
+
 
     '''<summary>Get an encoder by its MIME name</summary>
     '''<param name="mimeType"></param>

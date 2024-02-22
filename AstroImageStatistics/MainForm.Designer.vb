@@ -28,6 +28,7 @@ Partial Class MainForm
         tsmiFile_Open = New ToolStripMenuItem()
         tsmiFile_OpenRecent = New ToolStripMenuItem()
         tsmiFile_OpenLastFile = New ToolStripMenuItem()
+        tsmiFile_QHY600Preview = New ToolStripMenuItem()
         ToolStripMenuItem8 = New ToolStripSeparator()
         tsmiFile_FITSGrep = New ToolStripMenuItem()
         tsmiFile_AstroBinSearch = New ToolStripMenuItem()
@@ -157,30 +158,30 @@ Partial Class MainForm
         msMain.Items.AddRange(New ToolStripItem() {tsmiFile, tsmiAnalysis, tsmiProcessing, tsmiTools, WorkflowToolStripMenuItem, tsmiTest})
         msMain.Location = New Point(0, 0)
         msMain.Name = "msMain"
-        msMain.Padding = New Padding(7, 2, 0, 2)
-        msMain.Size = New Size(2820, 33)
+        msMain.Padding = New Padding(5, 1, 0, 1)
+        msMain.Size = New Size(1974, 24)
         msMain.TabIndex = 0
         msMain.Text = "MenuStrip1"
         ' 
         ' tsmiFile
         ' 
-        tsmiFile.DropDownItems.AddRange(New ToolStripItem() {tsmiFile_Open, tsmiFile_OpenRecent, tsmiFile_OpenLastFile, ToolStripMenuItem8, tsmiFile_FITSGrep, tsmiFile_AstroBinSearch, ToolStripMenuItem11, tsmiFile_Compress2nd, ToolStripMenuItem2, tsmiFile_SaveLastStat, tsmiSaveAllFilesStat, tsmiSaveFITSAndStats, tsmiSaveImageData, tsmiFile_ConvertTo16BitFITS, ToolStripMenuItem14, tsmiFile_ClearStatMem, ToolStripMenuItem1, OpenEXELocationToolStripMenuItem, ToolStripMenuItem5, ExitToolStripMenuItem})
+        tsmiFile.DropDownItems.AddRange(New ToolStripItem() {tsmiFile_Open, tsmiFile_OpenRecent, tsmiFile_OpenLastFile, tsmiFile_QHY600Preview, ToolStripMenuItem8, tsmiFile_FITSGrep, tsmiFile_AstroBinSearch, ToolStripMenuItem11, tsmiFile_Compress2nd, ToolStripMenuItem2, tsmiFile_SaveLastStat, tsmiSaveAllFilesStat, tsmiSaveFITSAndStats, tsmiSaveImageData, tsmiFile_ConvertTo16BitFITS, ToolStripMenuItem14, tsmiFile_ClearStatMem, ToolStripMenuItem1, OpenEXELocationToolStripMenuItem, ToolStripMenuItem5, ExitToolStripMenuItem})
         tsmiFile.Name = "tsmiFile"
-        tsmiFile.Size = New Size(54, 29)
+        tsmiFile.Size = New Size(37, 22)
         tsmiFile.Text = "File"
         ' 
         ' tsmiFile_Open
         ' 
         tsmiFile_Open.Name = "tsmiFile_Open"
         tsmiFile_Open.ShortcutKeys = Keys.Control Or Keys.O
-        tsmiFile_Open.Size = New Size(562, 34)
+        tsmiFile_Open.Size = New Size(366, 22)
         tsmiFile_Open.Text = "Open file to analyse"
         tsmiFile_Open.ToolTipText = "Open one or more files for analysis"
         ' 
         ' tsmiFile_OpenRecent
         ' 
         tsmiFile_OpenRecent.Name = "tsmiFile_OpenRecent"
-        tsmiFile_OpenRecent.Size = New Size(562, 34)
+        tsmiFile_OpenRecent.Size = New Size(366, 22)
         tsmiFile_OpenRecent.Text = "Open recent files ..."
         tsmiFile_OpenRecent.ToolTipText = "Open recent used files"
         ' 
@@ -188,120 +189,126 @@ Partial Class MainForm
         ' 
         tsmiFile_OpenLastFile.Name = "tsmiFile_OpenLastFile"
         tsmiFile_OpenLastFile.ShortcutKeys = Keys.Control Or Keys.R
-        tsmiFile_OpenLastFile.Size = New Size(562, 34)
+        tsmiFile_OpenLastFile.Size = New Size(366, 22)
         tsmiFile_OpenLastFile.Text = "Open last file processed in assoociated software"
         tsmiFile_OpenLastFile.ToolTipText = "Use the standard configured viewer to open the last opened file (e.g. with FITSWork)"
+        ' 
+        ' tsmiFile_QHY600Preview
+        ' 
+        tsmiFile_QHY600Preview.Name = "tsmiFile_QHY600Preview"
+        tsmiFile_QHY600Preview.Size = New Size(366, 22)
+        tsmiFile_QHY600Preview.Text = "Preview processing QHY600M"
         ' 
         ' ToolStripMenuItem8
         ' 
         ToolStripMenuItem8.Name = "ToolStripMenuItem8"
-        ToolStripMenuItem8.Size = New Size(559, 6)
+        ToolStripMenuItem8.Size = New Size(363, 6)
         ' 
         ' tsmiFile_FITSGrep
         ' 
         tsmiFile_FITSGrep.Name = "tsmiFile_FITSGrep"
-        tsmiFile_FITSGrep.Size = New Size(562, 34)
+        tsmiFile_FITSGrep.Size = New Size(366, 22)
         tsmiFile_FITSGrep.Text = "FITS Grep"
         ' 
         ' tsmiFile_AstroBinSearch
         ' 
         tsmiFile_AstroBinSearch.Name = "tsmiFile_AstroBinSearch"
-        tsmiFile_AstroBinSearch.Size = New Size(562, 34)
+        tsmiFile_AstroBinSearch.Size = New Size(366, 22)
         tsmiFile_AstroBinSearch.Text = "AstroBin search"
         ' 
         ' ToolStripMenuItem11
         ' 
         ToolStripMenuItem11.Name = "ToolStripMenuItem11"
-        ToolStripMenuItem11.Size = New Size(559, 6)
+        ToolStripMenuItem11.Size = New Size(363, 6)
         ' 
         ' tsmiFile_Compress2nd
         ' 
         tsmiFile_Compress2nd.Name = "tsmiFile_Compress2nd"
-        tsmiFile_Compress2nd.Size = New Size(562, 34)
+        tsmiFile_Compress2nd.Size = New Size(366, 22)
         tsmiFile_Compress2nd.Text = "Compress 2nd file"
         ' 
         ' ToolStripMenuItem2
         ' 
         ToolStripMenuItem2.Name = "ToolStripMenuItem2"
-        ToolStripMenuItem2.Size = New Size(559, 6)
+        ToolStripMenuItem2.Size = New Size(363, 6)
         ' 
         ' tsmiFile_SaveLastStat
         ' 
         tsmiFile_SaveLastStat.Name = "tsmiFile_SaveLastStat"
         tsmiFile_SaveLastStat.ShortcutKeys = Keys.Control Or Keys.E
-        tsmiFile_SaveLastStat.Size = New Size(562, 34)
+        tsmiFile_SaveLastStat.Size = New Size(366, 22)
         tsmiFile_SaveLastStat.Text = "Save last image statistics (EXCEL)"
         ' 
         ' tsmiSaveAllFilesStat
         ' 
         tsmiSaveAllFilesStat.Name = "tsmiSaveAllFilesStat"
-        tsmiSaveAllFilesStat.Size = New Size(562, 34)
+        tsmiSaveAllFilesStat.Size = New Size(366, 22)
         tsmiSaveAllFilesStat.Text = "Save all-files statistics"
         ' 
         ' tsmiSaveFITSAndStats
         ' 
         tsmiSaveFITSAndStats.Name = "tsmiSaveFITSAndStats"
-        tsmiSaveFITSAndStats.Size = New Size(562, 34)
+        tsmiSaveFITSAndStats.Size = New Size(366, 22)
         tsmiSaveFITSAndStats.Text = "Save FITS and statistics summary"
         ' 
         ' tsmiSaveImageData
         ' 
         tsmiSaveImageData.Name = "tsmiSaveImageData"
         tsmiSaveImageData.ShortcutKeys = Keys.Control Or Keys.S
-        tsmiSaveImageData.Size = New Size(562, 34)
+        tsmiSaveImageData.Size = New Size(366, 22)
         tsmiSaveImageData.Text = "Save current image"
         ' 
         ' tsmiFile_ConvertTo16BitFITS
         ' 
         tsmiFile_ConvertTo16BitFITS.Name = "tsmiFile_ConvertTo16BitFITS"
-        tsmiFile_ConvertTo16BitFITS.Size = New Size(562, 34)
+        tsmiFile_ConvertTo16BitFITS.Size = New Size(366, 22)
         tsmiFile_ConvertTo16BitFITS.Text = "Make file 16-bit FITS file"
         ' 
         ' ToolStripMenuItem14
         ' 
         ToolStripMenuItem14.Name = "ToolStripMenuItem14"
-        ToolStripMenuItem14.Size = New Size(559, 6)
+        ToolStripMenuItem14.Size = New Size(363, 6)
         ' 
         ' tsmiFile_ClearStatMem
         ' 
         tsmiFile_ClearStatMem.Name = "tsmiFile_ClearStatMem"
-        tsmiFile_ClearStatMem.Size = New Size(562, 34)
+        tsmiFile_ClearStatMem.Size = New Size(366, 22)
         tsmiFile_ClearStatMem.Text = "Clear statistics memory"
         ' 
         ' ToolStripMenuItem1
         ' 
         ToolStripMenuItem1.Name = "ToolStripMenuItem1"
-        ToolStripMenuItem1.Size = New Size(559, 6)
+        ToolStripMenuItem1.Size = New Size(363, 6)
         ' 
         ' OpenEXELocationToolStripMenuItem
         ' 
         OpenEXELocationToolStripMenuItem.Name = "OpenEXELocationToolStripMenuItem"
-        OpenEXELocationToolStripMenuItem.Size = New Size(562, 34)
+        OpenEXELocationToolStripMenuItem.Size = New Size(366, 22)
         OpenEXELocationToolStripMenuItem.Text = "Open EXE location"
         ' 
         ' ToolStripMenuItem5
         ' 
         ToolStripMenuItem5.Name = "ToolStripMenuItem5"
-        ToolStripMenuItem5.Size = New Size(559, 6)
+        ToolStripMenuItem5.Size = New Size(363, 6)
         ' 
         ' ExitToolStripMenuItem
         ' 
         ExitToolStripMenuItem.Name = "ExitToolStripMenuItem"
         ExitToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.X
-        ExitToolStripMenuItem.Size = New Size(562, 34)
+        ExitToolStripMenuItem.Size = New Size(366, 22)
         ExitToolStripMenuItem.Text = "Exit"
         ' 
         ' tsmiAnalysis
         ' 
         tsmiAnalysis.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysis_RowColStat, tsmiAnalysis_Plot, tsmiAnalysisHotPixel, ToolStripMenuItem7, tsmiAnalysis_ManualColorBalancer, tsmiAnalysisVignette, tsmiAnalysisPixelMap, tsmiAnalysis_RawFITSHeader, tsmiAnalysis_FloatAsIntError, tsmiAnalysis_MultiFile, tsmiAnalysis_XvsYPlot, tsmiAnalysis_FindStars})
         tsmiAnalysis.Name = "tsmiAnalysis"
-        tsmiAnalysis.Size = New Size(92, 29)
+        tsmiAnalysis.Size = New Size(62, 22)
         tsmiAnalysis.Text = "Analysis"
         ' 
         ' tsmiAnalysis_RowColStat
         ' 
         tsmiAnalysis_RowColStat.Name = "tsmiAnalysis_RowColStat"
-        tsmiAnalysis_RowColStat.Size = New Size(331, 34)
+        tsmiAnalysis_RowColStat.Size = New Size(222, 22)
         tsmiAnalysis_RowColStat.Text = "Row and column statistics"
         ' 
         ' tsmiAnalysis_Plot
@@ -309,439 +316,439 @@ Partial Class MainForm
         tsmiAnalysis_Plot.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysis_Plot_Replot, tsmiAnalysis_Plot_ADUQuant})
         tsmiAnalysis_Plot.Name = "tsmiAnalysis_Plot"
         tsmiAnalysis_Plot.ShortcutKeys = Keys.Control Or Keys.P
-        tsmiAnalysis_Plot.Size = New Size(331, 34)
+        tsmiAnalysis_Plot.Size = New Size(222, 22)
         tsmiAnalysis_Plot.Text = "Plot"
         ' 
         ' tsmiAnalysis_Plot_Replot
         ' 
         tsmiAnalysis_Plot_Replot.Name = "tsmiAnalysis_Plot_Replot"
-        tsmiAnalysis_Plot_Replot.Size = New Size(254, 34)
+        tsmiAnalysis_Plot_Replot.Size = New Size(167, 22)
         tsmiAnalysis_Plot_Replot.Text = "Re-plot statistics"
         ' 
         ' tsmiAnalysis_Plot_ADUQuant
         ' 
         tsmiAnalysis_Plot_ADUQuant.Name = "tsmiAnalysis_Plot_ADUQuant"
-        tsmiAnalysis_Plot_ADUQuant.Size = New Size(254, 34)
+        tsmiAnalysis_Plot_ADUQuant.Size = New Size(167, 22)
         tsmiAnalysis_Plot_ADUQuant.Text = "ADU quantization"
         ' 
         ' tsmiAnalysisHotPixel
         ' 
         tsmiAnalysisHotPixel.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisHotPixel_detect, tsmiAnalysisHotPixel_fixfile})
         tsmiAnalysisHotPixel.Name = "tsmiAnalysisHotPixel"
-        tsmiAnalysisHotPixel.Size = New Size(331, 34)
+        tsmiAnalysisHotPixel.Size = New Size(222, 22)
         tsmiAnalysisHotPixel.Text = "Hot pixel"
         ' 
         ' tsmiAnalysisHotPixel_detect
         ' 
         tsmiAnalysisHotPixel_detect.Name = "tsmiAnalysisHotPixel_detect"
-        tsmiAnalysisHotPixel_detect.Size = New Size(242, 34)
+        tsmiAnalysisHotPixel_detect.Size = New Size(159, 22)
         tsmiAnalysisHotPixel_detect.Text = "Detect"
         ' 
         ' tsmiAnalysisHotPixel_fixfile
         ' 
         tsmiAnalysisHotPixel_fixfile.Name = "tsmiAnalysisHotPixel_fixfile"
-        tsmiAnalysisHotPixel_fixfile.Size = New Size(242, 34)
+        tsmiAnalysisHotPixel_fixfile.Size = New Size(159, 22)
         tsmiAnalysisHotPixel_fixfile.Text = "Fix based on file"
         ' 
         ' ToolStripMenuItem7
         ' 
         ToolStripMenuItem7.Name = "ToolStripMenuItem7"
-        ToolStripMenuItem7.Size = New Size(328, 6)
+        ToolStripMenuItem7.Size = New Size(219, 6)
         ' 
         ' tsmiAnalysis_ManualColorBalancer
         ' 
         tsmiAnalysis_ManualColorBalancer.Name = "tsmiAnalysis_ManualColorBalancer"
-        tsmiAnalysis_ManualColorBalancer.Size = New Size(331, 34)
+        tsmiAnalysis_ManualColorBalancer.Size = New Size(222, 22)
         tsmiAnalysis_ManualColorBalancer.Text = "Manual color balancer"
         ' 
         ' tsmiAnalysisVignette
         ' 
         tsmiAnalysisVignette.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisVignette_CalcRaw, tsmiAnalysisVignette_CalcParam, tsmiAnalysisVignette_Correct, tsmiAnalysisVignette_Display, ToolStripMenuItem10, tsmiAnalysisVignette_Clear})
         tsmiAnalysisVignette.Name = "tsmiAnalysisVignette"
-        tsmiAnalysisVignette.Size = New Size(331, 34)
+        tsmiAnalysisVignette.Size = New Size(222, 22)
         tsmiAnalysisVignette.Text = "Vignette"
         ' 
         ' tsmiAnalysisVignette_CalcRaw
         ' 
         tsmiAnalysisVignette_CalcRaw.Name = "tsmiAnalysisVignette_CalcRaw"
-        tsmiAnalysisVignette_CalcRaw.Size = New Size(358, 34)
+        tsmiAnalysisVignette_CalcRaw.Size = New Size(240, 22)
         tsmiAnalysisVignette_CalcRaw.Text = "Calculate raw data (no binning)"
         ' 
         ' tsmiAnalysisVignette_CalcParam
         ' 
         tsmiAnalysisVignette_CalcParam.Name = "tsmiAnalysisVignette_CalcParam"
-        tsmiAnalysisVignette_CalcParam.Size = New Size(358, 34)
+        tsmiAnalysisVignette_CalcParam.Size = New Size(240, 22)
         tsmiAnalysisVignette_CalcParam.Text = "Calculate fitting parameters"
         ' 
         ' tsmiAnalysisVignette_Correct
         ' 
         tsmiAnalysisVignette_Correct.Name = "tsmiAnalysisVignette_Correct"
-        tsmiAnalysisVignette_Correct.Size = New Size(358, 34)
+        tsmiAnalysisVignette_Correct.Size = New Size(240, 22)
         tsmiAnalysisVignette_Correct.Text = "Correct (only for BIN=0)"
         ' 
         ' tsmiAnalysisVignette_Display
         ' 
         tsmiAnalysisVignette_Display.Name = "tsmiAnalysisVignette_Display"
-        tsmiAnalysisVignette_Display.Size = New Size(358, 34)
+        tsmiAnalysisVignette_Display.Size = New Size(240, 22)
         tsmiAnalysisVignette_Display.Text = "Display"
         ' 
         ' ToolStripMenuItem10
         ' 
         ToolStripMenuItem10.Name = "ToolStripMenuItem10"
-        ToolStripMenuItem10.Size = New Size(355, 6)
+        ToolStripMenuItem10.Size = New Size(237, 6)
         ' 
         ' tsmiAnalysisVignette_Clear
         ' 
         tsmiAnalysisVignette_Clear.Name = "tsmiAnalysisVignette_Clear"
-        tsmiAnalysisVignette_Clear.Size = New Size(358, 34)
+        tsmiAnalysisVignette_Clear.Size = New Size(240, 22)
         tsmiAnalysisVignette_Clear.Text = "Clear"
         ' 
         ' tsmiAnalysisPixelMap
         ' 
         tsmiAnalysisPixelMap.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisPixelMap_SaveFor})
         tsmiAnalysisPixelMap.Name = "tsmiAnalysisPixelMap"
-        tsmiAnalysisPixelMap.Size = New Size(331, 34)
+        tsmiAnalysisPixelMap.Size = New Size(222, 22)
         tsmiAnalysisPixelMap.Text = "Pixel map files"
         ' 
         ' tsmiAnalysisPixelMap_SaveFor
         ' 
         tsmiAnalysisPixelMap_SaveFor.Name = "tsmiAnalysisPixelMap_SaveFor"
-        tsmiAnalysisPixelMap_SaveFor.Size = New Size(335, 34)
+        tsmiAnalysisPixelMap_SaveFor.Size = New Size(221, 22)
         tsmiAnalysisPixelMap_SaveFor.Text = "Save pixel coordinates for ..."
         ' 
         ' tsmiAnalysis_RawFITSHeader
         ' 
         tsmiAnalysis_RawFITSHeader.Name = "tsmiAnalysis_RawFITSHeader"
-        tsmiAnalysis_RawFITSHeader.Size = New Size(331, 34)
+        tsmiAnalysis_RawFITSHeader.Size = New Size(222, 22)
         tsmiAnalysis_RawFITSHeader.Text = "Raw FITS Header"
         ' 
         ' tsmiAnalysis_FloatAsIntError
         ' 
         tsmiAnalysis_FloatAsIntError.Name = "tsmiAnalysis_FloatAsIntError"
-        tsmiAnalysis_FloatAsIntError.Size = New Size(331, 34)
+        tsmiAnalysis_FloatAsIntError.Size = New Size(222, 22)
         tsmiAnalysis_FloatAsIntError.Text = "Float error to int"
         ' 
         ' tsmiAnalysis_MultiFile
         ' 
         tsmiAnalysis_MultiFile.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysis_MultiFile_Open, tsmiAnalysis_MultiFile_LoadAbove})
         tsmiAnalysis_MultiFile.Name = "tsmiAnalysis_MultiFile"
-        tsmiAnalysis_MultiFile.Size = New Size(331, 34)
+        tsmiAnalysis_MultiFile.Size = New Size(222, 22)
         tsmiAnalysis_MultiFile.Text = "Multi-file pixelwise statistics"
         ' 
         ' tsmiAnalysis_MultiFile_Open
         ' 
         tsmiAnalysis_MultiFile_Open.Name = "tsmiAnalysis_MultiFile_Open"
-        tsmiAnalysis_MultiFile_Open.Size = New Size(296, 34)
+        tsmiAnalysis_MultiFile_Open.Size = New Size(195, 22)
         tsmiAnalysis_MultiFile_Open.Text = "Open analysis  window"
         ' 
         ' tsmiAnalysis_MultiFile_LoadAbove
         ' 
         tsmiAnalysis_MultiFile_LoadAbove.Name = "tsmiAnalysis_MultiFile_LoadAbove"
-        tsmiAnalysis_MultiFile_LoadAbove.Size = New Size(296, 34)
+        tsmiAnalysis_MultiFile_LoadAbove.Size = New Size(195, 22)
         tsmiAnalysis_MultiFile_LoadAbove.Text = "Load certain pixel ..."
         ' 
         ' tsmiAnalysis_XvsYPlot
         ' 
         tsmiAnalysis_XvsYPlot.Name = "tsmiAnalysis_XvsYPlot"
-        tsmiAnalysis_XvsYPlot.Size = New Size(331, 34)
+        tsmiAnalysis_XvsYPlot.Size = New Size(222, 22)
         tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
         ' 
         ' tsmiAnalysis_FindStars
         ' 
         tsmiAnalysis_FindStars.Name = "tsmiAnalysis_FindStars"
-        tsmiAnalysis_FindStars.Size = New Size(331, 34)
+        tsmiAnalysis_FindStars.Size = New Size(222, 22)
         tsmiAnalysis_FindStars.Text = "Find stars"
         ' 
         ' tsmiProcessing
         ' 
         tsmiProcessing.DropDownItems.AddRange(New ToolStripItem() {tsmiProcessing_AdjustRGB, tsmiStretch, tsmiPlateSolve, tsmiSetPixelToValue, tsmiProcessing_MedianFilter, SubtractMedianToolStripMenuItem, tsmiProcessing_LSBMSB, tsmiProcessing_Specials, tsmiProcessing_Stack, tsmiHotPixelFilter, tsmiProc_Bin2OpenCV, tsmiProc_Bin2Median, tsmiProc_Bin2MaxOut})
         tsmiProcessing.Name = "tsmiProcessing"
-        tsmiProcessing.Size = New Size(113, 29)
+        tsmiProcessing.Size = New Size(76, 22)
         tsmiProcessing.Text = "Processing"
         ' 
         ' tsmiProcessing_AdjustRGB
         ' 
         tsmiProcessing_AdjustRGB.Name = "tsmiProcessing_AdjustRGB"
-        tsmiProcessing_AdjustRGB.Size = New Size(454, 34)
+        tsmiProcessing_AdjustRGB.Size = New Size(301, 22)
         tsmiProcessing_AdjustRGB.Text = "Adjust RGB channels (using modus)"
         ' 
         ' tsmiStretch
         ' 
         tsmiStretch.Name = "tsmiStretch"
-        tsmiStretch.Size = New Size(454, 34)
+        tsmiStretch.Size = New Size(301, 22)
         tsmiStretch.Text = "Stretcher histogramm over complete range"
         ' 
         ' tsmiPlateSolve
         ' 
         tsmiPlateSolve.Name = "tsmiPlateSolve"
-        tsmiPlateSolve.Size = New Size(454, 34)
+        tsmiPlateSolve.Size = New Size(301, 22)
         tsmiPlateSolve.Text = "Plate solve image"
         ' 
         ' tsmiSetPixelToValue
         ' 
         tsmiSetPixelToValue.Name = "tsmiSetPixelToValue"
-        tsmiSetPixelToValue.Size = New Size(454, 34)
+        tsmiSetPixelToValue.Size = New Size(301, 22)
         tsmiSetPixelToValue.Text = "Set pixel above to certain value"
         ' 
         ' tsmiProcessing_MedianFilter
         ' 
         tsmiProcessing_MedianFilter.Name = "tsmiProcessing_MedianFilter"
-        tsmiProcessing_MedianFilter.Size = New Size(454, 34)
+        tsmiProcessing_MedianFilter.Size = New Size(301, 22)
         tsmiProcessing_MedianFilter.Text = "Median filter"
         ' 
         ' SubtractMedianToolStripMenuItem
         ' 
         SubtractMedianToolStripMenuItem.Name = "SubtractMedianToolStripMenuItem"
-        SubtractMedianToolStripMenuItem.Size = New Size(454, 34)
+        SubtractMedianToolStripMenuItem.Size = New Size(301, 22)
         SubtractMedianToolStripMenuItem.Text = "Subtract median"
         ' 
         ' tsmiProcessing_LSBMSB
         ' 
         tsmiProcessing_LSBMSB.Name = "tsmiProcessing_LSBMSB"
-        tsmiProcessing_LSBMSB.Size = New Size(454, 34)
+        tsmiProcessing_LSBMSB.Size = New Size(301, 22)
         tsmiProcessing_LSBMSB.Text = "LSB-MSB swap"
         ' 
         ' tsmiProcessing_Specials
         ' 
         tsmiProcessing_Specials.DropDownItems.AddRange(New ToolStripItem() {tsmiProcessing_Specials_NINAFix})
         tsmiProcessing_Specials.Name = "tsmiProcessing_Specials"
-        tsmiProcessing_Specials.Size = New Size(454, 34)
+        tsmiProcessing_Specials.Size = New Size(301, 22)
         tsmiProcessing_Specials.Text = "Specials"
         ' 
         ' tsmiProcessing_Specials_NINAFix
         ' 
         tsmiProcessing_Specials_NINAFix.Name = "tsmiProcessing_Specials_NINAFix"
-        tsmiProcessing_Specials_NINAFix.Size = New Size(195, 34)
+        tsmiProcessing_Specials_NINAFix.Size = New Size(128, 22)
         tsmiProcessing_Specials_NINAFix.Text = "NINA fix 1"
         ' 
         ' tsmiProcessing_Stack
         ' 
         tsmiProcessing_Stack.Name = "tsmiProcessing_Stack"
         tsmiProcessing_Stack.ShortcutKeys = Keys.Alt Or Keys.S
-        tsmiProcessing_Stack.Size = New Size(454, 34)
+        tsmiProcessing_Stack.Size = New Size(301, 22)
         tsmiProcessing_Stack.Text = "Stacking multiple files"
         ' 
         ' tsmiHotPixelFilter
         ' 
         tsmiHotPixelFilter.Name = "tsmiHotPixelFilter"
-        tsmiHotPixelFilter.Size = New Size(454, 34)
+        tsmiHotPixelFilter.Size = New Size(301, 22)
         tsmiHotPixelFilter.Text = "Special hotpixel filter - EXPERIMENTAL"
         ' 
         ' tsmiProc_Bin2OpenCV
         ' 
         tsmiProc_Bin2OpenCV.Name = "tsmiProc_Bin2OpenCV"
-        tsmiProc_Bin2OpenCV.Size = New Size(454, 34)
+        tsmiProc_Bin2OpenCV.Size = New Size(301, 22)
         tsmiProc_Bin2OpenCV.Text = "Bin 2 with OpenCV"
         ' 
         ' tsmiProc_Bin2Median
         ' 
         tsmiProc_Bin2Median.Name = "tsmiProc_Bin2Median"
-        tsmiProc_Bin2Median.Size = New Size(454, 34)
+        tsmiProc_Bin2Median.Size = New Size(301, 22)
         tsmiProc_Bin2Median.Text = "Bin 2 with median"
         ' 
         ' tsmiProc_Bin2MaxOut
         ' 
         tsmiProc_Bin2MaxOut.Name = "tsmiProc_Bin2MaxOut"
-        tsmiProc_Bin2MaxOut.Size = New Size(454, 34)
+        tsmiProc_Bin2MaxOut.Size = New Size(301, 22)
         tsmiProc_Bin2MaxOut.Text = "Bin 2 with max removal"
         ' 
         ' tsmiTools
         ' 
         tsmiTools.DropDownItems.AddRange(New ToolStripItem() {tsmiTools_ALADINCoords, tsmiTools_ChangeHeader, tsmiTools_RemoveOverscan, tsmiTools_TestFile, CheckROICutoutToolStripMenuItem})
         tsmiTools.Name = "tsmiTools"
-        tsmiTools.Size = New Size(69, 29)
+        tsmiTools.Size = New Size(46, 22)
         tsmiTools.Text = "Tools"
         ' 
         ' tsmiTools_ALADINCoords
         ' 
         tsmiTools_ALADINCoords.Name = "tsmiTools_ALADINCoords"
-        tsmiTools_ALADINCoords.Size = New Size(328, 34)
+        tsmiTools_ALADINCoords.Size = New Size(215, 22)
         tsmiTools_ALADINCoords.Text = "Coords for ALADIN call"
         ' 
         ' tsmiTools_ChangeHeader
         ' 
         tsmiTools_ChangeHeader.Name = "tsmiTools_ChangeHeader"
-        tsmiTools_ChangeHeader.Size = New Size(328, 34)
+        tsmiTools_ChangeHeader.Size = New Size(215, 22)
         tsmiTools_ChangeHeader.Text = "Change header"
         ' 
         ' tsmiTools_RemoveOverscan
         ' 
         tsmiTools_RemoveOverscan.Name = "tsmiTools_RemoveOverscan"
-        tsmiTools_RemoveOverscan.Size = New Size(328, 34)
+        tsmiTools_RemoveOverscan.Size = New Size(215, 22)
         tsmiTools_RemoveOverscan.Text = "Remove QHY600 Overscan"
         ' 
         ' tsmiTools_TestFile
         ' 
         tsmiTools_TestFile.Name = "tsmiTools_TestFile"
-        tsmiTools_TestFile.Size = New Size(328, 34)
+        tsmiTools_TestFile.Size = New Size(215, 22)
         tsmiTools_TestFile.Text = "Test file generator"
         ' 
         ' CheckROICutoutToolStripMenuItem
         ' 
         CheckROICutoutToolStripMenuItem.Name = "CheckROICutoutToolStripMenuItem"
-        CheckROICutoutToolStripMenuItem.Size = New Size(328, 34)
+        CheckROICutoutToolStripMenuItem.Size = New Size(215, 22)
         CheckROICutoutToolStripMenuItem.Text = "Check ROI cut-out"
         ' 
         ' WorkflowToolStripMenuItem
         ' 
         WorkflowToolStripMenuItem.DropDownItems.AddRange(New ToolStripItem() {MultifileActionToolStripMenuItem, ToolStripMenuItem13, FixRADECErrorToolStripMenuItem, tsmiWorkflow_Runner})
         WorkflowToolStripMenuItem.Name = "WorkflowToolStripMenuItem"
-        WorkflowToolStripMenuItem.Size = New Size(104, 29)
+        WorkflowToolStripMenuItem.Size = New Size(70, 22)
         WorkflowToolStripMenuItem.Text = "Workflow"
         ' 
         ' MultifileActionToolStripMenuItem
         ' 
         MultifileActionToolStripMenuItem.Name = "MultifileActionToolStripMenuItem"
         MultifileActionToolStripMenuItem.ShortcutKeys = Keys.Control Or Keys.M
-        MultifileActionToolStripMenuItem.Size = New Size(309, 34)
+        MultifileActionToolStripMenuItem.Size = New Size(204, 22)
         MultifileActionToolStripMenuItem.Text = "Multi-file action"
         ' 
         ' ToolStripMenuItem13
         ' 
         ToolStripMenuItem13.Name = "ToolStripMenuItem13"
-        ToolStripMenuItem13.Size = New Size(306, 6)
+        ToolStripMenuItem13.Size = New Size(201, 6)
         ' 
         ' FixRADECErrorToolStripMenuItem
         ' 
         FixRADECErrorToolStripMenuItem.Name = "FixRADECErrorToolStripMenuItem"
-        FixRADECErrorToolStripMenuItem.Size = New Size(309, 34)
+        FixRADECErrorToolStripMenuItem.Size = New Size(204, 22)
         FixRADECErrorToolStripMenuItem.Text = "Fix RA_DEC error"
         ' 
         ' tsmiWorkflow_Runner
         ' 
         tsmiWorkflow_Runner.Name = "tsmiWorkflow_Runner"
-        tsmiWorkflow_Runner.Size = New Size(309, 34)
+        tsmiWorkflow_Runner.Size = New Size(204, 22)
         tsmiWorkflow_Runner.Text = "Open runner"
         ' 
         ' tsmiTest
         ' 
         tsmiTest.DropDownItems.AddRange(New ToolStripItem() {AfiineTranslateToolStripMenuItem, ToolStripMenuItem6, tsmiTest_Focus, tssmRadCollimation, tsmiTest_ippiXCorr, ToolStripMenuItem9, tsmiTestCode_UseOpenCV, MedianWithinNETToolStripMenuItem, ToolStripMenuItem12, CodeBelowIsNotForHereToolStripMenuItem, CloudWatcherCombinerToolStripMenuItem, tsmiTest_AstrometryQuery, frmTest_HistoInteractive, tsmiTestCode_StreamDeck, tsmiTest_SigmaClip, tsmiTest_FITSReadSpeed, DataGridViewDataSourceToolStripMenuItem, tsmiTest_RAWReader})
         tsmiTest.Name = "tsmiTest"
-        tsmiTest.Size = New Size(102, 29)
+        tsmiTest.Size = New Size(68, 22)
         tsmiTest.Text = "Test code"
         ' 
         ' AfiineTranslateToolStripMenuItem
         ' 
         AfiineTranslateToolStripMenuItem.Name = "AfiineTranslateToolStripMenuItem"
-        AfiineTranslateToolStripMenuItem.Size = New Size(412, 34)
+        AfiineTranslateToolStripMenuItem.Size = New Size(274, 22)
         AfiineTranslateToolStripMenuItem.Text = "Afiine translate"
         ' 
         ' ToolStripMenuItem6
         ' 
         ToolStripMenuItem6.Name = "ToolStripMenuItem6"
-        ToolStripMenuItem6.Size = New Size(409, 6)
+        ToolStripMenuItem6.Size = New Size(271, 6)
         ' 
         ' tsmiTest_Focus
         ' 
         tsmiTest_Focus.Name = "tsmiTest_Focus"
-        tsmiTest_Focus.Size = New Size(412, 34)
+        tsmiTest_Focus.Size = New Size(274, 22)
         tsmiTest_Focus.Text = "Focus"
         ' 
         ' tssmRadCollimation
         ' 
         tssmRadCollimation.Name = "tssmRadCollimation"
-        tssmRadCollimation.Size = New Size(412, 34)
+        tssmRadCollimation.Size = New Size(274, 22)
         tssmRadCollimation.Text = "Radial statistics and collimation"
         ' 
         ' tsmiTest_ippiXCorr
         ' 
         tsmiTest_ippiXCorr.Name = "tsmiTest_ippiXCorr"
-        tsmiTest_ippiXCorr.Size = New Size(412, 34)
+        tsmiTest_ippiXCorr.Size = New Size(274, 22)
         tsmiTest_ippiXCorr.Text = "ippi XCorr"
         ' 
         ' ToolStripMenuItem9
         ' 
         ToolStripMenuItem9.Name = "ToolStripMenuItem9"
-        ToolStripMenuItem9.Size = New Size(409, 6)
+        ToolStripMenuItem9.Size = New Size(271, 6)
         ' 
         ' tsmiTestCode_UseOpenCV
         ' 
         tsmiTestCode_UseOpenCV.Name = "tsmiTestCode_UseOpenCV"
-        tsmiTestCode_UseOpenCV.Size = New Size(412, 34)
+        tsmiTestCode_UseOpenCV.Size = New Size(274, 22)
         tsmiTestCode_UseOpenCV.Text = "Use OpenCV"
         ' 
         ' MedianWithinNETToolStripMenuItem
         ' 
         MedianWithinNETToolStripMenuItem.Name = "MedianWithinNETToolStripMenuItem"
-        MedianWithinNETToolStripMenuItem.Size = New Size(412, 34)
+        MedianWithinNETToolStripMenuItem.Size = New Size(274, 22)
         MedianWithinNETToolStripMenuItem.Text = ".NET Median Filter (for reference only)"
         ' 
         ' ToolStripMenuItem12
         ' 
         ToolStripMenuItem12.Name = "ToolStripMenuItem12"
-        ToolStripMenuItem12.Size = New Size(409, 6)
+        ToolStripMenuItem12.Size = New Size(271, 6)
         ' 
         ' CodeBelowIsNotForHereToolStripMenuItem
         ' 
         CodeBelowIsNotForHereToolStripMenuItem.Name = "CodeBelowIsNotForHereToolStripMenuItem"
-        CodeBelowIsNotForHereToolStripMenuItem.Size = New Size(412, 34)
+        CodeBelowIsNotForHereToolStripMenuItem.Size = New Size(274, 22)
         CodeBelowIsNotForHereToolStripMenuItem.Text = "(Code below is not for here ...)"
         ' 
         ' CloudWatcherCombinerToolStripMenuItem
         ' 
         CloudWatcherCombinerToolStripMenuItem.Name = "CloudWatcherCombinerToolStripMenuItem"
-        CloudWatcherCombinerToolStripMenuItem.Size = New Size(412, 34)
+        CloudWatcherCombinerToolStripMenuItem.Size = New Size(274, 22)
         CloudWatcherCombinerToolStripMenuItem.Text = "CloudWatcher combiner"
         ' 
         ' tsmiTest_AstrometryQuery
         ' 
         tsmiTest_AstrometryQuery.Name = "tsmiTest_AstrometryQuery"
-        tsmiTest_AstrometryQuery.Size = New Size(412, 34)
+        tsmiTest_AstrometryQuery.Size = New Size(274, 22)
         tsmiTest_AstrometryQuery.Text = "Astrometry Batch Query"
         ' 
         ' frmTest_HistoInteractive
         ' 
         frmTest_HistoInteractive.Name = "frmTest_HistoInteractive"
-        frmTest_HistoInteractive.Size = New Size(412, 34)
+        frmTest_HistoInteractive.Size = New Size(274, 22)
         frmTest_HistoInteractive.Text = "Interactive Histogram"
         ' 
         ' tsmiTestCode_StreamDeck
         ' 
         tsmiTestCode_StreamDeck.Name = "tsmiTestCode_StreamDeck"
-        tsmiTestCode_StreamDeck.Size = New Size(412, 34)
+        tsmiTestCode_StreamDeck.Size = New Size(274, 22)
         tsmiTestCode_StreamDeck.Text = "StreamDeck"
         ' 
         ' tsmiTest_SigmaClip
         ' 
         tsmiTest_SigmaClip.Name = "tsmiTest_SigmaClip"
-        tsmiTest_SigmaClip.Size = New Size(412, 34)
+        tsmiTest_SigmaClip.Size = New Size(274, 22)
         tsmiTest_SigmaClip.Text = "Sigma clip"
         ' 
         ' tsmiTest_FITSReadSpeed
         ' 
         tsmiTest_FITSReadSpeed.Name = "tsmiTest_FITSReadSpeed"
-        tsmiTest_FITSReadSpeed.Size = New Size(412, 34)
+        tsmiTest_FITSReadSpeed.Size = New Size(274, 22)
         tsmiTest_FITSReadSpeed.Text = "FITS read speed"
         ' 
         ' DataGridViewDataSourceToolStripMenuItem
         ' 
         DataGridViewDataSourceToolStripMenuItem.Name = "DataGridViewDataSourceToolStripMenuItem"
-        DataGridViewDataSourceToolStripMenuItem.Size = New Size(412, 34)
+        DataGridViewDataSourceToolStripMenuItem.Size = New Size(274, 22)
         DataGridViewDataSourceToolStripMenuItem.Text = "DataGridView data source"
         ' 
         ' tsmiTest_RAWReader
         ' 
         tsmiTest_RAWReader.DropDownItems.AddRange(New ToolStripItem() {tsmiTest_RAWReader_NEF, tsmiTest_RAWReader_LibRawDLL, tsmiTest_RAWReader_GrayPNGToFits})
         tsmiTest_RAWReader.Name = "tsmiTest_RAWReader"
-        tsmiTest_RAWReader.Size = New Size(412, 34)
+        tsmiTest_RAWReader.Size = New Size(274, 22)
         tsmiTest_RAWReader.Text = "File format converter and RAW reader"
         ' 
         ' tsmiTest_RAWReader_NEF
         ' 
         tsmiTest_RAWReader_NEF.Name = "tsmiTest_RAWReader_NEF"
-        tsmiTest_RAWReader_NEF.Size = New Size(250, 34)
+        tsmiTest_RAWReader_NEF.Size = New Size(180, 22)
         tsmiTest_RAWReader_NEF.Text = "NEF reading"
         ' 
         ' tsmiTest_RAWReader_LibRawDLL
         ' 
         tsmiTest_RAWReader_LibRawDLL.Name = "tsmiTest_RAWReader_LibRawDLL"
-        tsmiTest_RAWReader_LibRawDLL.Size = New Size(250, 34)
+        tsmiTest_RAWReader_LibRawDLL.Size = New Size(180, 22)
         tsmiTest_RAWReader_LibRawDLL.Text = "LibRaw DLL "
         ' 
         ' tsmiTest_RAWReader_GrayPNGToFits
         ' 
         tsmiTest_RAWReader_GrayPNGToFits.Name = "tsmiTest_RAWReader_GrayPNGToFits"
-        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(250, 34)
+        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(180, 22)
         tsmiTest_RAWReader_GrayPNGToFits.Text = "Gray PNG to FITS"
         ' 
         ' ofdMain
@@ -754,11 +761,11 @@ Partial Class MainForm
         tbLogOutput.Dock = DockStyle.Fill
         tbLogOutput.Font = New Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbLogOutput.Location = New Point(0, 0)
-        tbLogOutput.Margin = New Padding(6, 5, 6, 5)
+        tbLogOutput.Margin = New Padding(4, 3, 4, 3)
         tbLogOutput.Multiline = True
         tbLogOutput.Name = "tbLogOutput"
         tbLogOutput.ScrollBars = ScrollBars.Both
-        tbLogOutput.Size = New Size(2159, 1624)
+        tbLogOutput.Size = New Size(1512, 974)
         tbLogOutput.TabIndex = 3
         tbLogOutput.WordWrap = False
         ' 
@@ -766,9 +773,10 @@ Partial Class MainForm
         ' 
         ssMain.ImageScalingSize = New Size(24, 24)
         ssMain.Items.AddRange(New ToolStripItem() {tsslRunning, tsslMain, tspbMain, ToolStripStatusLabel1, tspbMultiFile, tsslMultiFile})
-        ssMain.Location = New Point(0, 1735)
+        ssMain.Location = New Point(0, 1039)
         ssMain.Name = "ssMain"
-        ssMain.Size = New Size(2820, 35)
+        ssMain.Padding = New Padding(1, 0, 10, 0)
+        ssMain.Size = New Size(1974, 23)
         ssMain.TabIndex = 4
         ssMain.Text = "StatusStrip1"
         ' 
@@ -777,46 +785,46 @@ Partial Class MainForm
         tsslRunning.Font = New Font("Wingdings", 9F, FontStyle.Bold, GraphicsUnit.Point, CByte(2))
         tsslRunning.ForeColor = Color.Silver
         tsslRunning.Name = "tsslRunning"
-        tsslRunning.Size = New Size(23, 28)
+        tsslRunning.Size = New Size(17, 18)
         tsslRunning.Text = "l"
         ' 
         ' tsslMain
         ' 
         tsslMain.Name = "tsslMain"
-        tsslMain.Size = New Size(33, 28)
+        tsslMain.Size = New Size(22, 18)
         tsslMain.Text = "---"
         ' 
         ' tspbMain
         ' 
         tspbMain.ForeColor = Color.FromArgb(CByte(0), CByte(192), CByte(0))
         tspbMain.Name = "tspbMain"
-        tspbMain.Size = New Size(167, 27)
+        tspbMain.Size = New Size(117, 17)
         tspbMain.Style = ProgressBarStyle.Continuous
         ' 
         ' ToolStripStatusLabel1
         ' 
         ToolStripStatusLabel1.Name = "ToolStripStatusLabel1"
-        ToolStripStatusLabel1.Size = New Size(16, 28)
+        ToolStripStatusLabel1.Size = New Size(10, 18)
         ToolStripStatusLabel1.Text = "|"
         ' 
         ' tspbMultiFile
         ' 
         tspbMultiFile.Name = "tspbMultiFile"
-        tspbMultiFile.Size = New Size(167, 27)
+        tspbMultiFile.Size = New Size(117, 17)
         ' 
         ' tsslMultiFile
         ' 
         tsslMultiFile.Name = "tsslMultiFile"
-        tsslMultiFile.Size = New Size(33, 28)
+        tsslMultiFile.Size = New Size(22, 18)
         tsslMultiFile.Text = "---"
         ' 
         ' pgMain
         ' 
         pgMain.Dock = DockStyle.Fill
         pgMain.Location = New Point(0, 0)
-        pgMain.Margin = New Padding(6, 5, 6, 5)
+        pgMain.Margin = New Padding(4, 3, 4, 3)
         pgMain.Name = "pgMain"
-        pgMain.Size = New Size(614, 817)
+        pgMain.Size = New Size(429, 489)
         pgMain.TabIndex = 5
         pgMain.ToolbarVisible = False
         ' 
@@ -825,10 +833,10 @@ Partial Class MainForm
         gbDetails.Controls.Add(tbDetails)
         gbDetails.Dock = DockStyle.Fill
         gbDetails.Location = New Point(0, 0)
-        gbDetails.Margin = New Padding(6, 5, 6, 5)
+        gbDetails.Margin = New Padding(4, 3, 4, 3)
         gbDetails.Name = "gbDetails"
-        gbDetails.Padding = New Padding(6, 5, 6, 5)
-        gbDetails.Size = New Size(614, 799)
+        gbDetails.Padding = New Padding(4, 3, 4, 3)
+        gbDetails.Size = New Size(429, 480)
         gbDetails.TabIndex = 6
         gbDetails.TabStop = False
         gbDetails.Text = "Details"
@@ -837,19 +845,19 @@ Partial Class MainForm
         ' 
         tbDetails.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
         tbDetails.Font = New Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
-        tbDetails.Location = New Point(10, 37)
-        tbDetails.Margin = New Padding(6, 5, 6, 5)
+        tbDetails.Location = New Point(7, 22)
+        tbDetails.Margin = New Padding(4, 3, 4, 3)
         tbDetails.Multiline = True
         tbDetails.Name = "tbDetails"
         tbDetails.ScrollBars = ScrollBars.Both
-        tbDetails.Size = New Size(591, 748)
+        tbDetails.Size = New Size(414, 451)
         tbDetails.TabIndex = 0
         ' 
         ' scMain
         ' 
         scMain.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
-        scMain.Location = New Point(20, 100)
-        scMain.Margin = New Padding(6, 5, 6, 5)
+        scMain.Location = New Point(14, 60)
+        scMain.Margin = New Padding(4, 3, 4, 3)
         scMain.Name = "scMain"
         ' 
         ' scMain.Panel1
@@ -859,16 +867,16 @@ Partial Class MainForm
         ' scMain.Panel2
         ' 
         scMain.Panel2.Controls.Add(tbLogOutput)
-        scMain.Size = New Size(2780, 1624)
-        scMain.SplitterDistance = 614
-        scMain.SplitterWidth = 7
+        scMain.Size = New Size(1946, 974)
+        scMain.SplitterDistance = 429
+        scMain.SplitterWidth = 5
         scMain.TabIndex = 7
         ' 
         ' scLeft
         ' 
         scLeft.Dock = DockStyle.Fill
         scLeft.Location = New Point(0, 0)
-        scLeft.Margin = New Padding(6, 5, 6, 5)
+        scLeft.Margin = New Padding(4, 3, 4, 3)
         scLeft.Name = "scLeft"
         scLeft.Orientation = Orientation.Horizontal
         ' 
@@ -879,19 +887,19 @@ Partial Class MainForm
         ' scLeft.Panel2
         ' 
         scLeft.Panel2.Controls.Add(gbDetails)
-        scLeft.Size = New Size(614, 1624)
-        scLeft.SplitterDistance = 817
-        scLeft.SplitterWidth = 8
+        scLeft.Size = New Size(429, 974)
+        scLeft.SplitterDistance = 489
+        scLeft.SplitterWidth = 5
         scLeft.TabIndex = 0
         ' 
         ' tsMain
         ' 
         tsMain.ImageScalingSize = New Size(24, 24)
         tsMain.Items.AddRange(New ToolStripItem() {tsb_Open, tsb_Display})
-        tsMain.Location = New Point(0, 33)
+        tsMain.Location = New Point(0, 24)
         tsMain.Name = "tsMain"
-        tsMain.Padding = New Padding(0, 0, 3, 0)
-        tsMain.Size = New Size(2820, 34)
+        tsMain.Padding = New Padding(0, 0, 2, 0)
+        tsMain.Size = New Size(1974, 25)
         tsMain.TabIndex = 8
         tsMain.Text = "ToolStrip1"
         ' 
@@ -901,7 +909,7 @@ Partial Class MainForm
         tsb_Open.Image = CType(resources.GetObject("tsb_Open.Image"), Image)
         tsb_Open.ImageTransparentColor = Color.Magenta
         tsb_Open.Name = "tsb_Open"
-        tsb_Open.Size = New Size(77, 29)
+        tsb_Open.Size = New Size(52, 22)
         tsb_Open.Text = "Open ..."
         ' 
         ' tsb_Display
@@ -910,14 +918,14 @@ Partial Class MainForm
         tsb_Display.Image = CType(resources.GetObject("tsb_Display.Image"), Image)
         tsb_Display.ImageTransparentColor = Color.Magenta
         tsb_Display.Name = "tsb_Display"
-        tsb_Display.Size = New Size(74, 29)
+        tsb_Display.Size = New Size(49, 22)
         tsb_Display.Text = "Display"
         ' 
         ' MainForm
         ' 
-        AutoScaleDimensions = New SizeF(10F, 25F)
+        AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(2820, 1770)
+        ClientSize = New Size(1974, 1062)
         Controls.Add(tsMain)
         Controls.Add(scMain)
         Controls.Add(ssMain)
@@ -925,6 +933,7 @@ Partial Class MainForm
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
         KeyPreview = True
         MainMenuStrip = msMain
+        Margin = New Padding(2)
         Name = "MainForm"
         Text = "Astro Image Statistics Version 0.3"
         msMain.ResumeLayout(False)
@@ -1063,4 +1072,5 @@ Partial Class MainForm
     Friend WithEvents tsmiTest_RAWReader_NEF As ToolStripMenuItem
     Friend WithEvents tsmiTest_RAWReader_LibRawDLL As ToolStripMenuItem
     Friend WithEvents tsmiTest_RAWReader_GrayPNGToFits As ToolStripMenuItem
+    Friend WithEvents tsmiFile_QHY600Preview As ToolStripMenuItem
 End Class

@@ -1726,31 +1726,8 @@ Public Class MainForm
     Private Sub tsmiProc_Bin2Median_Click(sender As Object, e As EventArgs) Handles tsmiProc_Bin2Median.Click
 
         Running()
-        Select Case AIS.DB.LastFile_Data.DataType
-            Case AstroNET.Statistics.eDataType.UInt16
-                With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
-                    Dim NewImage((.NAXIS1 \ 2) - 1, (.NAXIS2 \ 2) - 1) As UInt16
-                    Dim Pixel As New List(Of UInt32)
-                    Dim NewX As Integer = 0
-                    For Idx1 As Integer = 0 To .NAXIS1 - 1 Step 2
-                        Dim NewY As Integer = 0
-                        For Idx2 As Integer = 0 To .NAXIS2 - 1 Step 2
-                            Pixel.Clear()
-                            Pixel.AddRange({ .Data(Idx1, Idx2), .Data(Idx1 + 1, Idx2), .Data(Idx1, Idx2 + 1), .Data(Idx1 + 1, Idx2 + 1)})
-                            Pixel.Sort()
-                            Dim PixelValue As UInt32 = (Pixel(1) + Pixel(2))
-                            NewImage(NewX, NewY) = CType(PixelValue \ 2, UInt16)
-                            If NewImage(NewX, NewY) = 0 Then MsgBox("!!!!")
-                            NewY += 1
-                        Next Idx2
-                        NewX += 1
-                    Next Idx1
-                    AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(NewImage)
-                End With
-                Log.Log("Bin2 with median executed.")
-            Case Else
-                MsgBox("Data type not supported!")
-        End Select
+        AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(AstroDSP.Bin2_Median(AIS.DB.LastFile_Data))
+        Log.Log("Bin2 with median executed.")
         Idle()
 
     End Sub
@@ -2159,6 +2136,46 @@ Public Class MainForm
         BaseOut.Close()
 
         MsgBox("OK")
+
+    End Sub
+
+    Private Sub tsmiFile_QHY600Preview_Click(sender As Object, e As EventArgs) Handles tsmiFile_QHY600Preview.Click
+
+        Dim InputFileName As String = "\\192.168.100.10\dsc\2024_02_19 - Test full area\QHY600_H_alpha_300_000_050_001_010_Photographic.fits"
+        Dim DataStartPosition As Integer = -1
+        Dim Container As New AstroNET.Statistics(AIS.DB.IPP)
+        Dim Statistics As New AstroNET.Statistics.sStatistics
+
+        'Load the raw data
+        Processing.LoadFITSFile(InputFileName, AIS.DB.IPP, AIS.Config.ForceDirect, AIS.DB.LastFile_FITSHeader, Container, DataStartPosition)
+
+        With Container.DataProcessor_UInt16
+
+            'Cut dark area
+            ' - Original data  : 9600 x 6422 mit Overscan
+            ' - Image as stored: 9576 x 6388
+            Dim ROI As New Rectangle(9600 - 9576, 0, 9576, 6388)
+            .LoadImageData(.ImageData(0).Data.GetROI(ROI))
+
+            'Median filter
+            .LoadImageData(AstroDSP.Bin2_Median(Container))
+
+            'Calculate statistics
+            Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(Container, True, False, Nothing, Statistics)
+
+            'Save data
+            Dim PreviewFileName As String = "C:\!Work\Preview.fits"
+            cFITSWriter.Write(PreviewFileName, .ImageData(0).Data, cFITSWriter.eBitPix.Int16)
+            'FileIO.PNG16Bit(.ImageData(0).Data, PreviewFileName)
+
+        End With
+
+        MsgBox("OK!")
+
+
+    End Sub
+
+    Private Sub tsmiTest_RAWReader_Click(sender As Object, e As EventArgs) Handles tsmiTest_RAWReader.Click
 
     End Sub
 

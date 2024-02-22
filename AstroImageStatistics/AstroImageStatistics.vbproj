@@ -40,6 +40,7 @@
     <Compile Include="..\..\MyLib\Extensions.vb">
       <Link>MyLib\Extensions.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\FileIO.vb" Link="MyLib\FileIO.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
       <DependentUpon>frmImageForm.vb</DependentUpon>
