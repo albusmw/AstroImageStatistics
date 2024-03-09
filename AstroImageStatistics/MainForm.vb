@@ -2175,8 +2175,9 @@ Public Class MainForm
 
     End Sub
 
-    Private Sub tsmiTest_RAWReader_Click(sender As Object, e As EventArgs) Handles tsmiTest_RAWReader.Click
-
+    Private Sub tsmiProcessing_AlignTIFFFiles_Click(sender As Object, e As EventArgs) Handles tsmiProcessing_AlignTIFFFiles.Click
+        Dim NewForm As New frmAlignTIFFFiles
+        NewForm.Show()
     End Sub
 
 End Class

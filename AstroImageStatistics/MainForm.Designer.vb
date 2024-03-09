@@ -87,6 +87,7 @@ Partial Class MainForm
         tsmiProc_Bin2OpenCV = New ToolStripMenuItem()
         tsmiProc_Bin2Median = New ToolStripMenuItem()
         tsmiProc_Bin2MaxOut = New ToolStripMenuItem()
+        tsmiProcessing_AlignTIFFFiles = New ToolStripMenuItem()
         tsmiTools = New ToolStripMenuItem()
         tsmiTools_ALADINCoords = New ToolStripMenuItem()
         tsmiTools_ChangeHeader = New ToolStripMenuItem()
@@ -461,7 +462,7 @@ Partial Class MainForm
         ' 
         ' tsmiProcessing
         ' 
-        tsmiProcessing.DropDownItems.AddRange(New ToolStripItem() {tsmiProcessing_AdjustRGB, tsmiStretch, tsmiPlateSolve, tsmiSetPixelToValue, tsmiProcessing_MedianFilter, SubtractMedianToolStripMenuItem, tsmiProcessing_LSBMSB, tsmiProcessing_Specials, tsmiProcessing_Stack, tsmiHotPixelFilter, tsmiProc_Bin2OpenCV, tsmiProc_Bin2Median, tsmiProc_Bin2MaxOut})
+        tsmiProcessing.DropDownItems.AddRange(New ToolStripItem() {tsmiProcessing_AdjustRGB, tsmiStretch, tsmiPlateSolve, tsmiSetPixelToValue, tsmiProcessing_MedianFilter, SubtractMedianToolStripMenuItem, tsmiProcessing_LSBMSB, tsmiProcessing_Specials, tsmiProcessing_Stack, tsmiHotPixelFilter, tsmiProc_Bin2OpenCV, tsmiProc_Bin2Median, tsmiProc_Bin2MaxOut, tsmiProcessing_AlignTIFFFiles})
         tsmiProcessing.Name = "tsmiProcessing"
         tsmiProcessing.Size = New Size(76, 22)
         tsmiProcessing.Text = "Processing"
@@ -551,6 +552,12 @@ Partial Class MainForm
         tsmiProc_Bin2MaxOut.Name = "tsmiProc_Bin2MaxOut"
         tsmiProc_Bin2MaxOut.Size = New Size(301, 22)
         tsmiProc_Bin2MaxOut.Text = "Bin 2 with max removal"
+        ' 
+        ' tsmiProcessing_AlignTIFFFiles
+        ' 
+        tsmiProcessing_AlignTIFFFiles.Name = "tsmiProcessing_AlignTIFFFiles"
+        tsmiProcessing_AlignTIFFFiles.Size = New Size(301, 22)
+        tsmiProcessing_AlignTIFFFiles.Text = "Align TIFF files (from DSS)"
         ' 
         ' tsmiTools
         ' 
@@ -736,19 +743,19 @@ Partial Class MainForm
         ' tsmiTest_RAWReader_NEF
         ' 
         tsmiTest_RAWReader_NEF.Name = "tsmiTest_RAWReader_NEF"
-        tsmiTest_RAWReader_NEF.Size = New Size(180, 22)
+        tsmiTest_RAWReader_NEF.Size = New Size(163, 22)
         tsmiTest_RAWReader_NEF.Text = "NEF reading"
         ' 
         ' tsmiTest_RAWReader_LibRawDLL
         ' 
         tsmiTest_RAWReader_LibRawDLL.Name = "tsmiTest_RAWReader_LibRawDLL"
-        tsmiTest_RAWReader_LibRawDLL.Size = New Size(180, 22)
+        tsmiTest_RAWReader_LibRawDLL.Size = New Size(163, 22)
         tsmiTest_RAWReader_LibRawDLL.Text = "LibRaw DLL "
         ' 
         ' tsmiTest_RAWReader_GrayPNGToFits
         ' 
         tsmiTest_RAWReader_GrayPNGToFits.Name = "tsmiTest_RAWReader_GrayPNGToFits"
-        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(180, 22)
+        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(163, 22)
         tsmiTest_RAWReader_GrayPNGToFits.Text = "Gray PNG to FITS"
         ' 
         ' ofdMain
@@ -1073,4 +1080,5 @@ Partial Class MainForm
     Friend WithEvents tsmiTest_RAWReader_LibRawDLL As ToolStripMenuItem
     Friend WithEvents tsmiTest_RAWReader_GrayPNGToFits As ToolStripMenuItem
     Friend WithEvents tsmiFile_QHY600Preview As ToolStripMenuItem
+    Friend WithEvents tsmiProcessing_AlignTIFFFiles As ToolStripMenuItem
 End Class

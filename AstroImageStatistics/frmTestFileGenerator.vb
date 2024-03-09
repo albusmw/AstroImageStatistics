@@ -21,12 +21,11 @@ Public Class frmTestFileGenerator
 
         Dim TestFileName As String = System.IO.Path.Combine(AIS.DB.MyPath, tbTestFileName.Text & "." & GetExtension())
 
-
         Select Case cbTestFileType.SelectedIndex
             Case 0
                 cFITSWriter.WriteTestFile_Int8(TestFileName, DimX, DimY)
             Case 1
-                cFITSWriter.WriteTestFile_UInt16(TestFileName, DimX, DimY, CType(tbInt16StartValue.Text, UInt16), CType(tbInt16StopValue.Text, UInt16))
+                cFITSWriter.WriteTestFile_UInt16(TestFileName, DimX, DimY, CType(tbStartValue.Text, UInt16), CType(tbStopValue.Text, UInt16))
             Case 2
                 ImageFileFormatSpecific.SaveTIFF_Format8bppGrayScale(TestFileName, GetTestImageData_Byte)
             Case 3
@@ -39,7 +38,7 @@ Public Class frmTestFileGenerator
 
     End Sub
 
-    Private Sub frmTestFileGenerator_Load(sender As Object, e As EventArgs) Handles Me.Load
+    Private Sub frmTestFileGenerator_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         With cbTestFileType
             .Items.Clear()
             .Items.Add("FITS, 8 Bit")
@@ -82,21 +81,26 @@ Public Class frmTestFileGenerator
         Return ImageData
     End Function
 
-    Private Sub btnOpenExplorer_Click(sender As Object, e As EventArgs) Handles btnOpenExplorer.Click
-        Process.Start(AIS.DB.MyPath)
-    End Sub
-
-    Private Sub btnWriteAllTestFiles_Click(sender As Object, e As EventArgs) Handles btnWriteAllTestFiles.Click
-        cFITSWriter.WriteTestFile_Int32(WriteToEXEFolder("FITS_BitPix32.FITS"))
-        cFITSWriter.WriteTestFile_Float32(WriteToEXEFolder("FITS_BitPix32f.FITS"))
-        cFITSWriter.WriteTestFile_Float64(WriteToEXEFolder("FITS_BitPix64f.FITS"))
-        cFITSWriter.WriteTestFile_UInt16_Cross(WriteToEXEFolder("UInt16_Cross_mono.fits"))
-        cFITSWriter.WriteTestFile_UInt16_Cross_RGB(WriteToEXEFolder("UInt16_Cross_rgb.fits"), DimX, DimY)
-        cFITSWriter.WriteTestFile_UInt16_XYIdent(WriteToEXEFolder("UInt16_XYIdent.fits"))
-    End Sub
-
     Private Function WriteToEXEFolder(ByVal FileName As String) As String
         Return System.IO.Path.Combine(AIS.DB.MyPath, FileName)
     End Function
+
+    Private Sub tsmiFile_Explorer_Click(sender As Object, e As EventArgs) Handles tsmiFile_Explorer.Click
+        Ato.Utils.StartWithItsEXE(AIS.DB.MyPath)
+    End Sub
+
+    Private Sub tsmiFile_Exit_Click(sender As Object, e As EventArgs) Handles tsmiFile_Exit.Click
+        Me.Close()
+    End Sub
+
+    Private Sub tsmiGenerate_FITSTestFiles_Click(sender As Object, e As EventArgs) Handles tsmiGenerate_FITSTestFiles.Click
+        If cbFile_FITS_BitPix32_Sweep.Checked = True Then cFITSWriter.WriteTestFile_Int32(WriteToEXEFolder("FITS_BitPix32_Sweep.FITS"), DimX, DimY, CInt(tbStartValue.Text))
+        If cbFile_FITS_BitPix32f.Checked = True Then cFITSWriter.WriteTestFile_Float32(WriteToEXEFolder("FITS_BitPix32f.FITS"), DimX, DimY, tbStartValue.Text.ValRegIndepSingle, tbStepValue.Text.ValRegIndepSingle)
+        If cbFile_FITS_BitPix64f.Checked = True Then cFITSWriter.WriteTestFile_Float64(WriteToEXEFolder("FITS_BitPix64f.FITS"), DimX, DimY, tbStartValue.Text.ValRegIndep, tbStepValue.Text.ValRegIndep)
+        If cbFile_FITS_UInt16_Cross_mono.Checked = True Then cFITSWriter.WriteTestFile_UInt16_Cross(WriteToEXEFolder("FITS_UInt16_Cross_mono.fits"), DimX, DimY)
+        If cbFile_FITS_UInt16_Cross_rgb.Checked = True Then cFITSWriter.WriteTestFile_UInt16_Cross_RGB(WriteToEXEFolder("FITS_UInt16_Cross_rgb.fits"), DimX, DimY)
+        If cbFile_FITS_UInt16_RowColOrder.Checked = True Then cFITSWriter.WriteTestFile_UInt16_RowColOrder(WriteToEXEFolder("FITS_UInt16_RowColOrder_Row.fits"), DimX, True)
+        If cbFile_FITS_UInt16_RowColOrder.Checked = True Then cFITSWriter.WriteTestFile_UInt16_RowColOrder(WriteToEXEFolder("FITS_UInt16_RowColOrder_Col.fits"), DimX, False)
+    End Sub
 
 End Class
