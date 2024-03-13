@@ -1,5 +1,6 @@
 ﻿Option Explicit On
 Option Strict On
+
 Imports System.CodeDom.Compiler
 Imports System.Configuration
 Imports System.DirectoryServices.ActiveDirectory
@@ -33,6 +34,8 @@ Partial Public Class frmMultiFileAction
 
     Public adgvBinding As New BindingSource
 
+    Private Plotter As cZEDGraph
+
     Private Config As New cConfig
     Private WithEvents Stacker As New cStacker
     Private LogContent As New System.Text.StringBuilder
@@ -56,6 +59,7 @@ Partial Public Class frmMultiFileAction
         pgMain.SelectedObject = Config
         adgvBinding.DataSource = AllFiles
         adgvMain.DataSource = adgvBinding
+        Plotter = New cZEDGraph(zgcSinglePixelStat)
     End Sub
 
     '═════════════════════════════════════════════════════════════════════════════
@@ -796,8 +800,8 @@ Partial Public Class frmMultiFileAction
         Dim MosaikBasePtr_Y As Integer = 0
 
         For Each File As cFileProps In FilesToLoad
-            Dim DeltaX As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaX = CInt(File.DeltaX)
-            Dim DeltaY As Integer = 0 : If Config.ROIDisplay_UseDeltaXY Then DeltaY = CInt(File.DeltaY)
+            Dim DeltaX As Integer = 0 : If (Config.ROIDisplay_UseDeltaXY = True) And (Double.IsNaN(File.DeltaX) = False) Then DeltaX = CInt(File.DeltaX)
+            Dim DeltaY As Integer = 0 : If (Config.ROIDisplay_UseDeltaXY = True) And (Double.IsNaN(File.DeltaY) = False) Then DeltaY = CInt(File.DeltaY)
             Dim ROI As New Rectangle(Config.ROIDisplay_X + DeltaX, Config.ROIDisplay_Y + DeltaY, Config.ROIDisplay_Width, Config.ROIDisplay_Height)
             Dim SingleFileTile(,) As UInt16 = FITSReader.ReadInUInt16(File.FileName, UseIPP, ROI, ForceDirect)
             If Display_blur > 1 Then cOpenCvSharp.MedianBlur(SingleFileTile, Display_blur)
@@ -859,8 +863,9 @@ Partial Public Class frmMultiFileAction
     End Sub
 
     Private Sub RunSinglePixelStat(ByVal Pixel As Point)
+        Dim SelectedPixel As String = "< " & Pixel.X.ValRegIndep & " : " & Pixel.Y.ValRegIndep & ">"
         Dim Log As New List(Of String)
-        Log.Add("Statistics for <" & Pixel.X.ValRegIndep & ":" & Pixel.Y.ValRegIndep & ">")
+        Log.Add("Statistics for " & SelectedPixel)
         Dim AllPixel As UInt16() = GetSamePixelFromMultipleFiles(Pixel)
         Log.Add("  " & AllPixel.Length.ValRegIndep & " pixel")
         Dim SamplesIgnored As UInt16 = 0
@@ -868,6 +873,10 @@ Partial Public Class frmMultiFileAction
         Log.Add("  SigmaClipped_mean: " & NewMean.ValRegIndep)
         Log.Add("  Samples Ignored: " & SamplesIgnored.ValRegIndep)
         tbPixelStat.Text = Join(Log.ToArray, System.Environment.NewLine)
+
+        Plotter.Clear()
+        Plotter.PlotData("Pixel vs file", AllPixel)
+        Plotter.ForceUpdate()
     End Sub
 
     '''<summary>Get pixel from the same position from all specified files.</summary>

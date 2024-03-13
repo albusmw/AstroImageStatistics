@@ -19,7 +19,7 @@ Public Class cCollimation
     '''<param name="HalfX">TRUE to move X center between 2 pixel.</param>
     '''<param name="HalfY">TRUE to move Y center between 2 pixel.</param>
     '''<param name="Radius">Radius to run calculation for.</param>
-    Public Sub ShowHistoAroundCenter(ByVal Center As Point, ByVal HalfX As Boolean, ByVal HalfY As Boolean, ByVal Radius As Integer, ByVal RadiusCombiner As Double, ByVal AngleSegments As Integer, ByRef PlotDist As cZEDGraphService, ByRef PlotCircle As cZEDGraphService)
+    Public Sub ShowHistoAroundCenter(ByVal Center As Point, ByVal HalfX As Boolean, ByVal HalfY As Boolean, ByVal Radius As Integer, ByVal RadiusCombiner As Double, ByVal AngleSegments As Integer, ByRef PlotDist As cZEDGraph, ByRef PlotCircle As cZEDGraph)
 
         Dim RealCenter_X As Double = Center.X + CInt(IIf(HalfX = True, 1 / 2, 0))
         Dim RealCenter_Y As Double = Center.Y + CInt(IIf(HalfY = True, 1 / 2, 0))
@@ -74,15 +74,15 @@ Public Class cCollimation
         Next Entry
 
         PlotDist.SetCaptions("Statistics vs distance", "Distance from center", "Pixel value")
-        PlotDist.PlotXvsY("Max vs Radius", X.ToArray, Y_max.ToArray, New cZEDGraphService.sGraphStyle(Color.Red, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-        PlotDist.PlotXvsY("Mean vs Radius", X.ToArray, Y_mean.ToArray, New cZEDGraphService.sGraphStyle(Color.Orange, ZEDGraphUtil.sGraphStyle.eCurveMode.LinesAndPoints))
-        PlotDist.PlotXvsY("Min vs Radius", X.ToArray, Y_min.ToArray, New cZEDGraphService.sGraphStyle(Color.Green, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
+        PlotDist.PlotXvsY("Max vs Radius", X.ToArray, Y_max.ToArray, New cZEDGraph.sGraphStyle(Color.Red, cZEDGraph.eCurveMode.Lines))
+        PlotDist.PlotXvsY("Mean vs Radius", X.ToArray, Y_mean.ToArray, New cZEDGraph.sGraphStyle(Color.Orange, cZEDGraph.eCurveMode.LinesAndPoints))
+        PlotDist.PlotXvsY("Min vs Radius", X.ToArray, Y_min.ToArray, New cZEDGraph.sGraphStyle(Color.Green, cZEDGraph.eCurveMode.Lines))
 
         PlotDist.SetCaptions("Statistics vs angle", "Angle [°]", "Value")
-        PlotCircle.PlotXvsY("Weighted mean", DistPerAngle.Angles, DistPerAngle.Median, New cZEDGraphService.sGraphStyle(Color.Orange, ZEDGraphUtil.sGraphStyle.eCurveMode.Dots))
+        PlotCircle.PlotXvsY("Weighted mean", DistPerAngle.Angles, DistPerAngle.Median, New cZEDGraph.sGraphStyle(Color.Orange, cZEDGraph.eCurveMode.Dots))
         'PlotCircle.PlotXvsY("Pct_10", DistPerAngle.Angles, DistPerAngle.Pct_10, New cZEDGraphService.sGraphStyle(Color.Red, ZEDGraphUtil.sGraphStyle.eCurveMode.Dots))
         'PlotCircle.PlotXvsY("Pct_90", DistPerAngle.Angles, DistPerAngle.Pct_90, New cZEDGraphService.sGraphStyle(Color.Green, ZEDGraphUtil.sGraphStyle.eCurveMode.Dots))
-        PlotCircle.PlotXvsY("Pct_width", DistPerAngle.Angles, DistPerAngle.Pct_width, New cZEDGraphService.sGraphStyle(Color.Green, ZEDGraphUtil.sGraphStyle.eCurveMode.Dots))
+        PlotCircle.PlotXvsY("Pct_width", DistPerAngle.Angles, DistPerAngle.Pct_width, New cZEDGraph.sGraphStyle(Color.Green, cZEDGraph.eCurveMode.Dots))
 
 
 

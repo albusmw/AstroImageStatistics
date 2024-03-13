@@ -33,6 +33,7 @@
       <Link>MyLib\CodeUtils.vb</Link>
     </Compile>
     <Compile Include="..\..\MyLib\COMInterop.vb" Link="MyLib\COMInterop.vb" />
+    <Compile Include="..\..\MyLib\cZEDGraph.vb" Link="MyLib\cZEDGraph.vb" />
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
     </Compile>
@@ -156,12 +157,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\ZedGraphService.vb">
-      <Link>ZedGraphService.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\ZEDGraphUtil.vb">
-      <Link>ZEDGraphUtil.vb</Link>
     </Compile>
     <Compile Include="..\..\src\Forms\frmFITSGrep.designer.vb">
       <Link>frmFITSGrep.designer.vb</Link>

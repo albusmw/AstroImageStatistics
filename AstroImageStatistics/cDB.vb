@@ -294,7 +294,7 @@ Public Class cConfig
 
     <ComponentModel.Category(Cat_plot)>
     <ComponentModel.DisplayName("b) Plot style")>
-    Public Property PlotStyle As cZEDGraphService.eCurveMode = cZEDGraphService.eCurveMode.LinesAndPoints
+    Public Property PlotStyle As cZEDGraph.eCurveMode = cZEDGraph.eCurveMode.LinesAndPoints
 
     <ComponentModel.Category(Cat_plot)>
     <ComponentModel.DisplayName("c) Stack graphs below form")>

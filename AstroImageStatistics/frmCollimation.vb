@@ -8,9 +8,9 @@ Public Class frmCollimation
     '''<summary>The ZED graph control inside the form.</summary>
     Public zgcHistoCircle As ZedGraph.ZedGraphControl = Nothing
     '''<summary>The ZED graph service (from file ZEDGraphService.vb).</summary>
-    Public PlotDist As cZEDGraphService = Nothing
+    Public PlotDist As cZEDGraph = Nothing
     '''<summary>The ZED graph service (from file ZEDGraphService.vb).</summary>
-    Public PlotCircle As cZEDGraphService = Nothing
+    Public PlotCircle As cZEDGraph = Nothing
 
     Public Collimation As New cCollimation
 
@@ -21,9 +21,9 @@ Public Class frmCollimation
 
         'Add any initialization after the InitializeComponent() call.
         zgcHistoDist = New ZedGraph.ZedGraphControl : scGraph.Panel1.Controls.Add(zgcHistoDist) : zgcHistoDist.Dock = DockStyle.Fill
-        PlotDist = New cZEDGraphService(zgcHistoDist) : PlotDist.Clear()
+        PlotDist = New cZEDGraph(zgcHistoDist) : PlotDist.Clear()
         zgcHistoCircle = New ZedGraph.ZedGraphControl : scGraph.Panel2.Controls.Add(zgcHistoCircle) : zgcHistoCircle.Dock = DockStyle.Fill
-        PlotCircle = New cZEDGraphService(zgcHistoCircle) : PlotCircle.Clear()
+        PlotCircle = New cZEDGraph(zgcHistoCircle) : PlotCircle.Clear()
 
     End Sub
 

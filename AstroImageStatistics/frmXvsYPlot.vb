@@ -9,21 +9,21 @@ Public Class frmXvsYPlot
     '''<summary>The ZED graph control inside the form.</summary>
     Private zgcMain1 As ZedGraph.ZedGraphControl = Nothing
     '''<summary>The ZED graph service (from file ZEDGraphService.vb).</summary>
-    Private Plotter1 As cZEDGraphService = Nothing
+    Private Plotter1 As cZEDGraph = Nothing
     '''<summary>The ZED graph control inside the form.</summary>
     Private zgcMain2 As ZedGraph.ZedGraphControl = Nothing
     '''<summary>The ZED graph service (from file ZEDGraphService.vb).</summary>
-    Private Plotter2 As cZEDGraphService = Nothing
+    Private Plotter2 As cZEDGraph = Nothing
 
     Private Sub frmXvsYPlot_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         zgcMain1 = New ZedGraph.ZedGraphControl : zgcMain1.IsShowCursorValues = True
         pPlot1.Controls.Add(zgcMain1)
         zgcMain1.Dock = DockStyle.Fill
-        Plotter1 = New cZEDGraphService(zgcMain1)
+        Plotter1 = New cZEDGraph(zgcMain1)
         zgcMain2 = New ZedGraph.ZedGraphControl : zgcMain2.IsShowCursorValues = True
         pPlot2.Controls.Add(zgcMain2)
         zgcMain2.Dock = DockStyle.Fill
-        Plotter2 = New cZEDGraphService(zgcMain2)
+        Plotter2 = New cZEDGraph(zgcMain2)
         FillBox(cbX) : cbX.SelectedIndex = 0
         FillBox(cbY) : cbY.SelectedIndex = 1
     End Sub
@@ -102,19 +102,19 @@ Public Class frmXvsYPlot
                     Dim Y_Regress As Double() = SignalProcessing.ApplyPoly(XAxis, Polynom)
                     'Draw
                     Plotter1.Clear()
-                    Plotter1.PlotXvsY("Linear", XAxis, Y_Lin, New cZEDGraphService.sGraphStyle(Color.Black, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-                    Plotter1.PlotXvsY("Minimum", XAxis, Y_Min, New cZEDGraphService.sGraphStyle(Color.Red, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-                    Plotter1.PlotXvsY("Maximum", XAxis, Y_Max, New cZEDGraphService.sGraphStyle(Color.Green, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-                    Plotter1.PlotXvsY("Mean", XAxis, Y_Mean, New cZEDGraphService.sGraphStyle(Color.Orange, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-                    Plotter1.PlotXvsY("Median", XAxis, Y_Median, New cZEDGraphService.sGraphStyle(Color.Blue, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-                    Plotter1.PlotXvsY("Curve fit (y=" & Polynom(0).ValRegIndep & " + " & Polynom(1).ValRegIndep & "*x", XAxis, Y_Regress, New cZEDGraphService.sGraphStyle(Color.LimeGreen, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
+                    Plotter1.PlotXvsY("Linear", XAxis, Y_Lin, New cZEDGraph.sGraphStyle(Color.Black, cZEDGraph.eCurveMode.Lines))
+                    Plotter1.PlotXvsY("Minimum", XAxis, Y_Min, New cZEDGraph.sGraphStyle(Color.Red, cZEDGraph.eCurveMode.Lines))
+                    Plotter1.PlotXvsY("Maximum", XAxis, Y_Max, New cZEDGraph.sGraphStyle(Color.Green, cZEDGraph.eCurveMode.Lines))
+                    Plotter1.PlotXvsY("Mean", XAxis, Y_Mean, New cZEDGraph.sGraphStyle(Color.Orange, cZEDGraph.eCurveMode.Lines))
+                    Plotter1.PlotXvsY("Median", XAxis, Y_Median, New cZEDGraph.sGraphStyle(Color.Blue, cZEDGraph.eCurveMode.Lines))
+                    Plotter1.PlotXvsY("Curve fit (y=" & Polynom(0).ValRegIndep & " + " & Polynom(1).ValRegIndep & "*x", XAxis, Y_Regress, New cZEDGraph.sGraphStyle(Color.LimeGreen, cZEDGraph.eCurveMode.Lines))
                     Plotter1.SetCaptions(cbX.Text & " vs " & cbY.Text, cbX.Text, cbY.Text)
                     Plotter1.ManuallyScaleXAxisLin(XAxisUInt16(0), XAxisUInt16(XAxisUInt16.Count - 1))
                     Plotter1.GridOnOff(True, True)
                     zgcMain1.Invalidate() : zgcMain1.Refresh()
                     Plotter2.Clear()
-                    Plotter2.PlotXvsY("Sigma", XAxis, Y_Sigma, New cZEDGraphService.sGraphStyle(Color.Blue, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines))
-                    Plotter2.PlotXvsY("# Values", XAxis, Y_Count, New cZEDGraphService.sGraphStyle(Color.Red, ZEDGraphUtil.sGraphStyle.eCurveMode.Lines), True)
+                    Plotter2.PlotXvsY("Sigma", XAxis, Y_Sigma, New cZEDGraph.sGraphStyle(Color.Blue, cZEDGraph.eCurveMode.Lines))
+                    Plotter2.PlotXvsY("# Values", XAxis, Y_Count, New cZEDGraph.sGraphStyle(Color.Red, cZEDGraph.eCurveMode.Lines), True)
                     Plotter2.SetCaptions(cbX.Text & " vs " & cbY.Text, cbX.Text, "Sigma")
                     Plotter2.ManuallyScaleXAxisLin(XAxisUInt16(0), XAxisUInt16(XAxisUInt16.Count - 1))
                     Plotter2.GridOnOff(True, True)

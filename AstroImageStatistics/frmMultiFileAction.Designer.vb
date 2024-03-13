@@ -41,6 +41,7 @@ Partial Class frmMultiFileAction
         cmsMain = New ContextMenuStrip(components)
         cmsMain_ToClipboard = New ToolStripMenuItem()
         tbSinglePixelStat = New TabPage()
+        zgcSinglePixelStat = New ZedGraph.ZedGraphControl()
         tbPixelStat = New TextBox()
         tbLog = New TextBox()
         Label1 = New Label()
@@ -115,7 +116,7 @@ Partial Class frmMultiFileAction
         adgvMain.RowHeadersVisible = False
         adgvMain.ShowEditingIcon = False
         adgvMain.ShowRowErrors = False
-        adgvMain.Size = New Size(1151, 338)
+        adgvMain.Size = New Size(1142, 338)
         adgvMain.SortStringChangedInvokeBeforeDatasourceUpdate = True
         adgvMain.TabIndex = 1
         adgvMain.VirtualMode = True
@@ -148,7 +149,7 @@ Partial Class frmMultiFileAction
         ' scMain.Panel2
         ' 
         scMain.Panel2.Controls.Add(scButtom)
-        scMain.Size = New Size(1540, 1002)
+        scMain.Size = New Size(1531, 1002)
         scMain.SplitterDistance = 345
         scMain.SplitterWidth = 5
         scMain.TabIndex = 2
@@ -156,11 +157,12 @@ Partial Class frmMultiFileAction
         ' tbStars
         ' 
         tbStars.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Right
+        tbStars.Font = New Font("Courier New", 9F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbStars.FormattingEnabled = True
         tbStars.IntegralHeight = False
         tbStars.ItemHeight = 15
         tbStars.Items.AddRange(New Object() {"--- no stars loaded from DSS ---"})
-        tbStars.Location = New Point(1162, 3)
+        tbStars.Location = New Point(1153, 3)
         tbStars.Name = "tbStars"
         tbStars.Size = New Size(375, 339)
         tbStars.TabIndex = 2
@@ -179,8 +181,8 @@ Partial Class frmMultiFileAction
         ' scButtom.Panel2
         ' 
         scButtom.Panel2.Controls.Add(scBottomRight)
-        scButtom.Size = New Size(1536, 641)
-        scButtom.SplitterDistance = 460
+        scButtom.Size = New Size(1527, 639)
+        scButtom.SplitterDistance = 457
         scButtom.SplitterWidth = 5
         scButtom.TabIndex = 1
         ' 
@@ -190,7 +192,7 @@ Partial Class frmMultiFileAction
         pgMain.Location = New Point(4, 3)
         pgMain.Margin = New Padding(4, 3, 4, 3)
         pgMain.Name = "pgMain"
-        pgMain.Size = New Size(452, 635)
+        pgMain.Size = New Size(449, 633)
         pgMain.TabIndex = 0
         ' 
         ' scBottomRight
@@ -208,8 +210,8 @@ Partial Class frmMultiFileAction
         ' 
         scBottomRight.Panel2.Controls.Add(tbLog)
         scBottomRight.Panel2.Controls.Add(Label1)
-        scBottomRight.Size = New Size(1059, 635)
-        scBottomRight.SplitterDistance = 315
+        scBottomRight.Size = New Size(1051, 633)
+        scBottomRight.SplitterDistance = 313
         scBottomRight.TabIndex = 7
         ' 
         ' gbAspects
@@ -220,7 +222,7 @@ Partial Class frmMultiFileAction
         gbAspects.Margin = New Padding(4, 3, 4, 3)
         gbAspects.Name = "gbAspects"
         gbAspects.Padding = New Padding(4, 3, 4, 3)
-        gbAspects.Size = New Size(1050, 309)
+        gbAspects.Size = New Size(1042, 307)
         gbAspects.TabIndex = 6
         gbAspects.TabStop = False
         gbAspects.Text = "Aspect"
@@ -235,7 +237,7 @@ Partial Class frmMultiFileAction
         tcAspect.Margin = New Padding(4, 3, 4, 3)
         tcAspect.Name = "tcAspect"
         tcAspect.SelectedIndex = 0
-        tcAspect.Size = New Size(1043, 280)
+        tcAspect.Size = New Size(1035, 278)
         tcAspect.TabIndex = 0
         ' 
         ' tpFITSHeader
@@ -246,7 +248,7 @@ Partial Class frmMultiFileAction
         tpFITSHeader.Margin = New Padding(4, 3, 4, 3)
         tpFITSHeader.Name = "tpFITSHeader"
         tpFITSHeader.Padding = New Padding(4, 3, 4, 3)
-        tpFITSHeader.Size = New Size(1035, 252)
+        tpFITSHeader.Size = New Size(1027, 250)
         tpFITSHeader.TabIndex = 0
         tpFITSHeader.Text = "FITS header"
         ' 
@@ -259,7 +261,7 @@ Partial Class frmMultiFileAction
         tbFITSHeader.Multiline = True
         tbFITSHeader.Name = "tbFITSHeader"
         tbFITSHeader.ScrollBars = ScrollBars.Both
-        tbFITSHeader.Size = New Size(1027, 246)
+        tbFITSHeader.Size = New Size(1019, 244)
         tbFITSHeader.TabIndex = 2
         tbFITSHeader.WordWrap = False
         ' 
@@ -271,7 +273,7 @@ Partial Class frmMultiFileAction
         tbCombinedROI.Margin = New Padding(4, 3, 4, 3)
         tbCombinedROI.Name = "tbCombinedROI"
         tbCombinedROI.Padding = New Padding(4, 3, 4, 3)
-        tbCombinedROI.Size = New Size(1035, 252)
+        tbCombinedROI.Size = New Size(1028, 251)
         tbCombinedROI.TabIndex = 1
         tbCombinedROI.Text = "(Combined) ROI"
         ' 
@@ -284,7 +286,7 @@ Partial Class frmMultiFileAction
         pbImage.Location = New Point(4, 7)
         pbImage.Margin = New Padding(4, 3, 4, 3)
         pbImage.Name = "pbImage"
-        pbImage.Size = New Size(1025, 241)
+        pbImage.Size = New Size(1018, 240)
         pbImage.SizeMode = PictureBoxSizeMode.Zoom
         pbImage.TabIndex = 5
         pbImage.TabStop = False
@@ -304,25 +306,42 @@ Partial Class frmMultiFileAction
         ' tbSinglePixelStat
         ' 
         tbSinglePixelStat.BackColor = SystemColors.Control
+        tbSinglePixelStat.Controls.Add(zgcSinglePixelStat)
         tbSinglePixelStat.Controls.Add(tbPixelStat)
         tbSinglePixelStat.Location = New Point(4, 24)
         tbSinglePixelStat.Margin = New Padding(4, 3, 4, 3)
         tbSinglePixelStat.Name = "tbSinglePixelStat"
         tbSinglePixelStat.Padding = New Padding(4, 3, 4, 3)
-        tbSinglePixelStat.Size = New Size(1036, 253)
+        tbSinglePixelStat.Size = New Size(1027, 250)
         tbSinglePixelStat.TabIndex = 2
         tbSinglePixelStat.Text = "Single pixel statistics"
         ' 
+        ' zgcSinglePixelStat
+        ' 
+        zgcSinglePixelStat.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        zgcSinglePixelStat.Location = New Point(461, 7)
+        zgcSinglePixelStat.Margin = New Padding(4, 3, 4, 3)
+        zgcSinglePixelStat.Name = "zgcSinglePixelStat"
+        zgcSinglePixelStat.ScrollGrace = 0R
+        zgcSinglePixelStat.ScrollMaxX = 0R
+        zgcSinglePixelStat.ScrollMaxY = 0R
+        zgcSinglePixelStat.ScrollMaxY2 = 0R
+        zgcSinglePixelStat.ScrollMinX = 0R
+        zgcSinglePixelStat.ScrollMinY = 0R
+        zgcSinglePixelStat.ScrollMinY2 = 0R
+        zgcSinglePixelStat.Size = New Size(558, 235)
+        zgcSinglePixelStat.TabIndex = 5
+        ' 
         ' tbPixelStat
         ' 
-        tbPixelStat.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        tbPixelStat.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left
         tbPixelStat.Font = New Font("Courier New", 8.25F, FontStyle.Regular, GraphicsUnit.Point, CByte(0))
         tbPixelStat.Location = New Point(7, 7)
         tbPixelStat.Margin = New Padding(4, 3, 4, 3)
         tbPixelStat.Multiline = True
         tbPixelStat.Name = "tbPixelStat"
         tbPixelStat.ScrollBars = ScrollBars.Both
-        tbPixelStat.Size = New Size(1022, 238)
+        tbPixelStat.Size = New Size(446, 235)
         tbPixelStat.TabIndex = 4
         tbPixelStat.WordWrap = False
         ' 
@@ -335,7 +354,7 @@ Partial Class frmMultiFileAction
         tbLog.Multiline = True
         tbLog.Name = "tbLog"
         tbLog.ScrollBars = ScrollBars.Both
-        tbLog.Size = New Size(1051, 289)
+        tbLog.Size = New Size(1043, 289)
         tbLog.TabIndex = 0
         tbLog.WordWrap = False
         ' 
@@ -355,7 +374,7 @@ Partial Class frmMultiFileAction
         msMain.Location = New Point(0, 0)
         msMain.Name = "msMain"
         msMain.Padding = New Padding(7, 2, 0, 2)
-        msMain.Size = New Size(1568, 24)
+        msMain.Size = New Size(1559, 24)
         msMain.TabIndex = 3
         msMain.Text = "MenuStrip1"
         ' 
@@ -495,7 +514,7 @@ Partial Class frmMultiFileAction
         ssMain.Location = New Point(0, 1050)
         ssMain.Name = "ssMain"
         ssMain.Padding = New Padding(1, 0, 16, 0)
-        ssMain.Size = New Size(1568, 24)
+        ssMain.Size = New Size(1559, 24)
         ssMain.TabIndex = 4
         ssMain.Text = "StatusStrip1"
         ' 
@@ -508,7 +527,7 @@ Partial Class frmMultiFileAction
         ' 
         AutoScaleDimensions = New SizeF(7F, 15F)
         AutoScaleMode = AutoScaleMode.Font
-        ClientSize = New Size(1568, 1074)
+        ClientSize = New Size(1559, 1074)
         Controls.Add(ssMain)
         Controls.Add(scMain)
         Controls.Add(msMain)
@@ -596,4 +615,5 @@ Partial Class frmMultiFileAction
     Friend WithEvents cmsTable As ContextMenuStrip
     Friend WithEvents cmsTable_OpenFile As ToolStripMenuItem
     Friend WithEvents tbStars As ListBox
+    Friend WithEvents zgcSinglePixelStat As ZedGraph.ZedGraphControl
 End Class
