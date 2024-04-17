@@ -5,7 +5,9 @@ Imports System.CodeDom.Compiler
 Imports System.Configuration
 Imports System.DirectoryServices.ActiveDirectory
 Imports System.IO
+Imports DocumentFormat.OpenXml.Vml.Office
 Imports OpenCvSharp
+Imports SixLabors.ImageSharp.Formats.Webp
 
 '''<summary>This form should handle actions that apply to multiple files, e.g. dark statistics, hot pixel search, basic stacking, ...</summary>
 Partial Public Class frmMultiFileAction
@@ -1124,9 +1126,11 @@ Partial Public Class frmMultiFileAction
                 Dim Stars As List(Of DSSFileParser.sStarInfo) = DSSFileParser.ParseInfoFile(InfoFile, AllFiles(Idx).NrStars, AllFiles(Idx).OverallQuality, AllFiles(Idx).SkyBackground)
                 If tbStars.Items.Count = 1 Then
                     tbStars.Items.Clear()
+                    Dim ListOfStars As New List(Of String)
                     For Each Entry As DSSFileParser.sStarInfo In Stars
-                        tbStars.Items.Add(Entry.ToString)
+                        ListOfStars.Add(Entry.ToString)
                     Next Entry
+                    tbStars.Items.AddRange(ListOfStars.ToArray)
                 End If
             End If
             'Load .stackinfo.txt (the stack info) for this file (parsed multiple times but is fast so left like this ...)
@@ -1149,10 +1153,63 @@ Partial Public Class frmMultiFileAction
             Config.ROIDisplay_X = CInt(CurrentEntry(0).ValRegIndep) - (Config.ROIDisplay_Width \ 2)
             Config.ROIDisplay_Y = CInt(CurrentEntry(1).ValRegIndep) - (Config.ROIDisplay_Height \ 2)
             CalcAndDisplayCombinedROI()
+            RunSinglePixelStat(New Point(CurrentEntry(0).ValRegIndep, CurrentEntry(1).ValRegIndep))
         Catch ex As Exception
             'Do nothing ...
         End Try
 
     End Sub
+
+    Private Sub HotPixelDetectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HotPixelDetectionToolStripMenuItem.Click
+
+        Dim FITSReader As New cFITSReader
+        Dim MaxOfAll(,) As UInt16
+
+        'Get max of all
+        Dim AllCheckedFiles As List(Of cFileProps) = GetListFiles(True)
+        Dim FirstFile As Boolean = True
+        For Each FileToProcess As cFileProps In AllCheckedFiles
+            MarkFile(FileToProcess.FileName, Color.Red)
+            DE()
+            'Load defined ROI
+            Dim FileROI As UInt16(,) = FITSReader.ReadInUInt16(FileToProcess.FileName, True, True)
+            If FirstFile = True Then
+                MaxOfAll = AIS.DB.IPP.Copy(FileROI)
+            Else
+                AIS.DB.IPP.MaxEvery(FileROI, MaxOfAll)
+            End If
+            FirstFile = False
+        Next FileToProcess
+
+        'Get statistics
+        Dim SumStat As New AstroNET.Statistics(AIS.DB.IPP)
+        SumStat.DataProcessor_UInt16.ImageData(0).Data = MaxOfAll
+        Dim SumStatStat As AstroNET.Statistics.sStatistics = SumStat.ImageStatistics
+        Dim HotPixelLimit As Int64 = Int64.MaxValue
+        Dim HotPixelCount As System.UInt64 = 0
+        For Each Entry As System.Int64 In SumStatStat.MonochromHistogram_Int.Keys.Reverse
+            HotPixelLimit = Entry
+            HotPixelCount += SumStatStat.MonochromHistogram_Int(Entry)
+            If HotPixelCount > 10000 Then Exit For
+        Next Entry
+
+        'Find all hotpixel
+        tbStars.Items.Clear()
+        Dim HotPixels As New List(Of String)
+        For Idx1 As Integer = 0 To MaxOfAll.GetUpperBound(0)
+            For Idx2 As Integer = 0 To MaxOfAll.GetUpperBound(1)
+                If MaxOfAll(Idx1, Idx2) >= HotPixelLimit Then
+                    HotPixels.Add(Idx1.ValRegIndep.PadLeft(4, " "c) & ":" & Idx2.ValRegIndep.PadLeft(4, " "c) & ":" & MaxOfAll(Idx1, Idx2).ValRegIndep)
+                End If
+            Next Idx2
+        Next Idx1
+        HotPixels.Sort(AddressOf SortByIntensity)
+        tbStars.Items.AddRange(HotPixels.ToArray)
+
+    End Sub
+
+    Private Function SortByIntensity(ByVal A As String, ByVal B As String) As Integer
+        Return Split(A, ":").Last.ValRegIndep.CompareTo(Split(B, ":").Last.ValRegIndep)
+    End Function
 
 End Class
