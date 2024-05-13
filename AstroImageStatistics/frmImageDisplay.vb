@@ -88,7 +88,7 @@ Public Class frmImageDisplay
         Dim Stopper As New cStopper
         Dim ImageDataMin As UInt16 = CUShort(SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key)
         Dim ImageDataMax As UInt16 = CUShort(SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key)
-        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, ImageDataMin, ImageDataMax, AIS.DB.IPP)
+        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, ImageDataMin, ImageDataMax, MyIPP)
         DisplayLUTColorBar()
 
         'Display final image
