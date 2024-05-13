@@ -34,8 +34,8 @@ Public Class AstroImageStatistics_Fun
         If IsNothing(File_RA_JNow_string) Or IsNothing(File_Dec_JNow_string) Then Return "No RA and/or DEC specified in input file."
 
         'Data from QHYCapture (10Micron) are in JNow, so convert to J2000 for PlateSolve
-        Dim File_RA_JNow As Double = AstroParser.ParseRA(File_RA_JNow_string)
-        Dim File_Dec_JNow As Double = AstroParser.ParseDeclination(File_Dec_JNow_string)
+        Dim File_RA_JNow As Double = File_RA_JNow_string.ParseRA
+        Dim File_Dec_JNow As Double = File_Dec_JNow_string.ParseDegree
         Dim File_RA_J2000 As Double = Double.NaN
         Dim File_Dec_J2000 As Double = Double.NaN
         ASCOMDynamic.JNowToJ2000(File_RA_JNow, File_Dec_JNow, Now, File_RA_J2000, File_Dec_J2000)
@@ -61,10 +61,10 @@ Public Class AstroImageStatistics_Fun
         ASCOMDynamic.J2000ToJNow(Solver.SolvedRA * RadToH, Solver.SolvedDec * RadToGrad, Now, JNow_RA_solved, JNow_Dec_solved)
 
         Dim Output As New List(Of String)
-        Output.Add("Start with        RA <" & Ato.AstroCalc.FormatHMS(File_RA_JNow) & ">, DEC <" & Ato.AstroCalc.Format360Degree(File_Dec_JNow) & "> (JNow file string)")
-        Output.Add("                  RA <" & Ato.AstroCalc.FormatHMS(File_RA_J2000) & ">, DEC <" & Ato.AstroCalc.Format360Degree(File_Dec_J2000) & "> (J2000)")
-        Output.Add("Solved as       : RA <" & Ato.AstroCalc.FormatHMS(Solver.SolvedRA * RadToH) & ">, DEC <" & Ato.AstroCalc.Format360Degree(Solver.SolvedDec * RadToGrad) & "> (J2000)")
-        Output.Add("                  RA <" & Ato.AstroCalc.FormatHMS(JNow_RA_solved) & ">, DEC <" & Ato.AstroCalc.Format360Degree(JNow_Dec_solved) & "> (JNow)")
+        Output.Add("Start with        RA <" & File_RA_JNow.ToHMS & ">, DEC <" & File_Dec_JNow.ToDegMinSec & "> (JNow file string)")
+        Output.Add("                  RA <" & File_RA_J2000.ToHMS & ">, DEC <" & File_Dec_J2000.ToDegMinSec & "> (J2000)")
+        Output.Add("Solved as       : RA <" & (Solver.SolvedRA * RadToH).ToHMS & ">, DEC <" & (Solver.SolvedDec * RadToGrad).ToDegMinSec & "> (J2000)")
+        Output.Add("                  RA <" & JNow_RA_solved.ToHMS & ">, DEC <" & JNow_Dec_solved.ToDegMinSec & "> (JNow)")
         Output.Add("Error           :  RA <" & Solver.ErrorRA.ValRegIndep & " "">, DEC < " & Solver.ErrorDec.ValRegIndep & " "">")
         Output.Add("Error results   :  RA <" & Solver.ErrorRA.ValRegIndep & " "">, DEC < " & Solver.ErrorDec.ValRegIndep & " "">")
         Output.Add(" <Pixel>        :  RA <" & Solver.PixelErrorRA.ValRegIndep & " pixel>, DEC < " & Solver.PixelErrorDec.ValRegIndep & " pixel>")
