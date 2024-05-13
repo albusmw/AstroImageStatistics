@@ -507,7 +507,7 @@ Public Class MainForm
             '4) Save and open
             Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
             workbook.SaveAs(FileToGenerate)
-            Process.Start(FileToGenerate)
+            AstroImageStatistics.Ato.Utils.StartWithItsEXE(FileToGenerate)
 
         End Using
 
@@ -924,9 +924,9 @@ Public Class MainForm
         'Data from QHYCapture (10Micron) are in JNow, so convert to J2000 for PlateSolve
         Dim File_RA_J2000 As Double = Double.NaN
         Dim File_Dec_J2000 As Double = Double.NaN
-        ASCOMDynamic.JNowToJ2000(AstroParser.ParseRA(File_RA_JNow), AstroParser.ParseDeclination(File_Dec_JNow), File_RA_J2000, File_Dec_J2000)
+        ASCOMDynamic.JNowToJ2000(File_RA_JNow.ParseRA, File_Dec_JNow.ParseDegree, File_RA_J2000, File_Dec_J2000)
 
-        Dim AladinCall As String = Ato.AstroCalc.FormatHMS(File_RA_J2000) & " " & Ato.AstroCalc.Format360Degree(File_Dec_J2000)
+        Dim AladinCall As String = File_RA_J2000.ToHMS & " " & File_Dec_J2000.ToDegMinSec
 
         'Possible resolvers:
         'http://tdc-www.harvard.edu/astro.image.html

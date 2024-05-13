@@ -469,7 +469,7 @@ Partial Public Class frmMultiFileAction
 
             Dim StackFileName_SigmaClip As String = IO.Path.Combine(Config.Gen_root, Config.Gen_OutputFileSigmaClip)
             cFITSWriter.Write(StackFileName_SigmaClip, Calculated, cFITSWriter.eBitPix.Single)
-            If Config.Stat_OpenStackedFile Then AstroImageStatistics.Ato.Utils.StartWithItsEXE(StackFileName_SigmaClip)
+            If Config.Stat_OpenStackedFile Then Ato.Utils.StartWithItsEXE(StackFileName_SigmaClip)
 
             Log("Sigma-clipped file <" & StackFileName_SigmaClip & "> generated")
 
@@ -508,8 +508,8 @@ Partial Public Class frmMultiFileAction
             cFITSWriter.Write(StackFileName_float32, OutputData_Float32, cFITSWriter.eBitPix.Single)
 
             'Open file(s)
-            If Config.Stat_OpenStackedFile Then AstroImageStatistics.Ato.Utils.StartWithItsEXE(StackFileName_UInt16)
-            If Config.Stat_OpenStackedFile Then AstroImageStatistics.Ato.Utils.StartWithItsEXE(StackFileName_float32)
+            If Config.Stat_OpenStackedFile Then Ato.Utils.StartWithItsEXE(StackFileName_UInt16)
+            If Config.Stat_OpenStackedFile Then Ato.Utils.StartWithItsEXE(StackFileName_float32)
 
         End If
 
@@ -963,7 +963,7 @@ Partial Public Class frmMultiFileAction
             'Save and open
             Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
             workbook.SaveAs(FileToGenerate)
-            Process.Start(FileToGenerate)
+            Ato.Utils.StartWithItsEXE(FileToGenerate)
 
         End Using
 
