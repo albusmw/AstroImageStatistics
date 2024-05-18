@@ -162,54 +162,56 @@ Public Class MainForm
     '''<param name="Stats">Statistics data to plot.</param>
     Private Sub PlotStatistics(ByVal FileName As String, ByRef Stats As AstroNET.Statistics.sStatistics)
         AIS.DB.AllPlots.Add(New cZEDGraphForm)
-        Dim Disp As cZEDGraphForm = AIS.DB.AllPlots.Item(AIS.DB.AllPlots.Count - 1)
-        AddHandler Disp.PointValueHandler, AddressOf PointValueHandler
-        Disp.PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
-        Dim XAxisMargin As Integer = 128                                    'axis margin to see the most outer values
-        Select Case Stats.DataMode
-            Case AstroNET.Statistics.eDataMode.Fixed
-                'Plot histogram
-                Disp.Plotter.Clear()
-                If IsNothing(Stats.BayerHistograms_Int) = False And AIS.Config.CalcStat_Bayer Then
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Int(0, 0), 1, New cZEDGraph.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Int(0, 1), 1, New cZEDGraph.sGraphStyle(Color.LightGreen, AIS.Config.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Int(1, 0), 1, New cZEDGraph.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Int(1, 1), 1, New cZEDGraph.sGraphStyle(Color.Blue, AIS.Config.PlotStyle, 1))
-                End If
-                If IsNothing(Stats.MonochromHistogram_Int) = False And AIS.Config.CalcStat_Mono Then
-                    Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Int, 1, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
-                End If
-                Disp.Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
-            Case AstroNET.Statistics.eDataMode.Float
-                'Plot histogram
-                Disp.Plotter.Clear()
-                If IsNothing(Stats.BayerHistograms_Float32) = False And AIS.Config.CalcStat_Bayer Then
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Float32(0, 0), 1, New cZEDGraph.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Float32(0, 1), 1, New cZEDGraph.sGraphStyle(Color.LightGreen, AIS.Config.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Float32(1, 0), 1, New cZEDGraph.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
-                    Disp.Plotter.PlotXvsY(AIS.Config.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Float32(1, 1), 1, New cZEDGraph.sGraphStyle(Color.Blue, AIS.Config.PlotStyle, 1))
-                End If
-                If IsNothing(Stats.MonochromHistogram_Float32) = False And AIS.Config.CalcStat_Mono Then
-                    Disp.Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Float32, 1, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
-                End If
-                Disp.Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
-        End Select
-        Disp.Plotter.AutoScaleYAxisLog()
-        Disp.Plotter.GridOnOff(True, True)
-        Disp.Plotter.ForceUpdate()
-        Disp.Plotter.MaximizePlotArea()
-        'Set style of the window
-        Disp.Plotter.SetCaptions(String.Empty, "Pixel value", "# of pixel with this value")
-        Disp.HostForm.Text = FileName
-        Disp.HostForm.Icon = Me.Icon
-        Disp.Tag = "Statistics"
-        'Position window below the main window
-        If AIS.Config.StackGraphs = True Then
-            Disp.HostForm.Left = Me.Left
-            Disp.HostForm.Top = Me.Top + Me.Height
-            Disp.HostForm.Height = Me.Height
-            Disp.HostForm.Width = Me.Width
-        End If
+        Dim Disp As cZEDGraphForm = AIS.DB.AllPlots.Last
+        With Disp
+            AddHandler .PointValueHandler, AddressOf PointValueHandler
+            .PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
+            Dim XAxisMargin As Integer = 128                                    'axis margin to see the most outer values
+            Select Case Stats.DataMode
+                Case AstroNET.Statistics.eDataMode.Fixed
+                    'Plot histogram
+                    .Plotter.Clear()
+                    If IsNothing(Stats.BayerHistograms_Int) = False And AIS.Config.CalcStat_Bayer Then
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Int(0, 0), 1, New cZEDGraph.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Int(0, 1), 1, New cZEDGraph.sGraphStyle(Color.LightGreen, AIS.Config.PlotStyle, 1))
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Int(1, 0), 1, New cZEDGraph.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Int(1, 1), 1, New cZEDGraph.sGraphStyle(Color.Blue, AIS.Config.PlotStyle, 1))
+                    End If
+                    If IsNothing(Stats.MonochromHistogram_Int) = False And AIS.Config.CalcStat_Mono Then
+                        .Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Int, 1, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
+                    End If
+                    .Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
+                Case AstroNET.Statistics.eDataMode.Float
+                    'Plot histogram
+                    .Plotter.Clear()
+                    If IsNothing(Stats.BayerHistograms_Float32) = False And AIS.Config.CalcStat_Bayer Then
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(0) & "[0,0]", Stats.BayerHistograms_Float32(0, 0), 1, New cZEDGraph.sGraphStyle(Color.Red, AIS.Config.PlotStyle, 1))
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(1) & "[0,1]", Stats.BayerHistograms_Float32(0, 1), 1, New cZEDGraph.sGraphStyle(Color.LightGreen, AIS.Config.PlotStyle, 1))
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(2) & "[1,0]", Stats.BayerHistograms_Float32(1, 0), 1, New cZEDGraph.sGraphStyle(Color.Green, AIS.Config.PlotStyle, 1))
+                        .Plotter.PlotXvsY(AIS.Config.BayerPatternName(3) & "[1,1]", Stats.BayerHistograms_Float32(1, 1), 1, New cZEDGraph.sGraphStyle(Color.Blue, AIS.Config.PlotStyle, 1))
+                    End If
+                    If IsNothing(Stats.MonochromHistogram_Float32) = False And AIS.Config.CalcStat_Mono Then
+                        .Plotter.PlotXvsY("Mono histo", Stats.MonochromHistogram_Float32, 1, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
+                    End If
+                    .Plotter.ManuallyScaleXAxisLin(Stats.MonoStatistics_Int.Min.Key - XAxisMargin, Stats.MonoStatistics_Int.Max.Key + XAxisMargin)
+            End Select
+            .Plotter.AutoScaleYAxisLog()
+            .Plotter.GridOnOff(True, True)
+            .Plotter.ForceUpdate()
+            .Plotter.MaximizePlotArea()
+            'Set style of the window
+            .Plotter.SetCaptions(String.Empty, "Pixel value", "# of pixel with this value")
+            .HostForm.Text = FileName
+            .HostForm.Icon = Me.Icon
+            .Tag = "Statistics"
+            'Position window below the main window
+            If AIS.Config.StackGraphs = True Then
+                .HostForm.Left = Me.Left
+                .HostForm.Top = Me.Top + Me.Height
+                .HostForm.Height = Me.Height
+                .HostForm.Width = Me.Width
+            End If
+        End With
     End Sub
 
     Private Sub PlotStatistics(ByVal FileName As String, ByRef Stats() As Ato.cSingleValueStatistics)
@@ -239,24 +241,26 @@ Public Class MainForm
 
     Private Sub PlotStatistics(ByVal PlotName As String, ByRef Trace As Dictionary(Of UInt16, UInt32), ByVal XNorm As Double)
         Dim Disp As New cZEDGraphForm
-        Disp.PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
-        'Plot data
-        Disp.Plotter.Clear()
-        Disp.Plotter.PlotXvsY("Data", Trace, XNorm, 1, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
-        Disp.Plotter.ManuallyScaleXAxisLin(Trace.Keys.First, Trace.Keys.Last)
-        Disp.Plotter.AutoScaleYAxisLog()
-        Disp.Plotter.GridOnOff(True, True)
-        Disp.Plotter.ForceUpdate()
-        'Set style of the window
-        Disp.Plotter.SetCaptions(String.Empty, "X", "Y")
-        Disp.Plotter.MaximizePlotArea()
-        Disp.HostForm.Text = PlotName
-        Disp.HostForm.Icon = Me.Icon
-        'Position window below the main window
-        Disp.HostForm.Left = Me.Left
-        Disp.HostForm.Top = Me.Top + Me.Height
-        Disp.HostForm.Height = Me.Height
-        Disp.HostForm.Width = Me.Width
+        With Disp
+            .PlotData("Test", New Double() {1, 2, 3, 4}, Color.Red)
+            'Plot data
+            .Plotter.Clear()
+            .Plotter.PlotXvsY("Data", Trace, XNorm, 1, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
+            .Plotter.ManuallyScaleXAxisLin(Trace.Keys.First, Trace.Keys.Last)
+            .Plotter.AutoScaleYAxisLog()
+            .Plotter.GridOnOff(True, True)
+            .Plotter.ForceUpdate()
+            'Set style of the window
+            .Plotter.SetCaptions(String.Empty, "X", "Y")
+            .Plotter.MaximizePlotArea()
+            .HostForm.Text = PlotName
+            .HostForm.Icon = Me.Icon
+            'Position window below the main window
+            .HostForm.Left = Me.Left
+            .HostForm.Top = Me.Top + Me.Height
+            .HostForm.Height = Me.Height
+            .HostForm.Width = Me.Width
+        End With
     End Sub
 
     Private Sub PlotStatistics(ByVal FileName As String, ByRef Stats As Dictionary(Of Double, AstroImageStatistics.AstroNET.Statistics.cSingleChannelStatistics_Int))
@@ -353,7 +357,6 @@ Public Class MainForm
                 Exit Sub
             End If
         Next File
-
     End Sub
 
     Private Sub tsmiFile_OpenLastFile_Click(sender As Object, e As EventArgs) Handles tsmiFile_OpenLastFile.Click
