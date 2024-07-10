@@ -86,15 +86,15 @@ Public Class frmImageDisplay
     Public Sub GenerateDisplayImage()
 
         Dim Stopper As New cStopper
-        Dim ImageDataMin As UInt16 = CUShort(SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key)
-        Dim ImageDataMax As UInt16 = CUShort(SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key)
-        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, ImageDataMin, ImageDataMax, MyIPP)
+        ImageFromData.ColorMap_LowerEnd = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
+        ImageFromData.ColorMap_UpperEnd = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
+        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, MyIPP)
         DisplayLUTColorBar()
 
         'Display final image
         Stopper.Tic()
-        pbMain.BackColor = ImageFromData.BackColor
-        pbZoomed.BackColor = ImageFromData.BackColor
+        pbMain.BackColor = Color.Black
+        pbZoomed.BackColor = Color.Black
         ImageFromData.OutputImage.UnlockBits()
         pbMain.Image = ImageFromData.OutputImage.BitmapToProcess
         Stopper.Toc("Display image")
@@ -130,9 +130,9 @@ Public Class frmImageDisplay
         'Special handling for certain property changes that need additional calculation
         Select Case pgMain.SelectedGridItem.PropertyDescriptor.Name
             Case "MinCutOff_pct"
-                ImageFromData.MinCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
+                'ImageFromData.MinCutOff_AD = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
             Case "MaxCutOff_pct"
-                ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
+                'ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
         End Select
         DisplayCurrentProps()
         GenerateDisplayImage()
@@ -142,27 +142,29 @@ Public Class frmImageDisplay
         Dim PropToChange As cImageFromData = CType(pgMain.SelectedObject, cImageFromData)
         Select Case pgMain.SelectedGridItem.PropertyDescriptor.Name
             Case "MinCutOff_pct"
-                PropToChange.MinCutOff_pct += Math.Sign(e.Delta) * PropToChange.PctStepSize
-                If PropToChange.MinCutOff_pct < 0.0 Then PropToChange.MinCutOff_pct = 0.0
-                ImageFromData.MinCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
+                'PropToChange.MinCutOff_pct += Math.Sign(e.Delta) * PropToChange.PctStepSize
+                'If PropToChange.MinCutOff_pct < 0.0 Then PropToChange.MinCutOff_pct = 0.0
+                'ImageFromData.MinCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
             Case "MaxCutOff_pct"
-                PropToChange.MaxCutOff_pct += Math.Sign(e.Delta) * PropToChange.PctStepSize
-                If PropToChange.MaxCutOff_pct > 100.0 Then PropToChange.MaxCutOff_pct = 100.0
-                ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
+                'PropToChange.MaxCutOff_pct += Math.Sign(e.Delta) * PropToChange.PctStepSize
+                'If PropToChange.MaxCutOff_pct > 100.0 Then PropToChange.MaxCutOff_pct = 100.0
+                'ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
             Case "MinCutOff_ADU"
+                'Adjust the minimum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
-                    ImageFromData.MinCutOff_ADU = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.MinCutOff_ADU)
+                    ImageFromData.ColorMap_LowerEnd = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_LowerEnd)
                 Else
-                    ImageFromData.MinCutOff_ADU = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.MinCutOff_ADU)
+                    ImageFromData.ColorMap_LowerEnd = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_LowerEnd)
                 End If
             Case "MaxCutOff_ADU"
+                'Adjust the maximum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
-                    ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.MaxCutOff_ADU)
+                    ImageFromData.ColorMap_UpperEnd = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_UpperEnd)
                 Else
-                    ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.MaxCutOff_ADU)
+                    ImageFromData.ColorMap_UpperEnd = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_UpperEnd)
                 End If
             Case "Gamma"
-                PropToChange.Gamma += Math.Sign(e.Delta) * PropToChange.PctStepSize
+                PropToChange.ColorMap_Gamma += Math.Sign(e.Delta) * PropToChange.PctStepSize
         End Select
         DisplayCurrentProps()
         GenerateDisplayImage()
@@ -331,8 +333,8 @@ Public Class frmImageDisplay
     End Sub
 
     Private Sub cms_SetCutOff_Click(sender As Object, e As EventArgs) Handles cms_SetCutOff.Click
-        ImageFromData.MinCutOff_ADU = ZoomStatistics.MonoStatistics_Int.Min.Key
-        ImageFromData.MaxCutOff_ADU = ZoomStatistics.MonoStatistics_Int.Max.Key
+        ImageFromData.ColorMap_LowerEnd = ZoomStatistics.MonoStatistics_Int.Min.Key
+        ImageFromData.ColorMap_UpperEnd = ZoomStatistics.MonoStatistics_Int.Max.Key
         DisplayCurrentProps()
         GenerateDisplayImage()
     End Sub

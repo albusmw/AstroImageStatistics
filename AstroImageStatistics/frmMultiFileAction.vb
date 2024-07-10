@@ -771,10 +771,14 @@ Partial Public Class frmMultiFileAction
         Dim SumStatStat As AstroNET.Statistics.sStatistics = SumStat.ImageStatistics
 
         'Display the image
-        ROIImageGenerator.ColorMap = Config.Stack_ROIDisplay_ColorMode
-        ROIImageGenerator.GenerateDisplayImage(ImageToDisplay, CUShort(SumStatStat.MonoStatistics_Int.Min.Key), CUShort(SumStatStat.MonoStatistics_Int.Max.Key), AIS.DB.IPP)
-        ROIImageGenerator.OutputImage.UnlockBits()
-        pbImage.Image = ROIImageGenerator.OutputImage.BitmapToProcess
+        With ROIImageGenerator
+            .ColorMap = Config.Stack_ROIDisplay_ColorMode
+            .ColorMap_LowerEnd = SumStatStat.MonoStatistics_Int.Min.Key
+            .ColorMap_UpperEnd = SumStatStat.MonoStatistics_Int.Max.Key
+            .GenerateDisplayImage(ImageToDisplay, AIS.DB.IPP)
+            .OutputImage.UnlockBits()
+            pbImage.Image = .OutputImage.BitmapToProcess
+        End With
 
     End Sub
 
@@ -1126,11 +1130,11 @@ Partial Public Class frmMultiFileAction
                 Dim Stars As List(Of DSSFileParser.sStarInfo) = DSSFileParser.ParseInfoFile(InfoFile, AllFiles(Idx).NrStars, AllFiles(Idx).OverallQuality, AllFiles(Idx).SkyBackground)
                 If tbStars.Items.Count = 1 Then
                     tbStars.Items.Clear()
-                    Dim ListOfStars As New List(Of String)
-                    For Each Entry As DSSFileParser.sStarInfo In Stars
-                        ListOfStars.Add(Entry.ToString)
-                    Next Entry
-                    tbStars.Items.AddRange(ListOfStars.ToArray)
+                    Dim ListOfStars(Stars.Count - 1) As String
+                    For StarIdx As Integer = 0 To Stars.Count - 1
+                        ListOfStars(StarIdx) = Stars(StarIdx).Format
+                    Next StarIdx
+                    tbStars.Items.AddRange(ListOfStars)
                 End If
             End If
             'Load .stackinfo.txt (the stack info) for this file (parsed multiple times but is fast so left like this ...)
@@ -1149,7 +1153,7 @@ Partial Public Class frmMultiFileAction
 
     Private Sub tbStars_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tbStars.SelectedIndexChanged
         Try
-            Dim CurrentEntry As String() = CStr(tbStars.SelectedItem).Split(":")
+            Dim CurrentEntry As String() = CStr(tbStars.SelectedItem).Split("|")
             Config.ROIDisplay_X = CInt(CurrentEntry(0).ValRegIndep) - (Config.ROIDisplay_Width \ 2)
             Config.ROIDisplay_Y = CInt(CurrentEntry(1).ValRegIndep) - (Config.ROIDisplay_Height \ 2)
             CalcAndDisplayCombinedROI()

@@ -1238,8 +1238,8 @@ Public Class MainForm
         ImageDisplay.SingleStatCalc = AIS.DB.LastFile_Data
         ImageDisplay.StatToUsed = AIS.DB.LastFile_Statistics
         ImageDisplay.MyIPP = AIS.DB.IPP
-        ImageDisplay.ImageFromData.MinCutOff_ADU = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Min.Key
-        ImageDisplay.ImageFromData.MaxCutOff_ADU = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key
+        ImageDisplay.ImageFromData.ColorMap_LowerEnd = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Min.Key
+        ImageDisplay.ImageFromData.ColorMap_UpperEnd = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key
         ImageDisplay.GenerateDisplayImage()
     End Sub
 
