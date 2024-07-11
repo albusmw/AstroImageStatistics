@@ -260,7 +260,9 @@
     <PackageReference Include="Irony" Version="1.5.1" />
     <PackageReference Include="Irony.NetCore" Version="1.1.11" />
     <PackageReference Include="OpenCvSharp4" Version="4.10.0.20240616" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.10.0.20240616" />
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20240616" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20240616" />
     <PackageReference Include="OpenMacroBoard.SDK" Version="6.0.0" />
     <PackageReference Include="SixLabors.Fonts" Version="2.0.4" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
