@@ -1164,7 +1164,11 @@ Partial Public Class frmMultiFileAction
 
     End Sub
 
-    Private Sub HotPixelDetectionToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles HotPixelDetectionToolStripMenuItem.Click
+    Private Function SortByIntensity(ByVal A As String, ByVal B As String) As Integer
+        Return Split(A, ":").Last.ValRegIndep.CompareTo(Split(B, ":").Last.ValRegIndep)
+    End Function
+
+    Private Sub tsmiAction_HotPixel_Method1_Click(sender As Object, e As EventArgs) Handles tsmiAction_HotPixel_Method1.Click
 
         Dim FITSReader As New cFITSReader
         Dim MaxOfAll(,) As UInt16
@@ -1212,8 +1216,74 @@ Partial Public Class frmMultiFileAction
 
     End Sub
 
-    Private Function SortByIntensity(ByVal A As String, ByVal B As String) As Integer
-        Return Split(A, ":").Last.ValRegIndep.CompareTo(Split(B, ":").Last.ValRegIndep)
-    End Function
+    Private Sub tsmiAction_HotPixel_Method2_Click(sender As Object, e As EventArgs) Handles tsmiAction_HotPixel_Method2.Click
+
+        Const UInt32One As UInt32 = 1
+
+        'For each pixel take the area around and check if the value is significantly too high
+        Dim FixedPixelCount As UInt32 = 0
+        Dim HotPixelLimit As Double = 5
+        With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
+            For Idx1 As Integer = 1 To .NAXIS1 - 2
+                For Idx2 As Integer = 1 To .NAXIS2 - 2
+                    Dim SurSum As New Ato.cSingleValueStatistics(True)
+                    SurSum.AddValue(.Data(Idx1 - 1, Idx2 - 1))
+                    SurSum.AddValue(.Data(Idx1 - 1, Idx2))
+                    SurSum.AddValue(.Data(Idx1 - 1, Idx2 + 1))
+                    SurSum.AddValue(.Data(Idx1, Idx2 - 1))
+                    SurSum.AddValue(.Data(Idx1, Idx2 + 1))
+                    SurSum.AddValue(.Data(Idx1 + 1, Idx2 - 1))
+                    SurSum.AddValue(.Data(Idx1 + 1, Idx2))
+                    SurSum.AddValue(.Data(Idx1 + 1, Idx2 + 1))
+                    If .Data(Idx1, Idx2) > HotPixelLimit * SurSum.Percentile(50) Then
+                        .Data(Idx1, Idx2) = CUShort(SurSum.Percentile(50))
+                        FixedPixelCount += UInt32One
+                    End If
+                Next Idx2
+            Next Idx1
+        End With
+        Log.Log("Fixed " & FixedPixelCount.ValRegIndep & " pixel")
+        Idle()
+
+    End Sub
+
+    Private Sub tsmiAction_HotPixel_Fix_Click(sender As Object, e As EventArgs) Handles tsmiAction_HotPixel_Fix.Click
+
+        With ofdMain
+            .Filter = "Hot pixel file (*.hotpixel.txt)|*.hotpixel.txt"
+            If .ShowDialog <> DialogResult.OK Then Exit Sub
+        End With
+        Dim HotPixel As String() = System.IO.File.ReadAllLines(ofdMain.FileName)
+
+        Dim ReplaceLog As New List(Of String)
+        With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
+            For Idx As Integer = 0 To HotPixel.GetUpperBound(0)
+                Dim X As Integer = CInt(HotPixel(Idx).Substring(0, 4))
+                Dim Y As Integer = CInt(HotPixel(Idx).Substring(5, 4))
+                'Run median
+                Dim SurPix As New List(Of UInt16)
+                SurPix.Add(.Data(X - 1, Y - 1))
+                SurPix.Add(.Data(X - 1, Y))
+                SurPix.Add(.Data(X - 1, Y + 1))
+                SurPix.Add(.Data(X, Y - 1))
+                SurPix.Add(.Data(X, Y))
+                SurPix.Add(.Data(X, Y + 1))
+                SurPix.Add(.Data(X + 1, Y - 1))
+                SurPix.Add(.Data(X + 1, Y))
+                SurPix.Add(.Data(X + 1, Y + 1))
+                SurPix.Sort()
+                Dim NewVal As UInt16 = SurPix(SurPix.Count \ 2)
+                'Replace wrong pixel
+                ReplaceLog.Add(X.ValRegIndep & ":" & Y.ValRegIndep & ": " & .Data(X, Y).ValRegIndep & "->" & NewVal.ValRegIndep)
+                .Data(X, Y) = NewVal
+            Next Idx
+        End With
+        Log.Log(ReplaceLog)
+        Log.Log("Fixed " & HotPixel.Count & " pixel")
+
+        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
+        Log.Log(StatisticsReport)
+
+    End Sub
 
 End Class

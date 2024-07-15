@@ -52,7 +52,6 @@ Partial Class MainForm
         tsmiAnalysis_Plot_Replot = New ToolStripMenuItem()
         tsmiAnalysis_Plot_ADUQuant = New ToolStripMenuItem()
         tsmiAnalysisHotPixel = New ToolStripMenuItem()
-        tsmiAnalysisHotPixel_detect = New ToolStripMenuItem()
         tsmiAnalysisHotPixel_fixfile = New ToolStripMenuItem()
         ToolStripMenuItem7 = New ToolStripSeparator()
         tsmiAnalysis_ManualColorBalancer = New ToolStripMenuItem()
@@ -323,32 +322,26 @@ Partial Class MainForm
         ' tsmiAnalysis_Plot_Replot
         ' 
         tsmiAnalysis_Plot_Replot.Name = "tsmiAnalysis_Plot_Replot"
-        tsmiAnalysis_Plot_Replot.Size = New Size(167, 22)
+        tsmiAnalysis_Plot_Replot.Size = New Size(180, 22)
         tsmiAnalysis_Plot_Replot.Text = "Re-plot statistics"
         ' 
         ' tsmiAnalysis_Plot_ADUQuant
         ' 
         tsmiAnalysis_Plot_ADUQuant.Name = "tsmiAnalysis_Plot_ADUQuant"
-        tsmiAnalysis_Plot_ADUQuant.Size = New Size(167, 22)
+        tsmiAnalysis_Plot_ADUQuant.Size = New Size(180, 22)
         tsmiAnalysis_Plot_ADUQuant.Text = "ADU quantization"
         ' 
         ' tsmiAnalysisHotPixel
         ' 
-        tsmiAnalysisHotPixel.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisHotPixel_detect, tsmiAnalysisHotPixel_fixfile})
+        tsmiAnalysisHotPixel.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisHotPixel_fixfile})
         tsmiAnalysisHotPixel.Name = "tsmiAnalysisHotPixel"
         tsmiAnalysisHotPixel.Size = New Size(222, 22)
         tsmiAnalysisHotPixel.Text = "Hot pixel"
         ' 
-        ' tsmiAnalysisHotPixel_detect
-        ' 
-        tsmiAnalysisHotPixel_detect.Name = "tsmiAnalysisHotPixel_detect"
-        tsmiAnalysisHotPixel_detect.Size = New Size(159, 22)
-        tsmiAnalysisHotPixel_detect.Text = "Detect"
-        ' 
         ' tsmiAnalysisHotPixel_fixfile
         ' 
         tsmiAnalysisHotPixel_fixfile.Name = "tsmiAnalysisHotPixel_fixfile"
-        tsmiAnalysisHotPixel_fixfile.Size = New Size(159, 22)
+        tsmiAnalysisHotPixel_fixfile.Size = New Size(180, 22)
         tsmiAnalysisHotPixel_fixfile.Text = "Fix based on file"
         ' 
         ' ToolStripMenuItem7
@@ -1024,7 +1017,6 @@ Partial Class MainForm
     Friend WithEvents tsmiAnalysis_Plot_ADUQuant As ToolStripMenuItem
     Friend WithEvents tsmiAnalysisPixelMap As ToolStripMenuItem
     Friend WithEvents tsmiAnalysisPixelMap_SaveFor As ToolStripMenuItem
-    Friend WithEvents tsmiAnalysisHotPixel_detect As ToolStripMenuItem
     Friend WithEvents tsmiAnalysisHotPixel_fixfile As ToolStripMenuItem
     Friend WithEvents MedianWithinNETToolStripMenuItem As ToolStripMenuItem
     Friend WithEvents tsmiProcessing_MedianFilter As ToolStripMenuItem

@@ -292,7 +292,7 @@ Public Class MainForm
     Private Sub Form1_Load(sender As Object, e As EventArgs) Handles MyBase.Load
 
         'Get build data
-        Text &= Ato.Utils.GetBuildDate
+        Me.Text = GetBuildDateTime.GetMainformTitle
 
         'Load IPP
         Dim IPPLoadError = String.Empty
@@ -1115,74 +1115,6 @@ Public Class MainForm
         System.IO.File.WriteAllLines(sfdMain.FileName, CriteriaPixel.ToArray)
         Log.Log("Found " & CriteriaPixel.Count.ToString.Trim & " pixel")
         Idle()
-    End Sub
-
-    Private Sub tsmiAnalysisHotPixel_detect_Click(sender As Object, e As EventArgs) Handles tsmiAnalysisHotPixel_detect.Click
-        'For each pixel take the area around and check if the value is significantly too high
-        Dim FixedPixelCount As UInt32 = 0
-        Dim HotPixelLimit As Double = 5
-        Running()
-        With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
-            For Idx1 As Integer = 1 To .NAXIS1 - 2
-                For Idx2 As Integer = 1 To .NAXIS2 - 2
-                    Dim SurSum As New Ato.cSingleValueStatistics(True)
-                    SurSum.AddValue(.Data(Idx1 - 1, Idx2 - 1))
-                    SurSum.AddValue(.Data(Idx1 - 1, Idx2))
-                    SurSum.AddValue(.Data(Idx1 - 1, Idx2 + 1))
-                    SurSum.AddValue(.Data(Idx1, Idx2 - 1))
-                    SurSum.AddValue(.Data(Idx1, Idx2 + 1))
-                    SurSum.AddValue(.Data(Idx1 + 1, Idx2 - 1))
-                    SurSum.AddValue(.Data(Idx1 + 1, Idx2))
-                    SurSum.AddValue(.Data(Idx1 + 1, Idx2 + 1))
-                    If .Data(Idx1, Idx2) > HotPixelLimit * SurSum.Percentile(50) Then
-                        .Data(Idx1, Idx2) = CUShort(SurSum.Percentile(50))
-                        FixedPixelCount += UInt32One
-                    End If
-                Next Idx2
-            Next Idx1
-        End With
-        Log.Log("Fixed " & FixedPixelCount.ValRegIndep & " pixel")
-        Idle()
-    End Sub
-
-    Private Sub tsmiAnalysisHotPixel_fixfile_Click(sender As Object, e As EventArgs) Handles tsmiAnalysisHotPixel_fixfile.Click
-        With ofdMain
-            .Filter = "Hot pixel file (*.hotpixel.txt)|*.hotpixel.txt"
-            If .ShowDialog <> DialogResult.OK Then Exit Sub
-        End With
-        Dim HotPixel As String() = System.IO.File.ReadAllLines(ofdMain.FileName)
-
-        Running()
-        Dim ReplaceLog As New List(Of String)
-        With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
-            For Idx As Integer = 0 To HotPixel.GetUpperBound(0)
-                Dim X As Integer = CInt(HotPixel(Idx).Substring(0, 4))
-                Dim Y As Integer = CInt(HotPixel(Idx).Substring(5, 4))
-                'Run median
-                Dim SurPix As New List(Of UInt16)
-                SurPix.Add(.Data(X - 1, Y - 1))
-                SurPix.Add(.Data(X - 1, Y))
-                SurPix.Add(.Data(X - 1, Y + 1))
-                SurPix.Add(.Data(X, Y - 1))
-                SurPix.Add(.Data(X, Y))
-                SurPix.Add(.Data(X, Y + 1))
-                SurPix.Add(.Data(X + 1, Y - 1))
-                SurPix.Add(.Data(X + 1, Y))
-                SurPix.Add(.Data(X + 1, Y + 1))
-                SurPix.Sort()
-                Dim NewVal As UInt16 = SurPix(SurPix.Count \ 2)
-                'Replace wrong pixel
-                ReplaceLog.Add(X.ValRegIndep & ":" & Y.ValRegIndep & ": " & .Data(X, Y).ValRegIndep & "->" & NewVal.ValRegIndep)
-                .Data(X, Y) = NewVal
-            Next Idx
-        End With
-        Log.Log(ReplaceLog)
-        Log.Log("Fixed " & HotPixel.Count & " pixel")
-
-        Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        Log.Log(StatisticsReport)
-        Idle()
-
     End Sub
 
     Private Sub MedianWithinNETToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles MedianWithinNETToolStripMenuItem.Click

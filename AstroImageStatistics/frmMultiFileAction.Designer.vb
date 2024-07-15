@@ -67,11 +67,15 @@ Partial Class frmMultiFileAction
         tsmiAction_SelectAll = New ToolStripMenuItem()
         tsmiAction_DeSelectAll = New ToolStripMenuItem()
         tsmiAction_DSSParam = New ToolStripMenuItem()
+        tsmiAction_HotPixel = New ToolStripMenuItem()
+        tsmiAction_HotPixel_Method1 = New ToolStripMenuItem()
+        tsmiAction_HotPixel_Method2 = New ToolStripMenuItem()
+        ToolStripMenuItem5 = New ToolStripSeparator()
+        tsmiAction_HotPixel_Fix = New ToolStripMenuItem()
         ofdMain = New OpenFileDialog()
         ssMain = New StatusStrip()
         tspbMain = New ToolStripProgressBar()
         sfdMain = New SaveFileDialog()
-        HotPixelDetectionToolStripMenuItem = New ToolStripMenuItem()
         CType(adgvMain, ComponentModel.ISupportInitialize).BeginInit()
         cmsTable.SuspendLayout()
         CType(scMain, ComponentModel.ISupportInitialize).BeginInit()
@@ -111,6 +115,7 @@ Partial Class frmMultiFileAction
         adgvMain.FilterStringChangedInvokeBeforeDatasourceUpdate = True
         adgvMain.Location = New Point(4, 3)
         adgvMain.Margin = New Padding(4, 3, 4, 3)
+        adgvMain.MaxFilterButtonImageHeight = 23
         adgvMain.MultiSelect = False
         adgvMain.Name = "adgvMain"
         adgvMain.RightToLeft = RightToLeft.No
@@ -182,7 +187,7 @@ Partial Class frmMultiFileAction
         ' scButtom.Panel2
         ' 
         scButtom.Panel2.Controls.Add(scBottomRight)
-        scButtom.Size = New Size(1527, 638)
+        scButtom.Size = New Size(1527, 631)
         scButtom.SplitterDistance = 457
         scButtom.SplitterWidth = 5
         scButtom.TabIndex = 1
@@ -193,7 +198,7 @@ Partial Class frmMultiFileAction
         pgMain.Location = New Point(4, 3)
         pgMain.Margin = New Padding(4, 3, 4, 3)
         pgMain.Name = "pgMain"
-        pgMain.Size = New Size(449, 632)
+        pgMain.Size = New Size(449, 625)
         pgMain.TabIndex = 0
         ' 
         ' scBottomRight
@@ -211,8 +216,8 @@ Partial Class frmMultiFileAction
         ' 
         scBottomRight.Panel2.Controls.Add(tbLog)
         scBottomRight.Panel2.Controls.Add(Label1)
-        scBottomRight.Size = New Size(1050, 632)
-        scBottomRight.SplitterDistance = 312
+        scBottomRight.Size = New Size(1043, 625)
+        scBottomRight.SplitterDistance = 305
         scBottomRight.TabIndex = 7
         ' 
         ' gbAspects
@@ -223,7 +228,7 @@ Partial Class frmMultiFileAction
         gbAspects.Margin = New Padding(4, 3, 4, 3)
         gbAspects.Name = "gbAspects"
         gbAspects.Padding = New Padding(4, 3, 4, 3)
-        gbAspects.Size = New Size(1041, 306)
+        gbAspects.Size = New Size(1034, 299)
         gbAspects.TabIndex = 6
         gbAspects.TabStop = False
         gbAspects.Text = "Aspect"
@@ -238,7 +243,7 @@ Partial Class frmMultiFileAction
         tcAspect.Margin = New Padding(4, 3, 4, 3)
         tcAspect.Name = "tcAspect"
         tcAspect.SelectedIndex = 0
-        tcAspect.Size = New Size(1034, 277)
+        tcAspect.Size = New Size(1027, 270)
         tcAspect.TabIndex = 0
         ' 
         ' tpFITSHeader
@@ -249,7 +254,7 @@ Partial Class frmMultiFileAction
         tpFITSHeader.Margin = New Padding(4, 3, 4, 3)
         tpFITSHeader.Name = "tpFITSHeader"
         tpFITSHeader.Padding = New Padding(4, 3, 4, 3)
-        tpFITSHeader.Size = New Size(1026, 249)
+        tpFITSHeader.Size = New Size(1019, 242)
         tpFITSHeader.TabIndex = 0
         tpFITSHeader.Text = "FITS header"
         ' 
@@ -262,7 +267,7 @@ Partial Class frmMultiFileAction
         tbFITSHeader.Multiline = True
         tbFITSHeader.Name = "tbFITSHeader"
         tbFITSHeader.ScrollBars = ScrollBars.Both
-        tbFITSHeader.Size = New Size(1018, 243)
+        tbFITSHeader.Size = New Size(1011, 236)
         tbFITSHeader.TabIndex = 2
         tbFITSHeader.WordWrap = False
         ' 
@@ -274,7 +279,7 @@ Partial Class frmMultiFileAction
         tbCombinedROI.Margin = New Padding(4, 3, 4, 3)
         tbCombinedROI.Name = "tbCombinedROI"
         tbCombinedROI.Padding = New Padding(4, 3, 4, 3)
-        tbCombinedROI.Size = New Size(1027, 250)
+        tbCombinedROI.Size = New Size(1020, 243)
         tbCombinedROI.TabIndex = 1
         tbCombinedROI.Text = "(Combined) ROI"
         ' 
@@ -287,7 +292,7 @@ Partial Class frmMultiFileAction
         pbImage.Location = New Point(4, 7)
         pbImage.Margin = New Padding(4, 3, 4, 3)
         pbImage.Name = "pbImage"
-        pbImage.Size = New Size(1017, 239)
+        pbImage.Size = New Size(1010, 232)
         pbImage.SizeMode = PictureBoxSizeMode.Zoom
         pbImage.TabIndex = 5
         pbImage.TabStop = False
@@ -313,7 +318,7 @@ Partial Class frmMultiFileAction
         tbSinglePixelStat.Margin = New Padding(4, 3, 4, 3)
         tbSinglePixelStat.Name = "tbSinglePixelStat"
         tbSinglePixelStat.Padding = New Padding(4, 3, 4, 3)
-        tbSinglePixelStat.Size = New Size(1027, 250)
+        tbSinglePixelStat.Size = New Size(1020, 243)
         tbSinglePixelStat.TabIndex = 2
         tbSinglePixelStat.Text = "Single pixel statistics"
         ' 
@@ -330,7 +335,7 @@ Partial Class frmMultiFileAction
         zgcSinglePixelStat.ScrollMinX = 0R
         zgcSinglePixelStat.ScrollMinY = 0R
         zgcSinglePixelStat.ScrollMinY2 = 0R
-        zgcSinglePixelStat.Size = New Size(558, 235)
+        zgcSinglePixelStat.Size = New Size(551, 228)
         zgcSinglePixelStat.TabIndex = 5
         ' 
         ' tbPixelStat
@@ -342,7 +347,7 @@ Partial Class frmMultiFileAction
         tbPixelStat.Multiline = True
         tbPixelStat.Name = "tbPixelStat"
         tbPixelStat.ScrollBars = ScrollBars.Both
-        tbPixelStat.Size = New Size(446, 235)
+        tbPixelStat.Size = New Size(446, 228)
         tbPixelStat.TabIndex = 4
         tbPixelStat.WordWrap = False
         ' 
@@ -355,7 +360,7 @@ Partial Class frmMultiFileAction
         tbLog.Multiline = True
         tbLog.Name = "tbLog"
         tbLog.ScrollBars = ScrollBars.Both
-        tbLog.Size = New Size(1042, 289)
+        tbLog.Size = New Size(1035, 289)
         tbLog.TabIndex = 0
         tbLog.WordWrap = False
         ' 
@@ -436,12 +441,12 @@ Partial Class frmMultiFileAction
         ' tsmiFileList_ClearList
         ' 
         tsmiFileList_ClearList.Name = "tsmiFileList_ClearList"
-        tsmiFileList_ClearList.Size = New Size(180, 22)
+        tsmiFileList_ClearList.Size = New Size(119, 22)
         tsmiFileList_ClearList.Text = "Clear list"
         ' 
         ' tsmiAction
         ' 
-        tsmiAction.DropDownItems.AddRange(New ToolStripItem() {tsmiAction_Run, ToolStripMenuItem2, tsmiAction_ClearLog, tsmiAction_StackSpecial, tsmiAction_Mode, ToolStripMenuItem4, tsmiAction_SelectAll, tsmiAction_DeSelectAll, tsmiAction_DSSParam, HotPixelDetectionToolStripMenuItem})
+        tsmiAction.DropDownItems.AddRange(New ToolStripItem() {tsmiAction_Run, ToolStripMenuItem2, tsmiAction_ClearLog, tsmiAction_StackSpecial, tsmiAction_Mode, ToolStripMenuItem4, tsmiAction_SelectAll, tsmiAction_DeSelectAll, tsmiAction_DSSParam, tsmiAction_HotPixel})
         tsmiAction.Name = "tsmiAction"
         tsmiAction.Size = New Size(59, 20)
         tsmiAction.Text = "Actions"
@@ -505,6 +510,36 @@ Partial Class frmMultiFileAction
         tsmiAction_DSSParam.Size = New Size(185, 22)
         tsmiAction_DSSParam.Text = "Read DSS parameters"
         ' 
+        ' tsmiAction_HotPixel
+        ' 
+        tsmiAction_HotPixel.DropDownItems.AddRange(New ToolStripItem() {tsmiAction_HotPixel_Method1, tsmiAction_HotPixel_Method2, ToolStripMenuItem5, tsmiAction_HotPixel_Fix})
+        tsmiAction_HotPixel.Name = "tsmiAction_HotPixel"
+        tsmiAction_HotPixel.Size = New Size(185, 22)
+        tsmiAction_HotPixel.Text = "Hot pixel detection"
+        ' 
+        ' tsmiAction_HotPixel_Method1
+        ' 
+        tsmiAction_HotPixel_Method1.Name = "tsmiAction_HotPixel_Method1"
+        tsmiAction_HotPixel_Method1.Size = New Size(180, 22)
+        tsmiAction_HotPixel_Method1.Text = "Method 1"
+        ' 
+        ' tsmiAction_HotPixel_Method2
+        ' 
+        tsmiAction_HotPixel_Method2.Name = "tsmiAction_HotPixel_Method2"
+        tsmiAction_HotPixel_Method2.Size = New Size(180, 22)
+        tsmiAction_HotPixel_Method2.Text = "Method 2"
+        ' 
+        ' ToolStripMenuItem5
+        ' 
+        ToolStripMenuItem5.Name = "ToolStripMenuItem5"
+        ToolStripMenuItem5.Size = New Size(177, 6)
+        ' 
+        ' tsmiAction_HotPixel_Fix
+        ' 
+        tsmiAction_HotPixel_Fix.Name = "tsmiAction_HotPixel_Fix"
+        tsmiAction_HotPixel_Fix.Size = New Size(180, 22)
+        tsmiAction_HotPixel_Fix.Text = "Fix hot pixel"
+        ' 
         ' ofdMain
         ' 
         ofdMain.FileName = "OpenFileDialog1"
@@ -523,12 +558,6 @@ Partial Class frmMultiFileAction
         ' 
         tspbMain.Name = "tspbMain"
         tspbMain.Size = New Size(117, 18)
-        ' 
-        ' HotPixelDetectionToolStripMenuItem
-        ' 
-        HotPixelDetectionToolStripMenuItem.Name = "HotPixelDetectionToolStripMenuItem"
-        HotPixelDetectionToolStripMenuItem.Size = New Size(185, 22)
-        HotPixelDetectionToolStripMenuItem.Text = "Hot pixel detection"
         ' 
         ' frmMultiFileAction
         ' 
@@ -623,5 +652,9 @@ Partial Class frmMultiFileAction
     Friend WithEvents cmsTable_OpenFile As ToolStripMenuItem
     Friend WithEvents tbStars As ListBox
     Friend WithEvents zgcSinglePixelStat As ZedGraph.ZedGraphControl
-    Friend WithEvents HotPixelDetectionToolStripMenuItem As ToolStripMenuItem
+    Friend WithEvents tsmiAction_HotPixel As ToolStripMenuItem
+    Friend WithEvents tsmiAction_HotPixel_Method1 As ToolStripMenuItem
+    Friend WithEvents tsmiAction_HotPixel_Method2 As ToolStripMenuItem
+    Friend WithEvents ToolStripMenuItem5 As ToolStripSeparator
+    Friend WithEvents tsmiAction_HotPixel_Fix As ToolStripMenuItem
 End Class

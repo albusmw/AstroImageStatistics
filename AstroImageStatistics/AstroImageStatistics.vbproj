@@ -11,7 +11,6 @@
     <Platforms>x64</Platforms>
 	<ApplicationIcon>Statistics.ico</ApplicationIcon>
 	<ApplicationManifest>My Project\app.manifest</ApplicationManifest>
-	<SourceRevisionId>build$([System.DateTime]::UtcNow.ToString("yyyy-MM-ddTHH:mm:ss:fffZ"))</SourceRevisionId>
   </PropertyGroup>
   <ItemGroup>
     <Import Include="System.Drawing" />
@@ -44,6 +43,7 @@
       <Link>MyLib\Extensions.vb</Link>
     </Compile>
     <Compile Include="..\..\MyLib\FileIO.vb" Link="MyLib\FileIO.vb" />
+    <Compile Include="..\..\MyLib\GetBuildDateTime.vb" Link="MyLib\GetBuildDateTime.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
       <DependentUpon>frmImageForm.vb</DependentUpon>
@@ -297,5 +297,6 @@
     <AssemblyTitle>AstroImageStatistics</AssemblyTitle>
     <Product>AstroImageStatistics</Product>
     <Copyright>Copyright ©  2024</Copyright>
+	<SourceRevisionID>build$([System.DateTime]::UtcNow.ToString("yyyyMMddHHmmss"))</SourceRevisionID>
   </PropertyGroup>
 </Project>
