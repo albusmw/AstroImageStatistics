@@ -86,10 +86,20 @@ Public Class frmImageDisplay
     Public Sub GenerateDisplayImage()
 
         Dim Stopper As New cStopper
+
+        'Check pre-conditions
+        If IsNothing(SingleStatCalc) Then Exit Sub
+
+        'Configure picture generation and generate image
+        Stopper.Tic()
         ImageFromData.ColorMap_LowerEnd = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
         ImageFromData.ColorMap_UpperEnd = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
         ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, MyIPP)
+        Stopper.Toc("GenerateDisplayImage")
+
+        Stopper.Tic()
         DisplayLUTColorBar()
+        Stopper.Toc("DisplayLUTColorBar")
 
         'Display final image
         Stopper.Tic()
