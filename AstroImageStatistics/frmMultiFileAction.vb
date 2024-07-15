@@ -1242,8 +1242,8 @@ Partial Public Class frmMultiFileAction
                 Next Idx2
             Next Idx1
         End With
-        Log.Log("Fixed " & FixedPixelCount.ValRegIndep & " pixel")
-        Idle()
+        'Log.Log("Fixed " & FixedPixelCount.ValRegIndep & " pixel")
+        'Idle()
 
     End Sub
 
@@ -1278,11 +1278,11 @@ Partial Public Class frmMultiFileAction
                 .Data(X, Y) = NewVal
             Next Idx
         End With
-        Log.Log(ReplaceLog)
-        Log.Log("Fixed " & HotPixel.Count & " pixel")
+        'Log.Log(ReplaceLog)
+        'Log.Log("Fixed " & HotPixel.Count & " pixel")
 
         Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
-        Log.Log(StatisticsReport)
+        'Log.Log(StatisticsReport)
 
     End Sub
 
