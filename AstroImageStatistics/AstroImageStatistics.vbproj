@@ -252,7 +252,7 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
-    <PackageReference Include="ClosedXML" Version="0.102.2" />
+    <PackageReference Include="ClosedXML" Version="0.102.3" />
     <PackageReference Include="DG.AdvancedDataGridView" Version="1.2.29301.14" />
     <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
@@ -265,7 +265,7 @@
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20240616" />
     <PackageReference Include="OpenMacroBoard.SDK" Version="6.0.0" />
     <PackageReference Include="SixLabors.Fonts" Version="2.0.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.4" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="StreamDeckSharp" Version="6.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />

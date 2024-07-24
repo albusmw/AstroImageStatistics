@@ -773,8 +773,8 @@ Partial Public Class frmMultiFileAction
         'Display the image
         With ROIImageGenerator
             .ColorMap = Config.Stack_ROIDisplay_ColorMode
-            .ColorMap_LowerEnd = SumStatStat.MonoStatistics_Int.Min.Key
-            .ColorMap_UpperEnd = SumStatStat.MonoStatistics_Int.Max.Key
+            .ColorMap_LowerEnd_Absolute = SumStatStat.MonoStatistics_Int.Min.Key
+            .ColorMap_UpperEnd_Absolute = SumStatStat.MonoStatistics_Int.Max.Key
             .GenerateDisplayImage(ImageToDisplay, AIS.DB.IPP)
             .OutputImage.UnlockBits()
             pbImage.Image = .OutputImage.BitmapToProcess

@@ -92,8 +92,8 @@ Public Class frmImageDisplay
 
         'Configure picture generation and generate image
         Stopper.Tic()
-        ImageFromData.ColorMap_LowerEnd = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
-        ImageFromData.ColorMap_UpperEnd = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
+        ImageFromData.ColorMap_LowerEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
+        ImageFromData.ColorMap_UpperEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
         ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, MyIPP)
         Stopper.Toc("GenerateDisplayImage")
 
@@ -162,16 +162,16 @@ Public Class frmImageDisplay
             Case "MinCutOff_ADU"
                 'Adjust the minimum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
-                    ImageFromData.ColorMap_LowerEnd = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_LowerEnd)
+                    ImageFromData.ColorMap_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_LowerEnd_Absolute)
                 Else
-                    ImageFromData.ColorMap_LowerEnd = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_LowerEnd)
+                    ImageFromData.ColorMap_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_LowerEnd_Absolute)
                 End If
             Case "MaxCutOff_ADU"
                 'Adjust the maximum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
-                    ImageFromData.ColorMap_UpperEnd = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_UpperEnd)
+                    ImageFromData.ColorMap_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_UpperEnd_Absolute)
                 Else
-                    ImageFromData.ColorMap_UpperEnd = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_UpperEnd)
+                    ImageFromData.ColorMap_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_UpperEnd_Absolute)
                 End If
             Case "Gamma"
                 PropToChange.ColorMap_Gamma += Math.Sign(e.Delta) * PropToChange.PctStepSize
@@ -343,8 +343,8 @@ Public Class frmImageDisplay
     End Sub
 
     Private Sub cms_SetCutOff_Click(sender As Object, e As EventArgs) Handles cms_SetCutOff.Click
-        ImageFromData.ColorMap_LowerEnd = ZoomStatistics.MonoStatistics_Int.Min.Key
-        ImageFromData.ColorMap_UpperEnd = ZoomStatistics.MonoStatistics_Int.Max.Key
+        ImageFromData.ColorMap_LowerEnd_Absolute = ZoomStatistics.MonoStatistics_Int.Min.Key
+        ImageFromData.ColorMap_UpperEnd_Absolute = ZoomStatistics.MonoStatistics_Int.Max.Key
         DisplayCurrentProps()
         GenerateDisplayImage()
     End Sub
