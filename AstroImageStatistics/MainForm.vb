@@ -2115,4 +2115,21 @@ Public Class MainForm
         NewForm.Show()
     End Sub
 
+    Private Sub tsmiTest_Shannon_Click(sender As Object, e As EventArgs) Handles tsmiTest_Shannon.Click
+        Dim TestFile As String = "C:\Users\albus\OneDrive\Transfer_Kevin_Morefield\QHY600_L_300_025_020_003_060_ExtendFullwell.fits"
+        LoadFile(TestFile)
+        Dim Dic As Dictionary(Of Long, ULong) = AIS.DB.LastFile_Statistics.MonochromHistogram_Int
+        Dim Gene As New cShanFano(Of Long)
+        Gene.GenCodeBook(Dic)
+        'Compress standard
+        Dim FileContent As Byte() = System.IO.File.ReadAllBytes(TestFile)
+        Debug.Print("File size: <" & FileContent.Length & ">")
+        Using InMemory As New System.IO.MemoryStream
+            Using Compressed As New System.IO.Compression.GZipStream(InMemory, IO.Compression.CompressionLevel.SmallestSize)
+                Compressed.Write(FileContent)
+                Debug.Print("Compressed : <" & InMemory.Length & ">")
+            End Using
+        End Using
+    End Sub
+
 End Class
