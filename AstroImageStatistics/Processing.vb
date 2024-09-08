@@ -13,7 +13,7 @@ Public Class Processing
     '''<returns>Error code or empty string on no error.</returns>
     Public Shared Function LoadFITSFile(ByVal FileName As String, ByRef IPP As cIntelIPP, ByVal ForceDirect As Boolean, ByRef FITSHeader As cFITSHeaderParser, ByRef Container As AstroNET.Statistics, ByRef DataStartPosition As Integer) As String
 
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Dim DataStartPos As Integer = 0
 
         '=========================================================================================================

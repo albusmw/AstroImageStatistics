@@ -55,7 +55,7 @@ Public Class frmStacking
         'So this code can never have worked on full-res QHY600 data
 
         Stopper = New cStopper
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
 
         ReDim AllImages(AllFiles.Count - 1)
         For Idx As Integer = 0 To AllFiles.Count - 1

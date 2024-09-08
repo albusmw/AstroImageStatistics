@@ -304,7 +304,7 @@ Public Class MainForm
             cFITSWriter.UseIPPForWriting = False
         End If
         cFITSWriter.IPPPath = AIS.DB.IPP.IPPPath
-        cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
+        'cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
 
         'Set FITS viewer
         Dim FileName As String = "FITSWork4.exe"
@@ -1913,9 +1913,9 @@ Public Class MainForm
         Dim FileName As String = "C:\GIT\AstroImageStatistics\AstroImageStatistics\bin\x64\Debug\AsImStatTestImage.fits"
         'Dim FileName As String = "\\192.168.100.10\astro_misc\TestData\TestImage_UInt16_20000_19000.fits"
         Dim ROI As New Drawing.Rectangle(1, 1, 20000 - 2, 19000 - 2)
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Dim Log As New List(Of String)
-        cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
+        'cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
         Dim Stopper As New Stopwatch
         Dim Data(,) As UInt16
 
@@ -2121,15 +2121,7 @@ Public Class MainForm
         Dim Dic As Dictionary(Of Long, ULong) = AIS.DB.LastFile_Statistics.MonochromHistogram_Int
         Dim Gene As New cShanFano(Of Long)
         Gene.GenCodeBook(Dic)
-        'Compress standard
-        Dim FileContent As Byte() = System.IO.File.ReadAllBytes(TestFile)
-        Debug.Print("File size: <" & FileContent.Length & ">")
-        Using InMemory As New System.IO.MemoryStream
-            Using Compressed As New System.IO.Compression.GZipStream(InMemory, IO.Compression.CompressionLevel.SmallestSize)
-                Compressed.Write(FileContent)
-                Debug.Print("Compressed : <" & InMemory.Length & ">")
-            End Using
-        End Using
+
     End Sub
 
 End Class

@@ -94,7 +94,7 @@ Public Class frmImageDisplay
         Stopper.Tic()
         ImageFromData.ColorMap_LowerEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
         ImageFromData.ColorMap_UpperEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
-        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, MyIPP)
+        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, SingleStatCalc.ImageStatistics, MyIPP)
         Stopper.Toc("GenerateDisplayImage")
 
         Stopper.Tic()

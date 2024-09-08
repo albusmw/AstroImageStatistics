@@ -120,6 +120,7 @@ Partial Class MainForm
         tsmiTest_RAWReader_NEF = New ToolStripMenuItem()
         tsmiTest_RAWReader_LibRawDLL = New ToolStripMenuItem()
         tsmiTest_RAWReader_GrayPNGToFits = New ToolStripMenuItem()
+        tsmiTest_Shannon = New ToolStripMenuItem()
         ofdMain = New OpenFileDialog()
         tbLogOutput = New TextBox()
         ssMain = New StatusStrip()
@@ -138,7 +139,6 @@ Partial Class MainForm
         tsMain = New ToolStrip()
         tsb_Open = New ToolStripButton()
         tsb_Display = New ToolStripButton()
-        tsmiTest_Shannon = New ToolStripMenuItem()
         msMain.SuspendLayout()
         ssMain.SuspendLayout()
         gbDetails.SuspendLayout()
@@ -752,6 +752,12 @@ Partial Class MainForm
         tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(204, 26)
         tsmiTest_RAWReader_GrayPNGToFits.Text = "Gray PNG to FITS"
         ' 
+        ' tsmiTest_Shannon
+        ' 
+        tsmiTest_Shannon.Name = "tsmiTest_Shannon"
+        tsmiTest_Shannon.Size = New Size(344, 26)
+        tsmiTest_Shannon.Text = "Shannon-Fano compression"
+        ' 
         ' ofdMain
         ' 
         ofdMain.Multiselect = True
@@ -921,12 +927,6 @@ Partial Class MainForm
         tsb_Display.Name = "tsb_Display"
         tsb_Display.Size = New Size(62, 24)
         tsb_Display.Text = "Display"
-        ' 
-        ' tsmiTest_Shannon
-        ' 
-        tsmiTest_Shannon.Name = "tsmiTest_Shannon"
-        tsmiTest_Shannon.Size = New Size(344, 26)
-        tsmiTest_Shannon.Text = "Shannon-Fano compression"
         ' 
         ' MainForm
         ' 

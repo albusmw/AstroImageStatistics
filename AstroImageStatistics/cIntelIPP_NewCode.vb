@@ -11,13 +11,13 @@ Public Class IntelIPP_NewCode
         Dim DataStartPos As Integer = -1
         Dim FITSHeader As New cFITSHeaderParser(cFITSHeaderChanger.ParseHeader(FileName, DataStartPos))
         Dim FITSHeaderDict As Dictionary(Of eFITSKeywords, Object) = FITSHeader.GetCardsAsDictionary
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Dim ImageData(,) As UInt16 = FITSReader.ReadInUInt16(FileName, True, False)
 
         Dim StatusRecord As New List(Of cIntelIPP.IppStatus)
 
         'Get rotation and transformation parameters
-        Dim MyIPP As New cIntelIPP(cFITSReader.IPPPath)
+        Dim MyIPP As New cIntelIPP(AIS.DB.IPPPath)
         Dim coeffs(,) As Double = {}
         Dim Angle As Double = 100
         Dim ShiftX As Double = 20

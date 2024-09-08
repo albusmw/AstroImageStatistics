@@ -236,7 +236,7 @@ Partial Public Class frmMultiFileAction
     Private Sub tsmiAction_Run_Click(sender As Object, e As EventArgs) Handles tsmiAction_Run.Click
 
         Dim AllCheckedFiles As List(Of cFileProps) = GetListFiles(True)
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Dim CorrRefData(,) As Single = {}
 
         Dim Stacked_UInt32(,) As UInt32 = {}
@@ -707,7 +707,7 @@ Partial Public Class frmMultiFileAction
 
         'Read ROI's for manual alignment
         Dim Data As New AstroNET.Statistics(AIS.DB.IPP)
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
 
         'Get all files or only the selected file
         Dim FilesToLoad As New List(Of cFileProps)
@@ -775,7 +775,7 @@ Partial Public Class frmMultiFileAction
             .ColorMap = Config.Stack_ROIDisplay_ColorMode
             .ColorMap_LowerEnd_Absolute = SumStatStat.MonoStatistics_Int.Min.Key
             .ColorMap_UpperEnd_Absolute = SumStatStat.MonoStatistics_Int.Max.Key
-            .GenerateDisplayImage(ImageToDisplay, AIS.DB.IPP)
+            .GenerateDisplayImage(ImageToDisplay, SumStatStat, AIS.DB.IPP)
             .OutputImage.UnlockBits()
             pbImage.Image = .OutputImage.BitmapToProcess
         End With
@@ -792,7 +792,7 @@ Partial Public Class frmMultiFileAction
         Dim UseIPP As Boolean = True
         Dim ForceDirect As Boolean = False
 
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
 
         Dim MosaikWidth As Integer = CInt(Math.Ceiling(Math.Sqrt(FilesToLoad.Count)))              'Number of tiles in X direction
         Dim MosaikHeight As Integer = CInt(Math.Ceiling(FilesToLoad.Count / MosaikWidth))          'Number of tiles in Y direction
@@ -1170,7 +1170,7 @@ Partial Public Class frmMultiFileAction
 
     Private Sub tsmiAction_HotPixel_Method1_Click(sender As Object, e As EventArgs) Handles tsmiAction_HotPixel_Method1.Click
 
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Dim MaxOfAll(,) As UInt16
 
         'Get max of all

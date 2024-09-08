@@ -106,14 +106,14 @@ Public Class frmXCorr
     End Sub
 
     Private Sub btnLoadRef_Click(sender As Object, e As EventArgs) Handles btnLoadRef.Click
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Ref_data = FITSReader.ReadInUInt16(tbRefFile.Text, True, True).Bin2MaxOut32f
         tbRefFile.BackColor = Color.LimeGreen
         RunCorrelation()
     End Sub
 
     Private Sub btnLoadMatch_Click(sender As Object, e As EventArgs) Handles btnLoadTemplate.Click
-        Dim FITSReader As New cFITSReader
+        Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Tlp_data = FITSReader.ReadInUInt16(tbTemplateFile.Text, True, True).Bin2MaxOut32f
         tbTemplateFile.BackColor = Color.LimeGreen
         RunCorrelation()
