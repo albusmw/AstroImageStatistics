@@ -771,11 +771,12 @@ Partial Public Class frmMultiFileAction
         Dim SumStatStat As AstroNET.Statistics.sStatistics = SumStat.ImageStatistics
 
         'Display the image
+        Dim NoROI As Rectangle = Nothing
         With ROIImageGenerator
-            .ColorMap = Config.Stack_ROIDisplay_ColorMode
-            .ColorMap_LowerEnd_Absolute = SumStatStat.MonoStatistics_Int.Min.Key
-            .ColorMap_UpperEnd_Absolute = SumStatStat.MonoStatistics_Int.Max.Key
-            .GenerateDisplayImage(ImageToDisplay, SumStatStat, AIS.DB.IPP)
+            .CM = Config.Stack_ROIDisplay_ColorMode
+            .CM_LowerEnd_Absolute = SumStatStat.MonoStatistics_Int.Min.Key
+            .CM_UpperEnd_Absolute = SumStatStat.MonoStatistics_Int.Max.Key
+            .GenerateDisplayImage(ImageToDisplay, NoROI, SumStatStat, AIS.DB.IPP)
             .OutputImage.UnlockBits()
             pbImage.Image = .OutputImage.BitmapToProcess
         End With

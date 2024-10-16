@@ -10,6 +10,16 @@ Public Class frmAlignTIFFFiles
     Private ImageData2(,) As Double
     Private ImageData3(,) As Double
 
+    Private WithEvents DD1 As Ato.DragDrop
+    Private WithEvents DD2 As Ato.DragDrop
+    Private WithEvents DD3 As Ato.DragDrop
+
+    Private Sub frmAlignTIFFFiles_Load(sender As Object, e As EventArgs) Handles Me.Load
+        DD1 = New Ato.DragDrop(tbFile1, True)
+        DD2 = New Ato.DragDrop(tbFile2, True)
+        DD3 = New Ato.DragDrop(tbFile3, True)
+    End Sub
+
     Private Sub btnLoad_Click(sender As Object, e As EventArgs) Handles btnLoad.Click
         Recalc()
         'Test write ...
@@ -27,7 +37,7 @@ Public Class frmAlignTIFFFiles
         LoadTIFF(tbFile2.Text, New Rectangle(BaseX + tbFile2_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile2_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), UInt16.MaxValue, ImageData2)
         LoadTIFF(tbFile3.Text, New Rectangle(BaseX + tbFile3_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile3_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), UInt16.MaxValue, ImageData3)
 
-        ROIImageGenerator.ColorMap = cColorMaps.eMaps.None
+        ROIImageGenerator.CM = cColorMaps.eMaps.None
         ROIImageGenerator.GenerateDisplayImageRGB(ImageData1, ImageData2, ImageData3, AIS.DB.IPP)
         ROIImageGenerator.OutputImage.UnlockBits()
         pbImage.Image = ROIImageGenerator.OutputImage.BitmapToProcess
@@ -105,6 +115,14 @@ Public Class frmAlignTIFFFiles
         If e.Delta > 0 Then Value += tbStepSize_Offset.Text.ValRegIndepInteger Else Value -= tbStepSize_Offset.Text.ValRegIndepInteger
         CType(sender, TextBox).Text = Value.ToString.Trim
         Recalc
+    End Sub
+
+    Private Sub btnSave_Click(sender As Object, e As EventArgs) Handles btnSave.Click
+
+    End Sub
+
+    Private Sub tbFile1_TextChanged(sender As Object, e As EventArgs) Handles tbFile1.TextChanged
+
     End Sub
 
 End Class

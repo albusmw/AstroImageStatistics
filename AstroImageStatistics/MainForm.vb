@@ -1170,8 +1170,8 @@ Public Class MainForm
         ImageDisplay.SingleStatCalc = AIS.DB.LastFile_Data
         ImageDisplay.StatToUsed = AIS.DB.LastFile_Statistics
         ImageDisplay.MyIPP = AIS.DB.IPP
-        ImageDisplay.ImageFromData.ColorMap_LowerEnd_Absolute = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Min.Key
-        ImageDisplay.ImageFromData.ColorMap_UpperEnd_Absolute = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key
+        ImageDisplay.ImageFromData.CM_LowerEnd_Absolute = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Min.Key
+        ImageDisplay.ImageFromData.CM_UpperEnd_Absolute = AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key
         ImageDisplay.GenerateDisplayImage()
     End Sub
 

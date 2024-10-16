@@ -1,6 +1,8 @@
 ﻿Option Explicit On
 Option Strict On
 
+#Disable Warning CA1416 ' Validate platform compatibility
+
 Public Class frmImageDisplay
 
     '''<summary>Class for data to image conversion.</summary>
@@ -92,9 +94,10 @@ Public Class frmImageDisplay
 
         'Configure picture generation and generate image
         Stopper.Tic()
-        ImageFromData.ColorMap_LowerEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
-        ImageFromData.ColorMap_UpperEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
-        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, SingleStatCalc.ImageStatistics, MyIPP)
+        Dim NoROI As Rectangle = Nothing
+        ImageFromData.CM_LowerEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
+        ImageFromData.CM_UpperEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
+        ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, NoROI, SingleStatCalc.ImageStatistics, MyIPP)
         Stopper.Toc("GenerateDisplayImage")
 
         Stopper.Tic()
@@ -162,19 +165,19 @@ Public Class frmImageDisplay
             Case "MinCutOff_ADU"
                 'Adjust the minimum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
-                    ImageFromData.ColorMap_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_LowerEnd_Absolute)
+                    ImageFromData.CM_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.CM_LowerEnd_Absolute)
                 Else
-                    ImageFromData.ColorMap_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_LowerEnd_Absolute)
+                    ImageFromData.CM_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.CM_LowerEnd_Absolute)
                 End If
             Case "MaxCutOff_ADU"
                 'Adjust the maximum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
-                    ImageFromData.ColorMap_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.ColorMap_UpperEnd_Absolute)
+                    ImageFromData.CM_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.CM_UpperEnd_Absolute)
                 Else
-                    ImageFromData.ColorMap_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.ColorMap_UpperEnd_Absolute)
+                    ImageFromData.CM_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.CM_UpperEnd_Absolute)
                 End If
             Case "Gamma"
-                PropToChange.ColorMap_Gamma += Math.Sign(e.Delta) * PropToChange.PctStepSize
+                PropToChange.CM_Gamma += Math.Sign(e.Delta) * PropToChange.PctStepSize
         End Select
         DisplayCurrentProps()
         GenerateDisplayImage()
@@ -343,8 +346,8 @@ Public Class frmImageDisplay
     End Sub
 
     Private Sub cms_SetCutOff_Click(sender As Object, e As EventArgs) Handles cms_SetCutOff.Click
-        ImageFromData.ColorMap_LowerEnd_Absolute = ZoomStatistics.MonoStatistics_Int.Min.Key
-        ImageFromData.ColorMap_UpperEnd_Absolute = ZoomStatistics.MonoStatistics_Int.Max.Key
+        ImageFromData.CM_LowerEnd_Absolute = ZoomStatistics.MonoStatistics_Int.Min.Key
+        ImageFromData.CM_UpperEnd_Absolute = ZoomStatistics.MonoStatistics_Int.Max.Key
         DisplayCurrentProps()
         GenerateDisplayImage()
     End Sub
@@ -385,3 +388,5 @@ Public Class frmImageDisplay
     'End Sub
 
 End Class
+
+#Enable Warning CA1416 ' Validate platform compatibility
