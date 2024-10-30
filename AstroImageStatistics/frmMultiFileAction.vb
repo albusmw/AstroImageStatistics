@@ -279,6 +279,8 @@ Partial Public Class frmMultiFileAction
                 'Calculate alignment
                 If Config.Processing_CalcAlignment = True Then
 
+                    MarkFileDelta(CurrentRow, Double.NaN, Double.NaN, Color.Orange)
+
                     Dim FileContentAsFloat32(,) As Single = {}
                     Dim Shift As System.Drawing.Point
 
@@ -305,8 +307,7 @@ Partial Public Class frmMultiFileAction
                     End If
 
                     'Store calculated shifts
-                    adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaX).Value = Shift.X
-                    adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaY).Value = Shift.Y
+                    MarkFileDelta(CurrentRow, Shift.X, Shift.Y, Color.LimeGreen)
 
                 End If
 
@@ -416,7 +417,7 @@ Partial Public Class frmMultiFileAction
                     Log("Stored file <" & FileToProcess.FileName & "> as aligned version in <" & NewFile & ">")
                     Log("   (CutROIs: " & CutROIs(FileToProcess).Describe)
                 End If
-                MarkFile(FileToProcess.FileName, Color.Green)
+                MarkFile(FileToProcess.FileName, Color.LimeGreen)
             Next FileToProcess
 
         End If
@@ -763,6 +764,8 @@ Partial Public Class frmMultiFileAction
                 Next Idx1
         End Select
 
+        'Condition check
+        If IsNothing(ImageToDisplay) = True Then Exit Sub
         If ImageToDisplay.LongLength = 0 Then Exit Sub
 
         'Calculate statistics on the image
@@ -794,6 +797,10 @@ Partial Public Class frmMultiFileAction
         Dim ForceDirect As Boolean = False
 
         Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
+
+        'Enter condition
+        If IsNothing(FilesToLoad) = True Then Return Nothing
+        If FilesToLoad.Count = 0 Then Return Nothing
 
         Dim MosaikWidth As Integer = CInt(Math.Ceiling(Math.Sqrt(FilesToLoad.Count)))              'Number of tiles in X direction
         Dim MosaikHeight As Integer = CInt(Math.Ceiling(FilesToLoad.Count / MosaikWidth))          'Number of tiles in Y direction
@@ -844,6 +851,16 @@ Partial Public Class frmMultiFileAction
         DE()
     End Sub
 
+    '''<summary>Mark a file in the list.</summary>
+    Private Sub MarkFileDelta(ByVal CurrentRow As Integer, ByVal DeltaX As Double, ByVal DeltaY As Double, ByVal Color As Color)
+        If CurrentRow = -1 Then Exit Sub
+        adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaX).Value = DeltaX
+        adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaY).Value = DeltaY
+        adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaX).Style.BackColor = Color
+        adgvMain.Rows(CurrentRow).Cells(eColumns.DeltaY).Style.BackColor = Color
+        DE()
+    End Sub
+
     Private Function ScaleToUInt16(ByVal Value As UInt32, ByVal Min As UInt32, ByVal Max As UInt32) As UInt16
         Return CType(((Value - Min) / (Max - Min)) * UInt16.MaxValue, UInt16)
     End Function
@@ -884,6 +901,7 @@ Partial Public Class frmMultiFileAction
         Plotter.Clear()
         Plotter.PlotData("Pixel vs file", AllPixel)
         Plotter.ForceUpdate()
+
     End Sub
 
     '''<summary>Get pixel from the same position from all specified files.</summary>
