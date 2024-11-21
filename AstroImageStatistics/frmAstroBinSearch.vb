@@ -1,34 +1,34 @@
 ﻿Option Explicit On
 Option Strict Off
+Imports AstroImageStatistics.Ato
 
 Public Class frmAstroBinSearch
 
-    Dim API_Key As String = "557ecc514617693189a3b30cae4dcf49388edc3e"
-    Dim API_secret As String = "7a095792be040799d35119e9d50c8ffe43811061"
+    Dim AstroBin As cAstroBin
+
     Dim LB As cLogTextBox
     Public ReadOnly Property MyPath As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
     Public ReadOnly Property PreviewFolder As String = System.IO.Path.Combine(MyPath, "previews")
 
+    Private Sub frmAstroBinSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
+        LB = New cLogTextBox(tbLog)
+        AstroBin = New cAstroBin("557ecc514617693189a3b30cae4dcf49388edc3e", "7a095792be040799d35119e9d50c8ffe43811061")
+    End Sub
+
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
 
-        LB.Clear
+        LB.Clear()
 
         'Compose the query
         Log("Started ...")
-        Dim RequestContent As New List(Of String)
-        RequestContent.Add("http://astrobin.com/api/v1/")
-        RequestContent.Add("image/")
-        Dim Filters As New List(Of String)
-        If cbFilter_User.Checked = True Then Filters.Add("user=" & tbFilter_User.Text)
-        If cbFilter_TitleContains.Checked = True Then Filters.Add("title__icontains=" & tbFilter_TitleContains.Text)
-        If cbFilter_DescriptionContains.Checked = True Then Filters.Add("description__icontains=" & tbFilter_DescriptionContains.Text)
-        RequestContent.Add("?" & Join(Filters.ToArray, "&"))
-        'RequestContent.Add("?imaging_cameras__icontains=16803")
-        RequestContent.Add("&limit=" & tbLimit.Text)
-        RequestContent.Add("&api_key=" & API_Key & "&api_secret=" & API_secret & "&format=json")
+        AstroBin.ResultCountLimit = tbLimit.Text.ValRegIndep
+        Dim Parameters As New Dictionary(Of cAstroBin.eFilterOptions, String)
+        If cbFilter_User.Checked = True Then Parameters.Add(cAstroBin.eFilterOptions.user, tbFilter_User.Text)
+        If cbFilter_TitleContains.Checked = True Then Parameters.Add(cAstroBin.eFilterOptions.title__icontains, tbFilter_TitleContains.Text)
+        If cbFilter_DescriptionContains.Checked = True Then Parameters.Add(cAstroBin.eFilterOptions.description__icontains, tbFilter_DescriptionContains.Text)
 
         Log("Running query ...")
-        Dim Request As String = Join(RequestContent.ToArray, String.Empty)
+        Dim Request As String = AstroBin.GetQueryURL(Parameters)
         tbURL.Text = Request
         Dim ErrorInfo As String = String.Empty
         Dim Answer As String = RESTQuery(Request, ErrorInfo)
@@ -47,19 +47,23 @@ Public Class frmAstroBinSearch
         For Each Entry As Newtonsoft.Json.Linq.JToken In AllObjects
             Counter += 1
             Log("Loading element " & Counter.ToString.Trim)
-            Dim Location As Object = Entry.Item("id")
-            Dim NormalImage As Object = Entry.Item("url_regular")
-            Dim ContentType As String = String.Empty
-            Dim ImageContent As Byte() = ImageQuery(NormalImage, ContentType, String.Empty)
-            If IsNothing(ImageContent) = False Then
-                If System.IO.Directory.Exists(PreviewFolder) = False Then System.IO.Directory.CreateDirectory(PreviewFolder)
-                Dim FileType As String = ContentType.Split("/").Last
-                Dim FileName As String = System.IO.Path.Combine(PreviewFolder, "AstroBinPreview" & Format(Counter, "0000") & "." & FileType)
-                System.IO.File.WriteAllBytes(FileName, ImageContent)
-            End If
-        Next Entry
+            For Each Element As Newtonsoft.Json.Linq.JToken In Entry
+                Log("  " & Element.ToString)
+            Next Element
 
-        Log("DONE")
+            Dim Location As Object = Entry.Item("id")
+                Dim NormalImage As Object = Entry.Item("url_regular")
+                Dim ContentType As String = String.Empty
+                Dim ImageContent As Byte() = ImageQuery(NormalImage, ContentType, String.Empty)
+                If IsNothing(ImageContent) = False Then
+                    If System.IO.Directory.Exists(PreviewFolder) = False Then System.IO.Directory.CreateDirectory(PreviewFolder)
+                    Dim FileType As String = ContentType.Split("/").Last
+                    Dim FileName As String = System.IO.Path.Combine(PreviewFolder, "AstroBinPreview" & Format(Counter, "0000") & "." & FileType)
+                    System.IO.File.WriteAllBytes(FileName, ImageContent)
+                End If
+            Next Entry
+
+            Log("DONE")
 
     End Sub
 
@@ -103,10 +107,6 @@ Public Class frmAstroBinSearch
         DE()
     End Sub
 
-    Private Sub frmAstroBinSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
-        LB = New cLogTextBox(tbLog)
-    End Sub
-
     Private Sub DE()
         System.Windows.Forms.Application.DoEvents()
     End Sub
@@ -117,7 +117,7 @@ Public Class frmAstroBinSearch
     End Sub
 
     Private Sub btnOpenFolder_Click(sender As Object, e As EventArgs) Handles btnOpenFolder.Click
-        Process.Start(PreviewFolder)
+        Utils.StartWithItsEXE(PreviewFolder)
     End Sub
 
 End Class

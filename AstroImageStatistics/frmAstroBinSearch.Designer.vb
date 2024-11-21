@@ -22,198 +22,206 @@ Partial Class frmAstroBinSearch
     'Do not modify it using the code editor.
     <System.Diagnostics.DebuggerStepThrough()>
     Private Sub InitializeComponent()
-        Me.btnSearch = New System.Windows.Forms.Button()
-        Me.tbLog = New System.Windows.Forms.TextBox()
-        Me.TableLayoutPanel1 = New System.Windows.Forms.TableLayoutPanel()
-        Me.tbFilter_TitleContains = New System.Windows.Forms.TextBox()
-        Me.cbFilter_User = New System.Windows.Forms.CheckBox()
-        Me.tbFilter_User = New System.Windows.Forms.TextBox()
-        Me.cbFilter_TitleContains = New System.Windows.Forms.CheckBox()
-        Me.Label1 = New System.Windows.Forms.Label()
-        Me.tbLimit = New System.Windows.Forms.TextBox()
-        Me.tbFilter_DescriptionContains = New System.Windows.Forms.TextBox()
-        Me.cbFilter_DescriptionContains = New System.Windows.Forms.CheckBox()
-        Me.tbURL = New System.Windows.Forms.TextBox()
-        Me.btnQueryToClipboard = New System.Windows.Forms.Button()
-        Me.btnOpenFolder = New System.Windows.Forms.Button()
-        Me.TableLayoutPanel1.SuspendLayout()
-        Me.SuspendLayout()
-        '
-        'btnSearch
-        '
-        Me.btnSearch.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnSearch.Location = New System.Drawing.Point(696, 8)
-        Me.btnSearch.Margin = New System.Windows.Forms.Padding(2)
-        Me.btnSearch.Name = "btnSearch"
-        Me.btnSearch.Size = New System.Drawing.Size(112, 49)
-        Me.btnSearch.TabIndex = 0
-        Me.btnSearch.Text = "Search"
-        Me.btnSearch.UseVisualStyleBackColor = True
-        '
-        'tbLog
-        '
-        Me.tbLog.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbLog.Location = New System.Drawing.Point(12, 186)
-        Me.tbLog.Multiline = True
-        Me.tbLog.Name = "tbLog"
-        Me.tbLog.Size = New System.Drawing.Size(792, 339)
-        Me.tbLog.TabIndex = 1
-        '
-        'TableLayoutPanel1
-        '
-        Me.TableLayoutPanel1.ColumnCount = 2
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.ColumnStyles.Add(New System.Windows.Forms.ColumnStyle(System.Windows.Forms.SizeType.Percent, 50.0!))
-        Me.TableLayoutPanel1.Controls.Add(Me.tbFilter_TitleContains, 1, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.cbFilter_User, 0, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbFilter_User, 1, 0)
-        Me.TableLayoutPanel1.Controls.Add(Me.cbFilter_TitleContains, 0, 1)
-        Me.TableLayoutPanel1.Controls.Add(Me.Label1, 0, 3)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbLimit, 1, 3)
-        Me.TableLayoutPanel1.Controls.Add(Me.tbFilter_DescriptionContains, 1, 2)
-        Me.TableLayoutPanel1.Controls.Add(Me.cbFilter_DescriptionContains, 0, 2)
-        Me.TableLayoutPanel1.Location = New System.Drawing.Point(12, 8)
-        Me.TableLayoutPanel1.Name = "TableLayoutPanel1"
-        Me.TableLayoutPanel1.RowCount = 4
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.00062!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.00063!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 25.00062!))
-        Me.TableLayoutPanel1.RowStyles.Add(New System.Windows.Forms.RowStyle(System.Windows.Forms.SizeType.Percent, 24.99813!))
-        Me.TableLayoutPanel1.Size = New System.Drawing.Size(497, 107)
-        Me.TableLayoutPanel1.TabIndex = 2
-        '
-        'tbFilter_TitleContains
-        '
-        Me.tbFilter_TitleContains.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbFilter_TitleContains.Location = New System.Drawing.Point(251, 29)
-        Me.tbFilter_TitleContains.Name = "tbFilter_TitleContains"
-        Me.tbFilter_TitleContains.Size = New System.Drawing.Size(243, 20)
-        Me.tbFilter_TitleContains.TabIndex = 4
-        Me.tbFilter_TitleContains.Text = "Helix"
-        '
-        'cbFilter_User
-        '
-        Me.cbFilter_User.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.cbFilter_User.AutoSize = True
-        Me.cbFilter_User.Checked = True
-        Me.cbFilter_User.CheckState = System.Windows.Forms.CheckState.Checked
-        Me.cbFilter_User.Location = New System.Drawing.Point(3, 4)
-        Me.cbFilter_User.Name = "cbFilter_User"
-        Me.cbFilter_User.Size = New System.Drawing.Size(48, 17)
-        Me.cbFilter_User.TabIndex = 0
-        Me.cbFilter_User.Text = "User"
-        Me.cbFilter_User.UseVisualStyleBackColor = True
-        '
-        'tbFilter_User
-        '
-        Me.tbFilter_User.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbFilter_User.Location = New System.Drawing.Point(251, 3)
-        Me.tbFilter_User.Name = "tbFilter_User"
-        Me.tbFilter_User.Size = New System.Drawing.Size(243, 20)
-        Me.tbFilter_User.TabIndex = 2
-        Me.tbFilter_User.Text = "equinoxx"
-        '
-        'cbFilter_TitleContains
-        '
-        Me.cbFilter_TitleContains.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.cbFilter_TitleContains.AutoSize = True
-        Me.cbFilter_TitleContains.Location = New System.Drawing.Point(3, 30)
-        Me.cbFilter_TitleContains.Name = "cbFilter_TitleContains"
-        Me.cbFilter_TitleContains.Size = New System.Drawing.Size(90, 17)
-        Me.cbFilter_TitleContains.TabIndex = 4
-        Me.cbFilter_TitleContains.Text = "Title Contains"
-        Me.cbFilter_TitleContains.UseVisualStyleBackColor = True
-        '
-        'Label1
-        '
-        Me.Label1.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.Label1.AutoSize = True
-        Me.Label1.Location = New System.Drawing.Point(3, 86)
-        Me.Label1.Name = "Label1"
-        Me.Label1.Size = New System.Drawing.Size(85, 13)
-        Me.Label1.TabIndex = 5
-        Me.Label1.Text = "Limit return items"
-        '
-        'tbLimit
-        '
-        Me.tbLimit.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbLimit.Location = New System.Drawing.Point(251, 82)
-        Me.tbLimit.Name = "tbLimit"
-        Me.tbLimit.Size = New System.Drawing.Size(243, 20)
-        Me.tbLimit.TabIndex = 4
-        Me.tbLimit.Text = "10"
-        '
-        'tbFilter_DescriptionContains
-        '
-        Me.tbFilter_DescriptionContains.Anchor = CType((System.Windows.Forms.AnchorStyles.Left Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbFilter_DescriptionContains.Location = New System.Drawing.Point(251, 55)
-        Me.tbFilter_DescriptionContains.Name = "tbFilter_DescriptionContains"
-        Me.tbFilter_DescriptionContains.Size = New System.Drawing.Size(243, 20)
-        Me.tbFilter_DescriptionContains.TabIndex = 3
-        Me.tbFilter_DescriptionContains.Text = "CDK20"
-        '
-        'cbFilter_DescriptionContains
-        '
-        Me.cbFilter_DescriptionContains.Anchor = System.Windows.Forms.AnchorStyles.Left
-        Me.cbFilter_DescriptionContains.AutoSize = True
-        Me.cbFilter_DescriptionContains.Location = New System.Drawing.Point(3, 56)
-        Me.cbFilter_DescriptionContains.Name = "cbFilter_DescriptionContains"
-        Me.cbFilter_DescriptionContains.Size = New System.Drawing.Size(123, 17)
-        Me.cbFilter_DescriptionContains.TabIndex = 1
-        Me.cbFilter_DescriptionContains.Text = "Description Contains"
-        Me.cbFilter_DescriptionContains.UseVisualStyleBackColor = True
-        '
-        'tbURL
-        '
-        Me.tbURL.Anchor = CType(((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Left) _
-            Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.tbURL.Location = New System.Drawing.Point(12, 160)
-        Me.tbURL.Name = "tbURL"
-        Me.tbURL.ReadOnly = True
-        Me.tbURL.Size = New System.Drawing.Size(675, 20)
-        Me.tbURL.TabIndex = 3
-        '
-        'btnQueryToClipboard
-        '
-        Me.btnQueryToClipboard.Anchor = CType((System.Windows.Forms.AnchorStyles.Bottom Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnQueryToClipboard.Location = New System.Drawing.Point(692, 160)
-        Me.btnQueryToClipboard.Margin = New System.Windows.Forms.Padding(2)
-        Me.btnQueryToClipboard.Name = "btnQueryToClipboard"
-        Me.btnQueryToClipboard.Size = New System.Drawing.Size(112, 21)
-        Me.btnQueryToClipboard.TabIndex = 4
-        Me.btnQueryToClipboard.Text = "Copy to clipboard"
-        Me.btnQueryToClipboard.UseVisualStyleBackColor = True
-        '
-        'btnOpenFolder
-        '
-        Me.btnOpenFolder.Anchor = CType((System.Windows.Forms.AnchorStyles.Top Or System.Windows.Forms.AnchorStyles.Right), System.Windows.Forms.AnchorStyles)
-        Me.btnOpenFolder.Location = New System.Drawing.Point(696, 61)
-        Me.btnOpenFolder.Margin = New System.Windows.Forms.Padding(2)
-        Me.btnOpenFolder.Name = "btnOpenFolder"
-        Me.btnOpenFolder.Size = New System.Drawing.Size(112, 49)
-        Me.btnOpenFolder.TabIndex = 5
-        Me.btnOpenFolder.Text = "Open preview folder"
-        Me.btnOpenFolder.UseVisualStyleBackColor = True
-        '
-        'frmAstroBinSearch
-        '
-        Me.AutoScaleDimensions = New System.Drawing.SizeF(6.0!, 13.0!)
-        Me.AutoScaleMode = System.Windows.Forms.AutoScaleMode.Font
-        Me.ClientSize = New System.Drawing.Size(816, 537)
-        Me.Controls.Add(Me.btnOpenFolder)
-        Me.Controls.Add(Me.btnQueryToClipboard)
-        Me.Controls.Add(Me.tbURL)
-        Me.Controls.Add(Me.TableLayoutPanel1)
-        Me.Controls.Add(Me.tbLog)
-        Me.Controls.Add(Me.btnSearch)
-        Me.Margin = New System.Windows.Forms.Padding(2)
-        Me.Name = "frmAstroBinSearch"
-        Me.Text = "AstroBin search"
-        Me.TableLayoutPanel1.ResumeLayout(False)
-        Me.TableLayoutPanel1.PerformLayout()
-        Me.ResumeLayout(False)
-        Me.PerformLayout()
+        btnSearch = New Button()
+        tbLog = New TextBox()
+        TableLayoutPanel1 = New TableLayoutPanel()
+        tbFilter_TitleContains = New TextBox()
+        cbFilter_User = New CheckBox()
+        tbFilter_User = New TextBox()
+        cbFilter_TitleContains = New CheckBox()
+        Label1 = New Label()
+        tbLimit = New TextBox()
+        tbFilter_DescriptionContains = New TextBox()
+        cbFilter_DescriptionContains = New CheckBox()
+        tbURL = New TextBox()
+        btnQueryToClipboard = New Button()
+        btnOpenFolder = New Button()
+        TableLayoutPanel1.SuspendLayout()
+        SuspendLayout()
+        ' 
+        ' btnSearch
+        ' 
+        btnSearch.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        btnSearch.Location = New Point(957, 9)
+        btnSearch.Margin = New Padding(2)
+        btnSearch.Name = "btnSearch"
+        btnSearch.Size = New Size(131, 57)
+        btnSearch.TabIndex = 0
+        btnSearch.Text = "Search"
+        btnSearch.UseVisualStyleBackColor = True
+        ' 
+        ' tbLog
+        ' 
+        tbLog.Anchor = AnchorStyles.Top Or AnchorStyles.Bottom Or AnchorStyles.Left Or AnchorStyles.Right
+        tbLog.Location = New Point(14, 167)
+        tbLog.Margin = New Padding(4, 3, 4, 3)
+        tbLog.Multiline = True
+        tbLog.Name = "tbLog"
+        tbLog.Size = New Size(1068, 738)
+        tbLog.TabIndex = 1
+        ' 
+        ' TableLayoutPanel1
+        ' 
+        TableLayoutPanel1.ColumnCount = 2
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.ColumnStyles.Add(New ColumnStyle(SizeType.Percent, 50F))
+        TableLayoutPanel1.Controls.Add(tbFilter_TitleContains, 1, 1)
+        TableLayoutPanel1.Controls.Add(cbFilter_User, 0, 0)
+        TableLayoutPanel1.Controls.Add(tbFilter_User, 1, 0)
+        TableLayoutPanel1.Controls.Add(cbFilter_TitleContains, 0, 1)
+        TableLayoutPanel1.Controls.Add(Label1, 0, 3)
+        TableLayoutPanel1.Controls.Add(tbLimit, 1, 3)
+        TableLayoutPanel1.Controls.Add(tbFilter_DescriptionContains, 1, 2)
+        TableLayoutPanel1.Controls.Add(cbFilter_DescriptionContains, 0, 2)
+        TableLayoutPanel1.Location = New Point(14, 9)
+        TableLayoutPanel1.Margin = New Padding(4, 3, 4, 3)
+        TableLayoutPanel1.Name = "TableLayoutPanel1"
+        TableLayoutPanel1.RowCount = 4
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25.00062F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25.00063F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 25.00062F))
+        TableLayoutPanel1.RowStyles.Add(New RowStyle(SizeType.Percent, 24.99813F))
+        TableLayoutPanel1.Size = New Size(580, 123)
+        TableLayoutPanel1.TabIndex = 2
+        ' 
+        ' tbFilter_TitleContains
+        ' 
+        tbFilter_TitleContains.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        tbFilter_TitleContains.Location = New Point(294, 33)
+        tbFilter_TitleContains.Margin = New Padding(4, 3, 4, 3)
+        tbFilter_TitleContains.Name = "tbFilter_TitleContains"
+        tbFilter_TitleContains.Size = New Size(282, 23)
+        tbFilter_TitleContains.TabIndex = 4
+        tbFilter_TitleContains.Text = "Helix"
+        ' 
+        ' cbFilter_User
+        ' 
+        cbFilter_User.Anchor = AnchorStyles.Left
+        cbFilter_User.AutoSize = True
+        cbFilter_User.Location = New Point(4, 5)
+        cbFilter_User.Margin = New Padding(4, 3, 4, 3)
+        cbFilter_User.Name = "cbFilter_User"
+        cbFilter_User.Size = New Size(49, 19)
+        cbFilter_User.TabIndex = 0
+        cbFilter_User.Text = "User"
+        cbFilter_User.UseVisualStyleBackColor = True
+        ' 
+        ' tbFilter_User
+        ' 
+        tbFilter_User.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        tbFilter_User.Location = New Point(294, 3)
+        tbFilter_User.Margin = New Padding(4, 3, 4, 3)
+        tbFilter_User.Name = "tbFilter_User"
+        tbFilter_User.Size = New Size(282, 23)
+        tbFilter_User.TabIndex = 2
+        tbFilter_User.Text = "equinoxx"
+        ' 
+        ' cbFilter_TitleContains
+        ' 
+        cbFilter_TitleContains.Anchor = AnchorStyles.Left
+        cbFilter_TitleContains.AutoSize = True
+        cbFilter_TitleContains.Location = New Point(4, 35)
+        cbFilter_TitleContains.Margin = New Padding(4, 3, 4, 3)
+        cbFilter_TitleContains.Name = "cbFilter_TitleContains"
+        cbFilter_TitleContains.Size = New Size(98, 19)
+        cbFilter_TitleContains.TabIndex = 4
+        cbFilter_TitleContains.Text = "Title Contains"
+        cbFilter_TitleContains.UseVisualStyleBackColor = True
+        ' 
+        ' Label1
+        ' 
+        Label1.Anchor = AnchorStyles.Left
+        Label1.AutoSize = True
+        Label1.Location = New Point(4, 99)
+        Label1.Margin = New Padding(4, 0, 4, 0)
+        Label1.Name = "Label1"
+        Label1.Size = New Size(101, 15)
+        Label1.TabIndex = 5
+        Label1.Text = "Limit return items"
+        ' 
+        ' tbLimit
+        ' 
+        tbLimit.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        tbLimit.Location = New Point(294, 95)
+        tbLimit.Margin = New Padding(4, 3, 4, 3)
+        tbLimit.Name = "tbLimit"
+        tbLimit.Size = New Size(282, 23)
+        tbLimit.TabIndex = 4
+        tbLimit.Text = "2"
+        ' 
+        ' tbFilter_DescriptionContains
+        ' 
+        tbFilter_DescriptionContains.Anchor = AnchorStyles.Left Or AnchorStyles.Right
+        tbFilter_DescriptionContains.Location = New Point(294, 63)
+        tbFilter_DescriptionContains.Margin = New Padding(4, 3, 4, 3)
+        tbFilter_DescriptionContains.Name = "tbFilter_DescriptionContains"
+        tbFilter_DescriptionContains.Size = New Size(282, 23)
+        tbFilter_DescriptionContains.TabIndex = 3
+        tbFilter_DescriptionContains.Text = "CDK20"
+        ' 
+        ' cbFilter_DescriptionContains
+        ' 
+        cbFilter_DescriptionContains.Anchor = AnchorStyles.Left
+        cbFilter_DescriptionContains.AutoSize = True
+        cbFilter_DescriptionContains.Location = New Point(4, 65)
+        cbFilter_DescriptionContains.Margin = New Padding(4, 3, 4, 3)
+        cbFilter_DescriptionContains.Name = "cbFilter_DescriptionContains"
+        cbFilter_DescriptionContains.Size = New Size(136, 19)
+        cbFilter_DescriptionContains.TabIndex = 1
+        cbFilter_DescriptionContains.Text = "Description Contains"
+        cbFilter_DescriptionContains.UseVisualStyleBackColor = True
+        ' 
+        ' tbURL
+        ' 
+        tbURL.Anchor = AnchorStyles.Top Or AnchorStyles.Left Or AnchorStyles.Right
+        tbURL.BackColor = Color.FromArgb(CByte(255), CByte(255), CByte(128))
+        tbURL.Location = New Point(14, 133)
+        tbURL.Margin = New Padding(4, 3, 4, 3)
+        tbURL.Name = "tbURL"
+        tbURL.ReadOnly = True
+        tbURL.Size = New Size(932, 23)
+        tbURL.TabIndex = 3
+        ' 
+        ' btnQueryToClipboard
+        ' 
+        btnQueryToClipboard.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        btnQueryToClipboard.Location = New Point(957, 133)
+        btnQueryToClipboard.Margin = New Padding(2)
+        btnQueryToClipboard.Name = "btnQueryToClipboard"
+        btnQueryToClipboard.Size = New Size(131, 24)
+        btnQueryToClipboard.TabIndex = 4
+        btnQueryToClipboard.Text = "Copy to clipboard"
+        btnQueryToClipboard.UseVisualStyleBackColor = True
+        ' 
+        ' btnOpenFolder
+        ' 
+        btnOpenFolder.Anchor = AnchorStyles.Top Or AnchorStyles.Right
+        btnOpenFolder.Location = New Point(957, 70)
+        btnOpenFolder.Margin = New Padding(2)
+        btnOpenFolder.Name = "btnOpenFolder"
+        btnOpenFolder.Size = New Size(131, 57)
+        btnOpenFolder.TabIndex = 5
+        btnOpenFolder.Text = "Open preview folder"
+        btnOpenFolder.UseVisualStyleBackColor = True
+        ' 
+        ' frmAstroBinSearch
+        ' 
+        AutoScaleDimensions = New SizeF(7F, 15F)
+        AutoScaleMode = AutoScaleMode.Font
+        ClientSize = New Size(1097, 919)
+        Controls.Add(btnOpenFolder)
+        Controls.Add(btnQueryToClipboard)
+        Controls.Add(tbURL)
+        Controls.Add(TableLayoutPanel1)
+        Controls.Add(tbLog)
+        Controls.Add(btnSearch)
+        Margin = New Padding(2)
+        Name = "frmAstroBinSearch"
+        Text = "AstroBin search"
+        TableLayoutPanel1.ResumeLayout(False)
+        TableLayoutPanel1.PerformLayout()
+        ResumeLayout(False)
+        PerformLayout()
 
     End Sub
 

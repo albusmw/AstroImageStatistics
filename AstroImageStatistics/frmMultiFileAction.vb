@@ -1,13 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports System.CodeDom.Compiler
-Imports System.Configuration
-Imports System.DirectoryServices.ActiveDirectory
-Imports System.IO
-Imports DocumentFormat.OpenXml.Vml.Office
 Imports OpenCvSharp
-Imports SixLabors.ImageSharp.Formats.Webp
 
 '''<summary>This form should handle actions that apply to multiple files, e.g. dark statistics, hot pixel search, basic stacking, ...</summary>
 Partial Public Class frmMultiFileAction

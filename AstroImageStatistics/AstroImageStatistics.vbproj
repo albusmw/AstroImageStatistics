@@ -23,9 +23,11 @@
     <Compile Include="..\..\MyLib\ASCOMDynamic.vb" Link="MyLib\ASCOMDynamic.vb" />
     <Compile Include="..\..\MyLib\AsImProc.vb" Link="AsImProc.vb" />
     <Compile Include="..\..\MyLib\Astro.vb" Link="MyLib\Astro.vb" />
+    <Compile Include="..\..\MyLib\AstroAlgo\cFlatEqualizer.vb" Link="MyLib\AstroAlgo\cFlatEqualizer.vb" />
     <Compile Include="..\..\MyLib\AstroDSP.vb">
       <Link>MyLib\AstroDSP.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\cAstroBin.vb" Link="MyLib\cAstroBin.vb" />
     <Compile Include="..\..\MyLib\cFITSHeaderKeywords.vb" Link="MyLib\cFITSHeaderKeywords.vb" />
     <Compile Include="..\..\MyLib\ClosedXML.vb">
       <Link>MyLib\ClosedXML.vb</Link>
@@ -46,6 +48,7 @@
     </Compile>
     <Compile Include="..\..\MyLib\FileIO.vb" Link="MyLib\FileIO.vb" />
     <Compile Include="..\..\MyLib\GetBuildDateTime.vb" Link="MyLib\GetBuildDateTime.vb" />
+    <Compile Include="..\..\MyLib\SingleValStatToXLS.vb" Link="MyLib\SingleValStatToXLS.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
       <DependentUpon>frmImageForm.vb</DependentUpon>
@@ -295,6 +298,9 @@
     <Reference Include="ASCOM.Astrometry">
       <HintPath>..\..\..\Windows\assembly\GAC_MSIL\ASCOM.Astrometry\6.0.0.0__565de7938946fba7\ASCOM.Astrometry.dll</HintPath>
     </Reference>
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="MyLib\AstroAlgo\" />
   </ItemGroup>
   <PropertyGroup>
     <AssemblyTitle>AstroImageStatistics</AssemblyTitle>

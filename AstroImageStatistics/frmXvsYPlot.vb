@@ -1,8 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
+
 Imports AstroImageStatistics.Ato
-Imports DocumentFormat.OpenXml.Drawing
-Imports ZedGraph
 
 Public Class frmXvsYPlot
 

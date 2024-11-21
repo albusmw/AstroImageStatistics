@@ -1,5 +1,6 @@
 ﻿Option Explicit On
 Option Strict On
+Imports System.Media
 
 Public Class MainForm
 
@@ -476,35 +477,14 @@ Public Class MainForm
 
             '3.) Row and column
             If IsNothing(AIS.DB.LastFile_EvalResults.StatPerRow) = False Then
-                Dim XY As New List(Of Object())
-                For Idx As Integer = 0 To AIS.DB.LastFile_EvalResults.StatPerRow.GetUpperBound(0)
-                    With AIS.DB.LastFile_EvalResults.StatPerRow(Idx)
-                        XY.Add(New Object() {Idx + 1, .Minimum, .Mean, .Maximum, .Sigma})
-                        If Idx = 492 Then
-                            Console.WriteLine("!!!")
-                        End If
-                    End With
-                Next Idx
-                Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Row Statistics")
-                worksheet.Cell(1, 1).InsertData(New List(Of String)({"Row #", "Min", "Mean", "Max", "Sigma"}), True)
-                worksheet.Cell(2, 1).InsertData(XY)
-                For Each col In worksheet.ColumnsUsed
-                    col.AdjustToContents()
-                Next col
+                With New cSingleValStatToXLS
+                    .Save(workbook.Worksheets.Add("Row Statistics"), AIS.DB.LastFile_EvalResults.StatPerRow)
+                End With
             End If
             If IsNothing(AIS.DB.LastFile_EvalResults.StatPerCol) = False Then
-                Dim XY As New List(Of Object())
-                For Idx As Integer = 0 To AIS.DB.LastFile_EvalResults.StatPerCol.GetUpperBound(0)
-                    With AIS.DB.LastFile_EvalResults.StatPerCol(Idx)
-                        XY.Add(New Object() {Idx + 1, .Minimum, .Mean, .Maximum, .Sigma})
-                    End With
-                Next Idx
-                Dim worksheet As ClosedXML.Excel.IXLWorksheet = workbook.Worksheets.Add("Column Statistics")
-                worksheet.Cell(1, 1).InsertData(New List(Of String)({"Column #", "Min", "Mean", "Max", "Sigma"}), True)
-                worksheet.Cell(2, 1).InsertData(XY)
-                For Each col In worksheet.ColumnsUsed
-                    col.AdjustToContents()
-                Next col
+                With New cSingleValStatToXLS
+                    .Save(workbook.Worksheets.Add("Column Statistics"), AIS.DB.LastFile_EvalResults.StatPerCol)
+                End With
             End If
 
             '4) Save and open
@@ -2121,7 +2101,42 @@ Public Class MainForm
         Dim Dic As Dictionary(Of Long, ULong) = AIS.DB.LastFile_Statistics.MonochromHistogram_Int
         Dim Gene As New cShanFano(Of Long)
         Gene.GenCodeBook(Dic)
-
     End Sub
 
+    Private Sub tsmiTest_FlatsEqualizer_Click(sender As Object, e As EventArgs) Handles tsmiTest_FlatsEqualizer.Click
+
+        Dim AllFiles As New List(Of String) : AllFiles.AddRange(System.IO.Directory.GetFiles("\\192.168.100.10\dsc\2024_11_13\Flats\06_28_12", "Flats_000*.fits"))
+
+        Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, "PolyFactorSummary.xlsx")
+        Dim FlatEqualizer As New cFlatEqualizer
+        FlatEqualizer.FlatFile1 = AllFiles.First
+        FlatEqualizer.PowerReduction = 5
+        FlatEqualizer.Config_CalcHeatMap = False
+        FlatEqualizer.Config_StoreXLS = False
+        Dim EQFlats As New Dictionary(Of String, Double())
+        Using WB As New ClosedXML.Excel.XLWorkbook
+            Dim WS As ClosedXML.Excel.IXLWorksheet = WB.Worksheets.Add("Polyfactors")
+            WS.Cell(1, 1).InsertData(New List(Of String)({"MatrixPoly_0", "MatrixPoly_1", "StatXYPoly_0", "StatXYPoly_1"}), True)
+            Dim RowPtr As Integer = 1
+            For Each FlatFile As String In AllFiles
+                If FlatFile <> FlatEqualizer.FlatFile1 Then
+                    RowPtr += 1
+                    Log.Log(RowPtr.ValRegIndep & "/" & 20.ValRegIndep)
+                    FlatEqualizer.FlatFile2 = FlatFile
+                    FlatEqualizer.CalcPolyFactors()
+                    WS.Cell(RowPtr, 1).Value = FlatEqualizer.MatrixPoly(0)
+                    WS.Cell(RowPtr, 2).Value = FlatEqualizer.MatrixPoly(1)
+                    WS.Cell(RowPtr, 3).Value = FlatEqualizer.StatXYPoly(0)
+                    WS.Cell(RowPtr, 4).Value = FlatEqualizer.StatXYPoly(1)
+                    EQFlats.Add(FlatEqualizer.FlatFile2, New Double() {FlatEqualizer.StatXYPoly(0), FlatEqualizer.StatXYPoly(1)})
+                End If
+                'If RowPtr = 5 Then Exit For                    'break for test purpose
+            Next FlatFile
+            WB.SaveAs(FileToGenerate)
+        End Using
+        Log.Log(" Combining ...")
+        FlatEqualizer.CombineFlats(FlatEqualizer.FlatFile1, EQFlats)
+        Log.Log(" DONE")
+        SystemSounds.Beep.Play()
+    End Sub
 End Class
