@@ -95,8 +95,8 @@ Public Class frmImageDisplay
         'Configure picture generation and generate image
         Stopper.Tic()
         Dim NoROI As Rectangle = Nothing
-        ImageFromData.CM_LowerEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
-        ImageFromData.CM_UpperEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
+        'ImageFromData.CM_LowerEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Min.Key
+        'ImageFromData.CM_UpperEnd_Absolute = SingleStatCalc.ImageStatistics.MonoStatistics_Int.Max.Key
         ImageFromData.GenerateDisplayImage(SingleStatCalc.DataProcessor_UInt16.ImageData(NAXIS3).Data, NoROI, SingleStatCalc.ImageStatistics, MyIPP)
         Stopper.Toc("GenerateDisplayImage")
 
@@ -109,6 +109,7 @@ Public Class frmImageDisplay
         pbMain.BackColor = Color.Black
         pbZoomed.BackColor = Color.Black
         ImageFromData.OutputImage.UnlockBits()
+        pbMain.BackColor = ImageFromData.CM_BackColor
         pbMain.Image = ImageFromData.OutputImage.BitmapToProcess
         Stopper.Toc("Display image")
 
@@ -124,7 +125,7 @@ Public Class frmImageDisplay
 
         'Generate LUT image
         'Dim ScaleDisplay_Width As Integer = CInt(Data_Max - Data_Min + 1)
-        ScaleImage = New cLockBitmap32Bit(800, 20)
+        ScaleImage = New cLockBitmap32Bit(2000, 40)
         ScaleImage.LockBits(False)
         Dim CopyPtr As Integer = 0
         For Y As Integer = 0 To ScaleImage.Height - 1
@@ -134,6 +135,7 @@ Public Class frmImageDisplay
             Next X
         Next Y
         ScaleImage.UnlockBits()
+        pbMainScale.BackColor = ImageFromData.CM_BackColor
         pbMainScale.InterpolationMode = Drawing2D.InterpolationMode.NearestNeighbor
         pbMainScale.Image = ScaleImage.BitmapToProcess
 
@@ -141,35 +143,35 @@ Public Class frmImageDisplay
 
     Private Sub pgMain_PropertyValueChanged(s As Object, e As PropertyValueChangedEventArgs) Handles pgMain.PropertyValueChanged
         'Special handling for certain property changes that need additional calculation
-        Select Case pgMain.SelectedGridItem.PropertyDescriptor.Name
-            Case "MinCutOff_pct"
-                'ImageFromData.MinCutOff_AD = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
-            Case "MaxCutOff_pct"
-                'ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
-        End Select
+        'Select Case pgMain.SelectedGridItem.PropertyDescriptor.Name
+        '    Case "MinCutOff_pct"
+        '        ImageFromData.MinCutOff_AD = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
+        '    Case "MaxCutOff_pct"
+        '        ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
+        'End Select
         DisplayCurrentProps()
         GenerateDisplayImage()
     End Sub
 
     Private Sub pgMain_MouseWheel(sender As Object, e As MouseEventArgs) Handles pgMain.MouseWheel
-        Dim PropToChange As cImageFromData = CType(pgMain.SelectedObject, cImageFromData)
+        'Dim PropToChange As cImageFromData = CType(pgMain.SelectedObject, cImageFromData)
         Select Case pgMain.SelectedGridItem.PropertyDescriptor.Name
-            Case "MinCutOff_pct"
-                'PropToChange.MinCutOff_pct += Math.Sign(e.Delta) * PropToChange.PctStepSize
-                'If PropToChange.MinCutOff_pct < 0.0 Then PropToChange.MinCutOff_pct = 0.0
-                'ImageFromData.MinCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MinCutOff_pct)
-            Case "MaxCutOff_pct"
-                'PropToChange.MaxCutOff_pct += Math.Sign(e.Delta) * PropToChange.PctStepSize
-                'If PropToChange.MaxCutOff_pct > 100.0 Then PropToChange.MaxCutOff_pct = 100.0
-                'ImageFromData.MaxCutOff_ADU = StatToUsed.MonochromHistogram_PctFract(ImageFromData.MaxCutOff_pct)
-            Case "MinCutOff_ADU"
+            Case "CM_LowerEnd_Relative"
+                ImageFromData.CM_LowerEnd_Relative += Math.Sign(e.Delta) * ImageFromData.PctStepSize
+                If ImageFromData.CM_LowerEnd_Relative < 0.0 Then ImageFromData.CM_LowerEnd_Relative = 0.0
+                ImageFromData.CM_LowerEnd_Absolute = StatToUsed.MonochromHistogram_PctFract(ImageFromData.CM_LowerEnd_Relative)
+            Case "CM_UpperEnd_Relative"
+                ImageFromData.CM_UpperEnd_Relative += Math.Sign(e.Delta) * ImageFromData.PctStepSize
+                If ImageFromData.CM_UpperEnd_Relative > 100.0 Then ImageFromData.CM_UpperEnd_Relative = 100.0
+                ImageFromData.CM_UpperEnd_Absolute = StatToUsed.MonochromHistogram_PctFract(ImageFromData.CM_UpperEnd_Relative)
+            Case "CM_LowerEnd_Absolute"
                 'Adjust the minimum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
                     ImageFromData.CM_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.CM_LowerEnd_Absolute)
                 Else
                     ImageFromData.CM_LowerEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.CM_LowerEnd_Absolute)
                 End If
-            Case "MaxCutOff_ADU"
+            Case "CM_UpperEnd_Absolute"
                 'Adjust the maximum cut-off value (fixed point) to the next used bin
                 If e.Delta < 0 Then
                     ImageFromData.CM_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextBelow(ImageFromData.CM_UpperEnd_Absolute)
@@ -177,7 +179,7 @@ Public Class frmImageDisplay
                     ImageFromData.CM_UpperEnd_Absolute = StatToUsed.MonochromHistogram_NextAbove(ImageFromData.CM_UpperEnd_Absolute)
                 End If
             Case "Gamma"
-                PropToChange.CM_Gamma += Math.Sign(e.Delta) * PropToChange.PctStepSize
+                ImageFromData.CM_Gamma += Math.Sign(e.Delta) * ImageFromData.PctStepSize
         End Select
         DisplayCurrentProps()
         GenerateDisplayImage()
