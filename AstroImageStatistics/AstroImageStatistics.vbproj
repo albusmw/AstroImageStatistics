@@ -38,6 +38,7 @@
     <Compile Include="..\..\MyLib\COMInterop.vb" Link="MyLib\COMInterop.vb" />
     <Compile Include="..\..\MyLib\cRTFGen.vb" Link="cRTFGen.vb" />
     <Compile Include="..\..\MyLib\cShanFano.vb" Link="cShanFano.vb" />
+    <Compile Include="..\..\MyLib\cTIFF_IO.vb" Link="MyLib\cTIFF_IO.vb" />
     <Compile Include="..\..\MyLib\cZEDGraph.vb" Link="MyLib\cZEDGraph.vb" />
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
