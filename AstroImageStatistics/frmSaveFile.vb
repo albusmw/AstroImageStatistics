@@ -1,7 +1,5 @@
 ﻿Option Explicit On
 Option Strict On
-Imports System.Windows
-Imports System.Windows.Media.Imaging
 
 Public Class frmSaveFile
 
@@ -61,53 +59,35 @@ Public Class frmSaveFile
                     SavedFiles.Add(FileName & " - FITS 32 bit float")
                 Case 3
                     'TIFF 16-bit
+                    Dim TIFFSave As New ImageFileFormatSpecific.cTIFF
                     If .OneChannelData = True Then
-                        ImageFileFormatSpecific.SaveTIFF_Format16bppGrayScale(FileName, .ImageData(0).Data)
+                        TIFFSave.Save_16bppGrayScale(FileName, .ImageData(0).Data)
                         SavedFiles.Add(FileName & " - TIFF 16-bit grayscale")
                     Else
-                        ImageFileFormatSpecific.SaveTIFF_Format48bppColor(FileName, .ImageData)
+                        TIFFSave.Save_48bppColor(FileName, .ImageData)
                         SavedFiles.Add(FileName & " - TIFF 48-bit color")
                     End If
                 Case 4
                     'JPG 8-bit
-                    Dim ImageQuality As Integer = CInt(tbImageQuality_JPEG.Text)
-                    Dim myEncoderParameters As New System.Drawing.Imaging.EncoderParameters(1)
-                    myEncoderParameters.Param(0) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, ImageQuality)
-                    Dim BMP8BitToSave As Bitmap = cLockBitmap.Get8BitGrayscaleImage(.ImageData(0).Data, AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key).BitmapToProcess
-                    BMP8BitToSave.Save(FileName, GetEncoderInfo("image/jpeg"), myEncoderParameters)
-                    SavedFiles.Add(FileName & " - JPG 8-bit, quality " & ImageQuality.ValRegIndep)
+                    Dim JPEGSave As New ImageFileFormatSpecific.cJPEG
+                    JPEGSave.ImageQuality = CInt(tbImageQuality_JPEG.Text)
+                    JPEGSave.Save_8bpp(FileName, .ImageData(0).Data)
+                    SavedFiles.Add(FileName & " - JPG 8-bit, quality " & JPEGSave.ImageQuality.ValRegIndep)
                 Case 5
                     'PNG 8-bit
-                    Dim ImageQuality As Integer = CInt(tbImageQuality_PNG.Text)
-                    Dim myEncoderParameters As New System.Drawing.Imaging.EncoderParameters(2)
-                    myEncoderParameters.Param(0) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.Quality, ImageQuality)
-                    myEncoderParameters.Param(1) = New System.Drawing.Imaging.EncoderParameter(System.Drawing.Imaging.Encoder.ColorDepth, 8)
-                    Dim BMP8BitToSave As Bitmap = cLockBitmap.Get8BitGrayscaleImage(.ImageData(0).Data, AIS.DB.LastFile_Statistics.MonoStatistics_Int.Max.Key).BitmapToProcess
-                    BMP8BitToSave.Save(FileName, GetEncoderInfo("image/png"), myEncoderParameters)
+                    Dim PNGSave As New ImageFileFormatSpecific.cPNG
+                    PNGSave.ImageQuality = CInt(tbImageQuality_PNG.Text)
+                    PNGSave.Save_8bpp(FileName, .ImageData(0).Data)
                     SavedFiles.Add(FileName & " - PNG 8-bit")
                 Case 6
                     'PNG 16-bit
-                    FileIO.PNG16Bit(.ImageData(0).Data, FileName)
+                    Dim PNGSave As New ImageFileFormatSpecific.cPNG
+                    PNGSave.Save_16bpp(FileName, .ImageData(0).Data)
                     SavedFiles.Add(FileName & " - PNG 16-bit")
             End Select
         End With
         tbSaveFileName.Text = FileName
     End Sub
-
-
-
-    '''<summary>Get an encoder by its MIME name</summary>
-    '''<param name="mimeType"></param>
-    '''<returns></returns>
-    Private Function GetEncoderInfo(ByVal mimeType As String) As Imaging.ImageCodecInfo
-        Dim RetVal As Imaging.ImageCodecInfo = Nothing
-        Dim AllEncoder As New List(Of String)
-        For Each Encoder As Imaging.ImageCodecInfo In Imaging.ImageCodecInfo.GetImageEncoders
-            If Encoder.MimeType = mimeType Then RetVal = Encoder
-            AllEncoder.Add(Encoder.MimeType)
-        Next Encoder
-        Return RetVal
-    End Function
 
     Private Sub btnClose_Click(sender As Object, e As EventArgs) Handles btnClose.Click
         If SavedFiles.Count = 0 Then Me.DialogResult = DialogResult.Cancel Else Me.DialogResult = DialogResult.OK

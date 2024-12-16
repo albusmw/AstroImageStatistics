@@ -33,9 +33,10 @@ Public Class frmAlignTIFFFiles
         Dim ROIWidth As Integer = tbROI_width.Text.ValRegIndepInteger
         Dim ROIHeigth As Integer = tbROI_heigth.Text.ValRegIndepInteger
 
-        cTIFF_IO.LoadTIFF(tbFile1.Text, New Rectangle(BaseX + tbFile1_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile1_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), UInt16.MaxValue, ImageData1)
-        cTIFF_IO.LoadTIFF(tbFile2.Text, New Rectangle(BaseX + tbFile2_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile2_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), UInt16.MaxValue, ImageData2)
-        cTIFF_IO.LoadTIFF(tbFile3.Text, New Rectangle(BaseX + tbFile3_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile3_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), UInt16.MaxValue, ImageData3)
+        Dim TIFF_Load As New ImageFileFormatSpecific.cTIFF
+        TIFF_Load.LoadTIFF(tbFile1.Text, New Rectangle(BaseX + tbFile1_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile1_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), ImageData1)
+        TIFF_Load.LoadTIFF(tbFile2.Text, New Rectangle(BaseX + tbFile2_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile2_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), ImageData2)
+        TIFF_Load.LoadTIFF(tbFile3.Text, New Rectangle(BaseX + tbFile3_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile3_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), ImageData3)
 
         ROIImageGenerator.CM = cColorMaps.eMaps.None
         ROIImageGenerator.GenerateDisplayImageRGB(ImageData1, ImageData2, ImageData3, AIS.DB.IPP)
@@ -47,8 +48,6 @@ Public Class frmAlignTIFFFiles
     '=================================================================================
     ' For class library
     '=================================================================================
-
-
 
     Private Sub Delta_MouseWheel(sender As Object, e As MouseEventArgs) Handles tbFile1_DeltaX.MouseWheel, tbFile2_DeltaX.MouseWheel, tbFile3_DeltaX.MouseWheel, tbFile1_DeltaY.MouseWheel, tbFile2_DeltaY.MouseWheel, tbFile3_DeltaY.MouseWheel
         Dim Value As Integer = CType(sender, TextBox).Text.ValRegIndepInteger

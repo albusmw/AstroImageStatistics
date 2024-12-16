@@ -38,7 +38,6 @@
     <Compile Include="..\..\MyLib\COMInterop.vb" Link="MyLib\COMInterop.vb" />
     <Compile Include="..\..\MyLib\cRTFGen.vb" Link="cRTFGen.vb" />
     <Compile Include="..\..\MyLib\cShanFano.vb" Link="cShanFano.vb" />
-    <Compile Include="..\..\MyLib\cTIFF_IO.vb" Link="MyLib\cTIFF_IO.vb" />
     <Compile Include="..\..\MyLib\cZEDGraph.vb" Link="MyLib\cZEDGraph.vb" />
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
@@ -47,8 +46,8 @@
     <Compile Include="..\..\MyLib\Extensions.vb">
       <Link>MyLib\Extensions.vb</Link>
     </Compile>
-    <Compile Include="..\..\MyLib\FileIO.vb" Link="MyLib\FileIO.vb" />
     <Compile Include="..\..\MyLib\GetBuildDateTime.vb" Link="MyLib\GetBuildDateTime.vb" />
+    <Compile Include="..\..\MyLib\ImageFileFormatSpecific.vb" Link="MyLib\ImageFileFormatSpecific.vb" />
     <Compile Include="..\..\MyLib\SingleValStatToXLS.vb" Link="MyLib\SingleValStatToXLS.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
@@ -131,9 +130,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\Everything.vb">
       <Link>common\Everything.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\ImageFileFormatSpecific.vb">
-      <Link>common\ImageFileFormatSpecific.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\ImgArrayFunctions.vb">
       <Link>ImgArrayFunctions.vb</Link>
@@ -258,21 +254,21 @@
   </ItemGroup>
   <ItemGroup>
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.649" />
-    <PackageReference Include="ClosedXML" Version="0.104.1" />
-    <PackageReference Include="DG.AdvancedDataGridView" Version="1.2.29301.14" />
+    <PackageReference Include="ClosedXML" Version="0.104.2" />
+    <PackageReference Include="DG.AdvancedDataGridView" Version="1.2.29921.15" />
     <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="HidSharp" Version="2.1.0" />
     <PackageReference Include="Irony" Version="1.5.3" />
     <PackageReference Include="Irony.NetCore" Version="1.1.11" />
-    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20240616" />
-    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.10.0.20240616" />
-    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20240616" />
-    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20240616" />
+    <PackageReference Include="OpenCvSharp4" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.Extensions" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20241108" />
+    <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20241108" />
     <PackageReference Include="OpenMacroBoard.SDK" Version="6.0.0" />
     <PackageReference Include="RTFExporter" Version="1.1.4" />
-    <PackageReference Include="SixLabors.Fonts" Version="2.0.4" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.5" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.0.6" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageReference Include="SQLite" Version="3.13.0" />
     <PackageReference Include="StreamDeckSharp" Version="6.0.0" />
     <PackageReference Include="System.ComponentModel.Composition" Version="8.0.0" />
@@ -281,7 +277,7 @@
     <PackageReference Include="System.Data.SQLite.Core" Version="1.0.119" />
     <PackageReference Include="System.Data.SQLite.EF6" Version="1.0.119" />
     <PackageReference Include="System.DirectoryServices" Version="8.0.0" />
-    <PackageReference Include="XLParser" Version="1.7.2" />
+    <PackageReference Include="XLParser" Version="1.7.3" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.4.0" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
