@@ -280,7 +280,7 @@ Partial Public Class frmMultiFileAction
 
                     'Run a Bin2 with max removal if selected (to remove hot pixel)
                     If Config.Stack_RunBin2 = True Then
-                        FileContentAsFloat32 = Container.DataProcessor_UInt16.ImageData(0).Data.Bin2MaxOut32f
+                        FileContentAsFloat32 = ImageProcessing.Binning.Mean_RemoveOuter_Single(Container.DataProcessor_UInt16.ImageData(0).Data, 2, 1)
                     Else
                         AIS.DB.IPP.Convert(Container.DataProcessor_UInt16.ImageData(0).Data, FileContentAsFloat32)
                     End If

@@ -121,6 +121,7 @@ Partial Class MainForm
         tsmiTest_RAWReader_LibRawDLL = New ToolStripMenuItem()
         tsmiTest_RAWReader_GrayPNGToFits = New ToolStripMenuItem()
         tsmiTest_Shannon = New ToolStripMenuItem()
+        tsmiTest_FlatsEqualizer = New ToolStripMenuItem()
         ofdMain = New OpenFileDialog()
         tbLogOutput = New TextBox()
         ssMain = New StatusStrip()
@@ -139,7 +140,7 @@ Partial Class MainForm
         tsMain = New ToolStrip()
         tsb_Open = New ToolStripButton()
         tsb_Display = New ToolStripButton()
-        tsmiTest_FlatsEqualizer = New ToolStripMenuItem()
+        tsmiAnalysis_Plot_RelPixDist = New ToolStripMenuItem()
         msMain.SuspendLayout()
         ssMain.SuspendLayout()
         gbDetails.SuspendLayout()
@@ -310,58 +311,58 @@ Partial Class MainForm
         ' tsmiAnalysis_RowColStat
         ' 
         tsmiAnalysis_RowColStat.Name = "tsmiAnalysis_RowColStat"
-        tsmiAnalysis_RowColStat.Size = New Size(222, 22)
+        tsmiAnalysis_RowColStat.Size = New Size(221, 22)
         tsmiAnalysis_RowColStat.Text = "Row and column statistics"
         ' 
         ' tsmiAnalysis_Plot
         ' 
-        tsmiAnalysis_Plot.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysis_Plot_Replot, tsmiAnalysis_Plot_ADUQuant})
+        tsmiAnalysis_Plot.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysis_Plot_Replot, tsmiAnalysis_Plot_ADUQuant, tsmiAnalysis_Plot_RelPixDist})
         tsmiAnalysis_Plot.Name = "tsmiAnalysis_Plot"
         tsmiAnalysis_Plot.ShortcutKeys = Keys.Control Or Keys.P
-        tsmiAnalysis_Plot.Size = New Size(222, 22)
+        tsmiAnalysis_Plot.Size = New Size(221, 22)
         tsmiAnalysis_Plot.Text = "Plot"
         ' 
         ' tsmiAnalysis_Plot_Replot
         ' 
         tsmiAnalysis_Plot_Replot.Name = "tsmiAnalysis_Plot_Replot"
-        tsmiAnalysis_Plot_Replot.Size = New Size(167, 22)
+        tsmiAnalysis_Plot_Replot.Size = New Size(210, 22)
         tsmiAnalysis_Plot_Replot.Text = "Re-plot statistics"
         ' 
         ' tsmiAnalysis_Plot_ADUQuant
         ' 
         tsmiAnalysis_Plot_ADUQuant.Name = "tsmiAnalysis_Plot_ADUQuant"
-        tsmiAnalysis_Plot_ADUQuant.Size = New Size(167, 22)
+        tsmiAnalysis_Plot_ADUQuant.Size = New Size(210, 22)
         tsmiAnalysis_Plot_ADUQuant.Text = "ADU quantization"
         ' 
         ' tsmiAnalysisHotPixel
         ' 
         tsmiAnalysisHotPixel.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisHotPixel_fixfile})
         tsmiAnalysisHotPixel.Name = "tsmiAnalysisHotPixel"
-        tsmiAnalysisHotPixel.Size = New Size(222, 22)
+        tsmiAnalysisHotPixel.Size = New Size(221, 22)
         tsmiAnalysisHotPixel.Text = "Hot pixel"
         ' 
         ' tsmiAnalysisHotPixel_fixfile
         ' 
         tsmiAnalysisHotPixel_fixfile.Name = "tsmiAnalysisHotPixel_fixfile"
-        tsmiAnalysisHotPixel_fixfile.Size = New Size(159, 22)
+        tsmiAnalysisHotPixel_fixfile.Size = New Size(180, 22)
         tsmiAnalysisHotPixel_fixfile.Text = "Fix based on file"
         ' 
         ' ToolStripMenuItem7
         ' 
         ToolStripMenuItem7.Name = "ToolStripMenuItem7"
-        ToolStripMenuItem7.Size = New Size(219, 6)
+        ToolStripMenuItem7.Size = New Size(218, 6)
         ' 
         ' tsmiAnalysis_ManualColorBalancer
         ' 
         tsmiAnalysis_ManualColorBalancer.Name = "tsmiAnalysis_ManualColorBalancer"
-        tsmiAnalysis_ManualColorBalancer.Size = New Size(222, 22)
+        tsmiAnalysis_ManualColorBalancer.Size = New Size(221, 22)
         tsmiAnalysis_ManualColorBalancer.Text = "Manual color balancer"
         ' 
         ' tsmiAnalysisVignette
         ' 
         tsmiAnalysisVignette.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisVignette_CalcRaw, tsmiAnalysisVignette_CalcParam, tsmiAnalysisVignette_Correct, tsmiAnalysisVignette_Display, ToolStripMenuItem10, tsmiAnalysisVignette_Clear})
         tsmiAnalysisVignette.Name = "tsmiAnalysisVignette"
-        tsmiAnalysisVignette.Size = New Size(222, 22)
+        tsmiAnalysisVignette.Size = New Size(221, 22)
         tsmiAnalysisVignette.Text = "Vignette"
         ' 
         ' tsmiAnalysisVignette_CalcRaw
@@ -403,32 +404,32 @@ Partial Class MainForm
         ' 
         tsmiAnalysisPixelMap.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysisPixelMap_SaveFor})
         tsmiAnalysisPixelMap.Name = "tsmiAnalysisPixelMap"
-        tsmiAnalysisPixelMap.Size = New Size(222, 22)
+        tsmiAnalysisPixelMap.Size = New Size(221, 22)
         tsmiAnalysisPixelMap.Text = "Pixel map files"
         ' 
         ' tsmiAnalysisPixelMap_SaveFor
         ' 
         tsmiAnalysisPixelMap_SaveFor.Name = "tsmiAnalysisPixelMap_SaveFor"
-        tsmiAnalysisPixelMap_SaveFor.Size = New Size(221, 22)
+        tsmiAnalysisPixelMap_SaveFor.Size = New Size(220, 22)
         tsmiAnalysisPixelMap_SaveFor.Text = "Save pixel coordinates for ..."
         ' 
         ' tsmiAnalysis_RawFITSHeader
         ' 
         tsmiAnalysis_RawFITSHeader.Name = "tsmiAnalysis_RawFITSHeader"
-        tsmiAnalysis_RawFITSHeader.Size = New Size(222, 22)
+        tsmiAnalysis_RawFITSHeader.Size = New Size(221, 22)
         tsmiAnalysis_RawFITSHeader.Text = "Raw FITS Header"
         ' 
         ' tsmiAnalysis_FloatAsIntError
         ' 
         tsmiAnalysis_FloatAsIntError.Name = "tsmiAnalysis_FloatAsIntError"
-        tsmiAnalysis_FloatAsIntError.Size = New Size(222, 22)
+        tsmiAnalysis_FloatAsIntError.Size = New Size(221, 22)
         tsmiAnalysis_FloatAsIntError.Text = "Float error to int"
         ' 
         ' tsmiAnalysis_MultiFile
         ' 
         tsmiAnalysis_MultiFile.DropDownItems.AddRange(New ToolStripItem() {tsmiAnalysis_MultiFile_Open, tsmiAnalysis_MultiFile_LoadAbove})
         tsmiAnalysis_MultiFile.Name = "tsmiAnalysis_MultiFile"
-        tsmiAnalysis_MultiFile.Size = New Size(222, 22)
+        tsmiAnalysis_MultiFile.Size = New Size(221, 22)
         tsmiAnalysis_MultiFile.Text = "Multi-file pixelwise statistics"
         ' 
         ' tsmiAnalysis_MultiFile_Open
@@ -446,13 +447,13 @@ Partial Class MainForm
         ' tsmiAnalysis_XvsYPlot
         ' 
         tsmiAnalysis_XvsYPlot.Name = "tsmiAnalysis_XvsYPlot"
-        tsmiAnalysis_XvsYPlot.Size = New Size(222, 22)
+        tsmiAnalysis_XvsYPlot.Size = New Size(221, 22)
         tsmiAnalysis_XvsYPlot.Text = "X-vs-Y plots"
         ' 
         ' tsmiAnalysis_FindStars
         ' 
         tsmiAnalysis_FindStars.Name = "tsmiAnalysis_FindStars"
-        tsmiAnalysis_FindStars.Size = New Size(222, 22)
+        tsmiAnalysis_FindStars.Size = New Size(221, 22)
         tsmiAnalysis_FindStars.Text = "Find stars"
         ' 
         ' tsmiProcessing
@@ -514,7 +515,7 @@ Partial Class MainForm
         ' tsmiProcessing_Specials_NINAFix
         ' 
         tsmiProcessing_Specials_NINAFix.Name = "tsmiProcessing_Specials_NINAFix"
-        tsmiProcessing_Specials_NINAFix.Size = New Size(128, 22)
+        tsmiProcessing_Specials_NINAFix.Size = New Size(127, 22)
         tsmiProcessing_Specials_NINAFix.Text = "NINA fix 1"
         ' 
         ' tsmiProcessing_Stack
@@ -558,7 +559,7 @@ Partial Class MainForm
         ' 
         tsmiTools.DropDownItems.AddRange(New ToolStripItem() {tsmiTools_ALADINCoords, tsmiTools_ChangeHeader, tsmiTools_RemoveOverscan, tsmiTools_TestFile, CheckROICutoutToolStripMenuItem})
         tsmiTools.Name = "tsmiTools"
-        tsmiTools.Size = New Size(46, 22)
+        tsmiTools.Size = New Size(47, 22)
         tsmiTools.Text = "Tools"
         ' 
         ' tsmiTools_ALADINCoords
@@ -626,138 +627,144 @@ Partial Class MainForm
         ' 
         tsmiTest.DropDownItems.AddRange(New ToolStripItem() {AfiineTranslateToolStripMenuItem, ToolStripMenuItem6, tsmiTest_Focus, tssmRadCollimation, tsmiTest_ippiXCorr, ToolStripMenuItem9, tsmiTestCode_UseOpenCV, MedianWithinNETToolStripMenuItem, ToolStripMenuItem12, CodeBelowIsNotForHereToolStripMenuItem, CloudWatcherCombinerToolStripMenuItem, tsmiTest_AstrometryQuery, frmTest_HistoInteractive, tsmiTestCode_StreamDeck, tsmiTest_SigmaClip, tsmiTest_FITSReadSpeed, DataGridViewDataSourceToolStripMenuItem, tsmiTest_RAWReader, tsmiTest_Shannon, tsmiTest_FlatsEqualizer})
         tsmiTest.Name = "tsmiTest"
-        tsmiTest.Size = New Size(68, 22)
+        tsmiTest.Size = New Size(69, 22)
         tsmiTest.Text = "Test code"
         ' 
         ' AfiineTranslateToolStripMenuItem
         ' 
         AfiineTranslateToolStripMenuItem.Name = "AfiineTranslateToolStripMenuItem"
-        AfiineTranslateToolStripMenuItem.Size = New Size(274, 22)
+        AfiineTranslateToolStripMenuItem.Size = New Size(275, 22)
         AfiineTranslateToolStripMenuItem.Text = "Afiine translate"
         ' 
         ' ToolStripMenuItem6
         ' 
         ToolStripMenuItem6.Name = "ToolStripMenuItem6"
-        ToolStripMenuItem6.Size = New Size(271, 6)
+        ToolStripMenuItem6.Size = New Size(272, 6)
         ' 
         ' tsmiTest_Focus
         ' 
         tsmiTest_Focus.Name = "tsmiTest_Focus"
-        tsmiTest_Focus.Size = New Size(274, 22)
+        tsmiTest_Focus.Size = New Size(275, 22)
         tsmiTest_Focus.Text = "Focus"
         ' 
         ' tssmRadCollimation
         ' 
         tssmRadCollimation.Name = "tssmRadCollimation"
-        tssmRadCollimation.Size = New Size(274, 22)
+        tssmRadCollimation.Size = New Size(275, 22)
         tssmRadCollimation.Text = "Radial statistics and collimation"
         ' 
         ' tsmiTest_ippiXCorr
         ' 
         tsmiTest_ippiXCorr.Name = "tsmiTest_ippiXCorr"
-        tsmiTest_ippiXCorr.Size = New Size(274, 22)
+        tsmiTest_ippiXCorr.Size = New Size(275, 22)
         tsmiTest_ippiXCorr.Text = "ippi XCorr"
         ' 
         ' ToolStripMenuItem9
         ' 
         ToolStripMenuItem9.Name = "ToolStripMenuItem9"
-        ToolStripMenuItem9.Size = New Size(271, 6)
+        ToolStripMenuItem9.Size = New Size(272, 6)
         ' 
         ' tsmiTestCode_UseOpenCV
         ' 
         tsmiTestCode_UseOpenCV.Name = "tsmiTestCode_UseOpenCV"
-        tsmiTestCode_UseOpenCV.Size = New Size(274, 22)
+        tsmiTestCode_UseOpenCV.Size = New Size(275, 22)
         tsmiTestCode_UseOpenCV.Text = "Use OpenCV"
         ' 
         ' MedianWithinNETToolStripMenuItem
         ' 
         MedianWithinNETToolStripMenuItem.Name = "MedianWithinNETToolStripMenuItem"
-        MedianWithinNETToolStripMenuItem.Size = New Size(274, 22)
+        MedianWithinNETToolStripMenuItem.Size = New Size(275, 22)
         MedianWithinNETToolStripMenuItem.Text = ".NET Median Filter (for reference only)"
         ' 
         ' ToolStripMenuItem12
         ' 
         ToolStripMenuItem12.Name = "ToolStripMenuItem12"
-        ToolStripMenuItem12.Size = New Size(271, 6)
+        ToolStripMenuItem12.Size = New Size(272, 6)
         ' 
         ' CodeBelowIsNotForHereToolStripMenuItem
         ' 
         CodeBelowIsNotForHereToolStripMenuItem.Name = "CodeBelowIsNotForHereToolStripMenuItem"
-        CodeBelowIsNotForHereToolStripMenuItem.Size = New Size(274, 22)
+        CodeBelowIsNotForHereToolStripMenuItem.Size = New Size(275, 22)
         CodeBelowIsNotForHereToolStripMenuItem.Text = "(Code below is not for here ...)"
         ' 
         ' CloudWatcherCombinerToolStripMenuItem
         ' 
         CloudWatcherCombinerToolStripMenuItem.Name = "CloudWatcherCombinerToolStripMenuItem"
-        CloudWatcherCombinerToolStripMenuItem.Size = New Size(274, 22)
+        CloudWatcherCombinerToolStripMenuItem.Size = New Size(275, 22)
         CloudWatcherCombinerToolStripMenuItem.Text = "CloudWatcher combiner"
         ' 
         ' tsmiTest_AstrometryQuery
         ' 
         tsmiTest_AstrometryQuery.Name = "tsmiTest_AstrometryQuery"
-        tsmiTest_AstrometryQuery.Size = New Size(274, 22)
+        tsmiTest_AstrometryQuery.Size = New Size(275, 22)
         tsmiTest_AstrometryQuery.Text = "Astrometry Batch Query"
         ' 
         ' frmTest_HistoInteractive
         ' 
         frmTest_HistoInteractive.Name = "frmTest_HistoInteractive"
-        frmTest_HistoInteractive.Size = New Size(274, 22)
+        frmTest_HistoInteractive.Size = New Size(275, 22)
         frmTest_HistoInteractive.Text = "Interactive Histogram"
         ' 
         ' tsmiTestCode_StreamDeck
         ' 
         tsmiTestCode_StreamDeck.Name = "tsmiTestCode_StreamDeck"
-        tsmiTestCode_StreamDeck.Size = New Size(274, 22)
+        tsmiTestCode_StreamDeck.Size = New Size(275, 22)
         tsmiTestCode_StreamDeck.Text = "StreamDeck"
         ' 
         ' tsmiTest_SigmaClip
         ' 
         tsmiTest_SigmaClip.Name = "tsmiTest_SigmaClip"
-        tsmiTest_SigmaClip.Size = New Size(274, 22)
+        tsmiTest_SigmaClip.Size = New Size(275, 22)
         tsmiTest_SigmaClip.Text = "Sigma clip"
         ' 
         ' tsmiTest_FITSReadSpeed
         ' 
         tsmiTest_FITSReadSpeed.Name = "tsmiTest_FITSReadSpeed"
-        tsmiTest_FITSReadSpeed.Size = New Size(274, 22)
+        tsmiTest_FITSReadSpeed.Size = New Size(275, 22)
         tsmiTest_FITSReadSpeed.Text = "FITS read speed"
         ' 
         ' DataGridViewDataSourceToolStripMenuItem
         ' 
         DataGridViewDataSourceToolStripMenuItem.Name = "DataGridViewDataSourceToolStripMenuItem"
-        DataGridViewDataSourceToolStripMenuItem.Size = New Size(274, 22)
+        DataGridViewDataSourceToolStripMenuItem.Size = New Size(275, 22)
         DataGridViewDataSourceToolStripMenuItem.Text = "DataGridView data source"
         ' 
         ' tsmiTest_RAWReader
         ' 
         tsmiTest_RAWReader.DropDownItems.AddRange(New ToolStripItem() {tsmiTest_RAWReader_NEF, tsmiTest_RAWReader_LibRawDLL, tsmiTest_RAWReader_GrayPNGToFits})
         tsmiTest_RAWReader.Name = "tsmiTest_RAWReader"
-        tsmiTest_RAWReader.Size = New Size(274, 22)
+        tsmiTest_RAWReader.Size = New Size(275, 22)
         tsmiTest_RAWReader.Text = "File format converter and RAW reader"
         ' 
         ' tsmiTest_RAWReader_NEF
         ' 
         tsmiTest_RAWReader_NEF.Name = "tsmiTest_RAWReader_NEF"
-        tsmiTest_RAWReader_NEF.Size = New Size(163, 22)
+        tsmiTest_RAWReader_NEF.Size = New Size(164, 22)
         tsmiTest_RAWReader_NEF.Text = "NEF reading"
         ' 
         ' tsmiTest_RAWReader_LibRawDLL
         ' 
         tsmiTest_RAWReader_LibRawDLL.Name = "tsmiTest_RAWReader_LibRawDLL"
-        tsmiTest_RAWReader_LibRawDLL.Size = New Size(163, 22)
+        tsmiTest_RAWReader_LibRawDLL.Size = New Size(164, 22)
         tsmiTest_RAWReader_LibRawDLL.Text = "LibRaw DLL "
         ' 
         ' tsmiTest_RAWReader_GrayPNGToFits
         ' 
         tsmiTest_RAWReader_GrayPNGToFits.Name = "tsmiTest_RAWReader_GrayPNGToFits"
-        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(163, 22)
+        tsmiTest_RAWReader_GrayPNGToFits.Size = New Size(164, 22)
         tsmiTest_RAWReader_GrayPNGToFits.Text = "Gray PNG to FITS"
         ' 
         ' tsmiTest_Shannon
         ' 
         tsmiTest_Shannon.Name = "tsmiTest_Shannon"
-        tsmiTest_Shannon.Size = New Size(274, 22)
+        tsmiTest_Shannon.Size = New Size(275, 22)
         tsmiTest_Shannon.Text = "Shannon-Fano compression"
+        ' 
+        ' tsmiTest_FlatsEqualizer
+        ' 
+        tsmiTest_FlatsEqualizer.Name = "tsmiTest_FlatsEqualizer"
+        tsmiTest_FlatsEqualizer.Size = New Size(275, 22)
+        tsmiTest_FlatsEqualizer.Text = "Flats equalizers"
         ' 
         ' ofdMain
         ' 
@@ -929,11 +936,11 @@ Partial Class MainForm
         tsb_Display.Size = New Size(49, 22)
         tsb_Display.Text = "Display"
         ' 
-        ' tsmiTest_FlatsEqualizer
+        ' tsmiAnalysis_Plot_RelPixDist
         ' 
-        tsmiTest_FlatsEqualizer.Name = "tsmiTest_FlatsEqualizer"
-        tsmiTest_FlatsEqualizer.Size = New Size(274, 22)
-        tsmiTest_FlatsEqualizer.Text = "Flats equalizers"
+        tsmiAnalysis_Plot_RelPixDist.Name = "tsmiAnalysis_Plot_RelPixDist"
+        tsmiAnalysis_Plot_RelPixDist.Size = New Size(210, 22)
+        tsmiAnalysis_Plot_RelPixDist.Text = "Relevant pixel distribution"
         ' 
         ' MainForm
         ' 
@@ -947,7 +954,7 @@ Partial Class MainForm
         Icon = CType(resources.GetObject("$this.Icon"), Icon)
         KeyPreview = True
         MainMenuStrip = msMain
-        Margin = New Padding(2, 2, 2, 2)
+        Margin = New Padding(2)
         Name = "MainForm"
         Text = "Astro Image Statistics Version 0.3"
         msMain.ResumeLayout(False)
@@ -1089,4 +1096,5 @@ Partial Class MainForm
     Friend WithEvents tsmiProcessing_AlignTIFFFiles As ToolStripMenuItem
     Friend WithEvents tsmiTest_Shannon As ToolStripMenuItem
     Friend WithEvents tsmiTest_FlatsEqualizer As ToolStripMenuItem
+    Friend WithEvents tsmiAnalysis_Plot_RelPixDist As ToolStripMenuItem
 End Class

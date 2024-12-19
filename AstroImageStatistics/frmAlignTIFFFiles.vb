@@ -33,10 +33,14 @@ Public Class frmAlignTIFFFiles
         Dim ROIWidth As Integer = tbROI_width.Text.ValRegIndepInteger
         Dim ROIHeigth As Integer = tbROI_heigth.Text.ValRegIndepInteger
 
+        Dim ROI1 As New Rectangle(BaseX + tbFile1_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile1_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth)
+        Dim ROI2 As New Rectangle(BaseX + tbFile2_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile2_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth)
+        Dim ROI3 As New Rectangle(BaseX + tbFile3_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile3_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth)
+
         Dim TIFF_Load As New ImageFileFormatSpecific.cTIFF
-        TIFF_Load.LoadTIFF(tbFile1.Text, New Rectangle(BaseX + tbFile1_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile1_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), ImageData1)
-        TIFF_Load.LoadTIFF(tbFile2.Text, New Rectangle(BaseX + tbFile2_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile2_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), ImageData2)
-        TIFF_Load.LoadTIFF(tbFile3.Text, New Rectangle(BaseX + tbFile3_DeltaX.Text.ValRegIndepInteger, BaseY + tbFile3_DeltaY.Text.ValRegIndepInteger, ROIWidth, ROIHeigth), ImageData3)
+        TIFF_Load.Load(tbFile1.Text, ROI1, ImageData1)
+        TIFF_Load.Load(tbFile2.Text, ROI2, ImageData2)
+        TIFF_Load.Load(tbFile3.Text, ROI3, ImageData3)
 
         ROIImageGenerator.CM = cColorMaps.eMaps.None
         ROIImageGenerator.GenerateDisplayImageRGB(ImageData1, ImageData2, ImageData3, AIS.DB.IPP)

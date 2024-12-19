@@ -1,6 +1,7 @@
 ﻿Option Explicit On
 Option Strict On
-Imports System.Media
+'Imports System.Media
+'Imports DocumentFormat.OpenXml.Spreadsheet
 
 Public Class MainForm
 
@@ -1641,7 +1642,7 @@ Public Class MainForm
     Private Sub tsmiProc_Bin2Median_Click(sender As Object, e As EventArgs) Handles tsmiProc_Bin2Median.Click
 
         Running()
-        AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(AstroDSP.Bin2_Median(AIS.DB.LastFile_Data))
+        AIS.DB.LastFile_Data.DataProcessor_UInt16.LoadImageData(ImageProcessing.Binning.Bin2_Inner_UInt16(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data))
         Log.Log("Bin2 with median executed.")
         Idle()
 
@@ -1651,7 +1652,7 @@ Public Class MainForm
 
         Dim StepName As String = "BIN2, max removal"
         Dim Stopper As Stopwatch = Running(StepName)
-        Dim Bin2_2(,) As UInt16 = AsImProc.Bin2MaxOut(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
+        Dim Bin2_2(,) As UInt16 = ImageProcessing.Binning.Bin2_Inner_UInt16(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
         Idle(Stopper, StepName)
 
         'Load new image
@@ -2073,7 +2074,7 @@ Public Class MainForm
             .LoadImageData(.ImageData(0).Data.GetROI(ROI))
 
             'Median filter
-            .LoadImageData(AstroDSP.Bin2_Median(Container))
+            .LoadImageData(ImageProcessing.Binning.Bin2_Inner_UInt16(Container.DataProcessor_UInt16.ImageData(0).Data))
 
             'Calculate statistics
             Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(Container, True, False, Nothing, Statistics)
@@ -2137,6 +2138,56 @@ Public Class MainForm
         Log.Log(" Combining ...")
         FlatEqualizer.CombineFlats(FlatEqualizer.FlatFile1, EQFlats)
         Log.Log(" DONE")
-        SystemSounds.Beep.Play()
+        Media.SystemSounds.Beep.Play()
     End Sub
+
+    Private Sub tsmiAnalysis_Plot_RelPixDist_Click(sender As Object, e As EventArgs) Handles tsmiAnalysis_Plot_RelPixDist.Click
+
+        'We take the image data and run a BIN2 with outer removal.
+        'Then we generate a statistics on this.
+        Dim Bin2Data As New AstroNET.Statistics(AIS.DB.IPP)
+        Bin2Data.ResetAllProcessors()
+        'Bin2Data.DataProcessor_UInt16.ImageData(0).Data = ImageProcessing.Binning.Bin2_Inner_UInt16(AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data)
+        Bin2Data.DataProcessor_UInt16.ImageData(0).Data = AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data
+        Dim Bin2Stat As AstroNET.Statistics.sStatistics = Bin2Data.ImageStatistics()
+
+        'Now we order the histogram by the occurence of ADU values
+        Dim ADUValStat As Dictionary(Of Long, ULong) = Bin2Stat.MonochromHistogram_Int.SortDictionaryByValue(True)
+
+        Dim MaxTrace As New Dictionary(Of ULong, Long)
+        Dim MinTrace As New Dictionary(Of ULong, Long)
+        Dim ADUMax As Long = Long.MinValue
+        Dim ADUMin As Long = Long.MaxValue
+        Dim Ptr As Integer = 0
+        Dim TotalSamplesConsidered As ULong = 0
+        Dim SamplesInOriginal As Long = AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0).Data.LongLength
+
+        For Each Item As KeyValuePair(Of Long, ULong) In ADUValStat
+            TotalSamplesConsidered += Item.Value
+            If Item.Key > ADUMax Then
+                ADUMax = Item.Key
+                MaxTrace.Add(TotalSamplesConsidered, ADUMax)
+            End If
+            If Item.Key < ADUMin Then
+                ADUMin = Item.Key
+                MinTrace.Add(TotalSamplesConsidered, ADUMin)
+            End If
+            Ptr += 1
+        Next Item
+
+        Dim Disp As New cZEDGraphForm
+        Disp.Plotter.Clear()
+        Disp.Plotter.PlotXvsY("Max trace", MaxTrace, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
+        Disp.Plotter.PlotXvsY("Min trace", MinTrace, New cZEDGraph.sGraphStyle(Color.Black, AIS.Config.PlotStyle, 1))
+        Disp.Plotter.GridOnOff(True, True)
+        Disp.Plotter.AutoScaleXAxis()
+        Disp.Plotter.ManuallyScaleYAxisLin(0, 100)
+        Disp.Plotter.ForceUpdate()
+        'Set style of the window
+        Disp.Plotter.SetCaptions(String.Empty, "Samples considered [%]", "Range of samples up to this point")
+        Disp.Plotter.MaximizePlotArea()
+        Disp.HostForm.Icon = Me.Icon
+
+    End Sub
+
 End Class
