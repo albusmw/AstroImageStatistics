@@ -6,7 +6,6 @@ Public Class AstroImageStatistics_Fun
 
     '''<summary>Plate solve the passed file,</summary>
     '''<returns>Error code; empty string on no error.</returns>
-    <Runtime.Versioning.SupportedOSPlatform("windows")>
     Public Shared Function PlateSolve(ByVal FileToRun As String, ByVal PlateSolve2Path As String, ByVal PlateSolve2HoldOpen As Integer, ByRef SolverLog As String()) As String
 
         Dim Solver As New cPlateSolve

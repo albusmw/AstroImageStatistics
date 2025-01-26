@@ -1,7 +1,5 @@
 ﻿Option Explicit On
 Option Strict On
-'Imports System.Media
-'Imports DocumentFormat.OpenXml.Spreadsheet
 
 Public Class MainForm
 
@@ -1898,7 +1896,7 @@ Public Class MainForm
         Dim Log As New List(Of String)
         'cFITSReader.IPPPath = AIS.DB.IPP.IPPPath
         Dim Stopper As New Stopwatch
-        Dim Data(,) As UInt16
+        Dim Data(,) As UInt16 = {}
 
         'Load reference data
         FITSReader.UseExperimentalModes = False

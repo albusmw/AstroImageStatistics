@@ -1184,7 +1184,7 @@ Partial Public Class frmMultiFileAction
     Private Sub tsmiAction_HotPixel_Method1_Click(sender As Object, e As EventArgs) Handles tsmiAction_HotPixel_Method1.Click
 
         Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
-        Dim MaxOfAll(,) As UInt16
+        Dim MaxOfAll(,) As UInt16 = {}
 
         'Get max of all
         Dim AllCheckedFiles As List(Of cFileProps) = GetListFiles(True)
