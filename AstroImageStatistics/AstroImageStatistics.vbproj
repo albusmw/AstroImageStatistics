@@ -28,8 +28,15 @@
     <Compile Include="..\..\MyLib\AstroDSP.vb">
       <Link>MyLib\AstroDSP.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\AstroStatistics.vb" Link="MyLib\AstroStatistics.vb" />
     <Compile Include="..\..\MyLib\cAstroBin.vb" Link="MyLib\cAstroBin.vb" />
+    <Compile Include="..\..\MyLib\cColorMaps.vb" Link="MyLib\cColorMaps.vb" />
+    <Compile Include="..\..\MyLib\cCreateSlideShow.vb" Link="MyLib\cCreateSlideShow.vb" />
+    <Compile Include="..\..\MyLib\cDLLDynCall.vb" Link="MyLib\cDLLDynCall.vb" />
     <Compile Include="..\..\MyLib\cFITSHeaderKeywords.vb" Link="MyLib\cFITSHeaderKeywords.vb" />
+    <Compile Include="..\..\MyLib\cImageFromData.vb" Link="MyLib\cImageFromData.vb" />
+    <Compile Include="..\..\MyLib\cIntelIPP.vb" Link="MyLib\cIntelIPP.vb" />
+    <Compile Include="..\..\MyLib\cLockBitmap.vb" Link="MyLib\cLockBitmap.vb" />
     <Compile Include="..\..\MyLib\ClosedXML.vb">
       <Link>MyLib\ClosedXML.vb</Link>
     </Compile>
@@ -37,8 +44,10 @@
       <Link>MyLib\CodeUtils.vb</Link>
     </Compile>
     <Compile Include="..\..\MyLib\COMInterop.vb" Link="MyLib\COMInterop.vb" />
+    <Compile Include="..\..\MyLib\ComponentModelConverter.vb" Link="MyLib\ComponentModelConverter.vb" />
     <Compile Include="..\..\MyLib\cRTFGen.vb" Link="cRTFGen.vb" />
     <Compile Include="..\..\MyLib\cShanFano.vb" Link="cShanFano.vb" />
+    <Compile Include="..\..\MyLib\cStatMultiThread.vb" Link="MyLib\cStatMultiThread.vb" />
     <Compile Include="..\..\MyLib\cZEDGraph.vb" Link="MyLib\cZEDGraph.vb" />
     <Compile Include="..\..\MyLib\Download.vb">
       <Link>MyLib\Download.vb</Link>
@@ -47,8 +56,11 @@
     <Compile Include="..\..\MyLib\Extensions.vb">
       <Link>MyLib\Extensions.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\frmLogDisplay.Designer.vb" Link="MyLib\frmLogDisplay.Designer.vb" />
+    <Compile Include="..\..\MyLib\frmLogDisplay.vb" Link="MyLib\frmLogDisplay.vb" />
     <Compile Include="..\..\MyLib\GetBuildDateTime.vb" Link="MyLib\GetBuildDateTime.vb" />
     <Compile Include="..\..\MyLib\ImageFileFormatSpecific.vb" Link="MyLib\ImageFileFormatSpecific.vb" />
+    <Compile Include="..\..\MyLib\PictureBoxEx.vb" Link="MyLib\PictureBoxEx.vb" />
     <Compile Include="..\..\MyLib\SingleValStatToXLS.vb" Link="MyLib\SingleValStatToXLS.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
@@ -56,9 +68,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\AstroCalc.vb">
       <Link>common\AstroCalc.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\AstroStatistics.vb">
-      <Link>common\AstroStatistics.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\BayerFunctions.vb">
       <Link>common\BayerFunctions.vb</Link>
@@ -68,12 +77,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\cBitByte.vb">
       <Link>atomics\cBitByte.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cColorMaps.vb">
-      <Link>atomics\cColorMaps.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cDLLDynCall.vb">
-      <Link>DLL access\cDLLDynCall.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cFITSGrepper.vb">
       <Link>FITS\cFITSGrepper.vb</Link>
@@ -93,23 +96,11 @@
     <Compile Include="..\..\src\atomics\cFITSWriter.vb">
       <Link>FITS\cFITSWriter.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\cImageFromData.vb">
-      <Link>common\cImageFromData.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cIntelIPP.vb">
-      <Link>DLL access\cIntelIPP.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\cLibRaw.vb">
       <Link>common\cLibRaw.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\cLockBitmap.vb">
-      <Link>common\cLockBitmap.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\cNEFReader.vb">
       <Link>common\cNEFReader.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\ComponentModelConverter.vb">
-      <Link>common\ComponentModelConverter.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cOpenCvSharp.vb">
       <Link>common\cOpenCvSharp.vb</Link>
@@ -119,9 +110,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\cSingleValueStatistics.vb">
       <Link>common\cSingleValueStatistics.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\cStatMultiThread.vb">
-      <Link>common\cStatMultiThread.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\cStopper.vb">
       <Link>common\cStopper.vb</Link>
@@ -160,14 +148,8 @@
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\Forms\frmFITSGrep.designer.vb">
-      <Link>frmFITSGrep.designer.vb</Link>
-      <DependentUpon>frmFITSGrep.vb</DependentUpon>
-    </Compile>
-    <Compile Include="..\..\src\GUIElements\PictureBoxEx.vb">
-      <Link>PictureBoxEx.vb</Link>
-      <SubType>Component</SubType>
-    </Compile>
+    <Compile Include="..\..\src\Forms\frmFITSGrep.Designer.vb" Link="frmFITSGrep.Designer.vb" />
+    <Compile Include="..\..\src\Forms\frmFITSGrep.vb" Link="frmFITSGrep.vb" />
     <Compile Update="frmAstroBinSearch.Designer.vb">
       <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
     </Compile>
@@ -230,6 +212,8 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\..\MyLib\frmLogDisplay.resx" Link="MyLib\frmLogDisplay.resx" />
+    <EmbeddedResource Include="..\..\src\Forms\frmFITSGrep.resx" Link="frmFITSGrep.resx" />
     <EmbeddedResource Include="..\HelpContent.rtf">
       <Link>HelpContent.rtf</Link>
     </EmbeddedResource>
@@ -270,26 +254,27 @@
     <PackageReference Include="OpenCvSharp4.runtime.win" Version="4.10.0.20241108" />
     <PackageReference Include="OpenCvSharp4.WpfExtensions" Version="4.10.0.20241108" />
     <PackageReference Include="OpenMacroBoard.SDK" Version="6.0.0" />
+    <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="RTFExporter" Version="1.1.4" />
-    <PackageReference Include="SixLabors.Fonts" Version="2.1.0" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.1.2" />
     <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
     <PackageReference Include="StreamDeckSharp" Version="6.0.0" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.1" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.2" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
-    <PackageReference Include="System.DirectoryServices" Version="9.0.1" />
-    <PackageReference Include="XLParser" Version="1.7.4" />
-    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="1.4.0" />
+    <PackageReference Include="System.DirectoryServices" Version="9.0.2" />
+    <PackageReference Include="XLParser" Version="1.7.5" />
+    <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.0.0" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.1" />
-    <PackageReference Include="System.IO.Packaging" Version="9.0.1" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.2" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.2" />
     <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
     <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
-    <PackageReference Include="System.Security.Permissions" Version="9.0.1" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.1" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.1" />
+    <PackageReference Include="System.Security.Permissions" Version="9.0.2" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.2" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.2" />
     <PackageReference Include="ZedGraph6" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
