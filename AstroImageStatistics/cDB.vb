@@ -39,7 +39,7 @@ Public Class AIS
         Try
             If System.IO.File.Exists(FileToOpen) Then
                 If String.IsNullOrEmpty(AIS.Config.FITSViewer) = True Then
-                    Ato.Utils.StartWithItsEXE(FileToOpen)
+                    Utils.StartWithItsEXE(FileToOpen)
                 Else
                     Process.Start(AIS.Config.FITSViewer, Chr(34) & FileToOpen & Chr(34))
                 End If

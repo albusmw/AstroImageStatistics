@@ -93,7 +93,7 @@ Public Class frmTestFileGenerator
     Private Sub tsmiGenerate_SingleFile_Click(sender As Object, e As EventArgs) Handles tsmiGenerate_SingleFile.Click
         Dim TestFileName As String = System.IO.Path.Combine(Prop.RootFolder, Prop.BaseFileName & "." & GetExtension())
         GenerateSingleFile(TestFileName, Prop.Val_SingleTestFile)
-        If Prop.OpenFileAfterWrite Then Ato.Utils.StartWithItsEXE(TestFileName)
+        If Prop.OpenFileAfterWrite Then Utils.StartWithItsEXE(TestFileName)
     End Sub
 
     Private Function GetExtension() As String
@@ -134,7 +134,7 @@ Public Class frmTestFileGenerator
     End Function
 
     Private Sub tsmiFile_Explorer_Click(sender As Object, e As EventArgs) Handles tsmiFile_Explorer.Click
-        Ato.Utils.StartWithItsEXE(Prop.RootFolder)
+        Utils.StartWithItsEXE(Prop.RootFolder)
     End Sub
 
     Private Sub tsmiFile_Exit_Click(sender As Object, e As EventArgs) Handles tsmiFile_Exit.Click

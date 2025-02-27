@@ -143,33 +143,7 @@ Partial Public Class frmMultiFileAction
         <ComponentModel.DefaultValue(20)>
         Public Property Stack_ShiftMargin As Integer = 20
 
-        '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
-        ' Cut range limitations
-        '‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗‗
 
-        <ComponentModel.Category(Cat_CutLimitation)>
-        <ComponentModel.DisplayName("a) Left limit")>
-        <ComponentModel.Description("Left limit")>
-        <ComponentModel.DefaultValue(0)>
-        Public Property CutLimit_Left As Integer = 0
-
-        <ComponentModel.Category(Cat_CutLimitation)>
-        <ComponentModel.DisplayName("b) Right limit")>
-        <ComponentModel.Description("Right limit")>
-        <ComponentModel.DefaultValue(100000)>
-        Public Property CutLimit_Right As Integer = 100000
-
-        <ComponentModel.Category(Cat_CutLimitation)>
-        <ComponentModel.DisplayName("c) Top limit")>
-        <ComponentModel.Description("Top limit")>
-        <ComponentModel.DefaultValue(0)>
-        Public Property CutLimit_Top As Integer = 0
-
-        <ComponentModel.Category(Cat_CutLimitation)>
-        <ComponentModel.DisplayName("d) Bottom limit")>
-        <ComponentModel.Description("Bottom limit")>
-        <ComponentModel.DefaultValue(100000)>
-        Public Property CutLimit_Bottom As Integer = 100000
 
         '˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭˭
         ' Stacking

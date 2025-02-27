@@ -30,6 +30,7 @@
     </Compile>
     <Compile Include="..\..\MyLib\AstroStatistics.vb" Link="MyLib\AstroStatistics.vb" />
     <Compile Include="..\..\MyLib\cAstroBin.vb" Link="MyLib\cAstroBin.vb" />
+    <Compile Include="..\..\MyLib\cAstroImageProcessing.vb" Link="MyLib\cAstroImageProcessing.vb" />
     <Compile Include="..\..\MyLib\cColorMaps.vb" Link="MyLib\cColorMaps.vb" />
     <Compile Include="..\..\MyLib\cCreateSlideShow.vb" Link="MyLib\cCreateSlideShow.vb" />
     <Compile Include="..\..\MyLib\cDLLDynCall.vb" Link="MyLib\cDLLDynCall.vb" />
@@ -53,6 +54,7 @@
       <Link>MyLib\Download.vb</Link>
     </Compile>
     <Compile Include="..\..\MyLib\DSSFileParser.vb" Link="MyLib\DSSFileParser.vb" />
+    <Compile Include="..\..\MyLib\Everything.vb" Link="MyLib\Everything.vb" />
     <Compile Include="..\..\MyLib\Extensions.vb">
       <Link>MyLib\Extensions.vb</Link>
     </Compile>
@@ -62,6 +64,7 @@
     <Compile Include="..\..\MyLib\ImageFileFormatSpecific.vb" Link="MyLib\ImageFileFormatSpecific.vb" />
     <Compile Include="..\..\MyLib\PictureBoxEx.vb" Link="MyLib\PictureBoxEx.vb" />
     <Compile Include="..\..\MyLib\SingleValStatToXLS.vb" Link="MyLib\SingleValStatToXLS.vb" />
+    <Compile Include="..\..\MyLib\Utils.vb" Link="MyLib\Utils.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
       <DependentUpon>frmImageForm.vb</DependentUpon>
@@ -117,9 +120,6 @@
     <Compile Include="..\..\src\atomics\DragDrop.vb">
       <Link>atomics\DragDrop.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\Everything.vb">
-      <Link>common\Everything.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\ImgArrayFunctions.vb">
       <Link>ImgArrayFunctions.vb</Link>
     </Compile>
@@ -141,9 +141,6 @@
     </Compile>
     <Compile Include="..\..\src\atomics\SQLT.vb">
       <Link>atomics\SQLT.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\Utils.vb">
-      <Link>atomics\Utils.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>

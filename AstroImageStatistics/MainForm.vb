@@ -341,7 +341,7 @@ Public Class MainForm
     End Sub
 
     Private Sub OpenEXELocationToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles OpenEXELocationToolStripMenuItem.Click
-        Ato.Utils.StartWithItsEXE(AIS.DB.MyPath)
+        Utils.StartWithItsEXE(AIS.DB.MyPath)
     End Sub
 
     Private Sub DE()
@@ -489,7 +489,7 @@ Public Class MainForm
             '4) Save and open
             Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
             workbook.SaveAs(FileToGenerate)
-            AstroImageStatistics.Ato.Utils.StartWithItsEXE(FileToGenerate)
+            Utils.StartWithItsEXE(FileToGenerate)
 
         End Using
 

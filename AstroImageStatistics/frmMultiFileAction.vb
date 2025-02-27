@@ -36,7 +36,11 @@ Partial Public Class frmMultiFileAction
     Private WithEvents Stacker As New cStacker
     Private LogContent As New System.Text.StringBuilder
     Private WithEvents FITSGrepper As New cFITSGrepper
-    '''<summary>PROI image generator.</summary>
+
+    '''<summary>Common ROI calculator.</summary>
+    Private ROICombiner As New cAstroImageProcessing.cROICombiner
+
+    '''<summary>ROI image generator.</summary>
     Private ROIImageGenerator As New cImageFromData
 
     Private Class c2D(Of T)
@@ -321,75 +325,28 @@ Partial Public Class frmMultiFileAction
         If (Config.Processing_StoreAlignedFiles = True) Or (Config.Processing_CalcStackedFile = True) Or (Config.Processing_CalcSigmaClip = True) Then
 
             Log("Running common ROI calculation ...")
+            ROICombiner.Clear
 
-            Dim CutROIs As New Dictionary(Of cFileProps, Rectangle)
-
-            '1.) We start in the center of each image at a point shifted by the given DeltaX and DeltaY
+            'Add all combiner-specific parameters (size and delta) to the ROICombiner
             For Each OriginalFile As cFileProps In AllCheckedFiles
-                Dim CenterX As Integer = CInt((OriginalFile.NAXIS1 \ 2) + OriginalFile.DeltaX)
-                Dim CenterY As Integer = CInt((OriginalFile.NAXIS2 \ 2) + OriginalFile.DeltaY)
-                CutROIs.Add(OriginalFile, New Rectangle(CenterX, CenterY, 0, 0))
+                Dim FileSpecs As New cAstroImageProcessing.cROICombiner.cFileSpecifics(OriginalFile.NAXIS1, OriginalFile.NAXIS2, OriginalFile.DeltaX, OriginalFile.DeltaY)
+                ROICombiner.Files.Add(OriginalFile.FileName, FileSpecs)
             Next OriginalFile
 
-            '2.) We move left until any ROI reaches the border
-            Do
-                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
-                For Each File As cFileProps In CutROIs.Keys
-                    NewROIs.Add(File, CutROIs(File).ExpandLeft(1))      'Calculate all new ROIs by expanding to the left
-                    If NewROIs(File).Left < 0 Then Exit Do
-                    If NewROIs(File).Left < Config.CutLimit_Left Then Exit Do
-                Next File
-                'Copy new ROIs if they are valid
-                CutROIs = NewROIs.Clone
-            Loop Until 1 = 0
-
-            '3.) We move up until any ROI reaches the border
-            Do
-                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
-                For Each File As cFileProps In CutROIs.Keys
-                    NewROIs.Add(File, CutROIs(File).ExpandTop(1))      'Calculate all new ROIs by expanding to the top
-                    If NewROIs(File).Top < 0 Then Exit Do
-                    If NewROIs(File).Top < Config.CutLimit_Top Then Exit Do
-                Next File
-                'Copy new ROIs if they are valid
-                CutROIs = NewROIs.Clone
-            Loop Until 1 = 0
-
-            '4.) We increase the width until any ROI reaches the border
-            Do
-                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
-                For Each File As cFileProps In CutROIs.Keys
-                    NewROIs.Add(File, CutROIs(File).ExpandRight(1))      'Calculate all new ROIs by expanding to the right
-                    If NewROIs(File).Right > File.NAXIS1 Then Exit Do
-                    If NewROIs(File).Right > Config.CutLimit_Right Then Exit Do
-                Next File
-                'Copy new ROIs if they are valid
-                CutROIs = NewROIs.Clone
-            Loop Until 1 = 0
-
-            '5.) We increase the heigth until any ROI reaches the border
-            Do
-                Dim NewROIs As New Dictionary(Of cFileProps, Rectangle)
-                For Each File As cFileProps In CutROIs.Keys
-                    NewROIs.Add(File, CutROIs(File).ExpandBottom(1))      'Calculate all new ROIs by expanding to the bottom
-                    If NewROIs(File).Bottom > File.NAXIS2 Then Exit Do
-                    If NewROIs(File).Bottom > Config.CutLimit_Bottom Then Exit Do
-                Next File
-                'Copy new ROIs if they are valid
-                CutROIs = NewROIs.Clone
-            Loop Until 1 = 0
-
-            Log("  DONE, I have " & CutROIs.Count.ValRegIndep & " common ROI's, size <" & CutROIs.First.Value.Width.ValRegIndep & "x" & CutROIs.First.Value.Height.ValRegIndep & ">")
+            'Calculate
+            ROICombiner.Calculate()
+            Log("  DONE, I have " & ROICombiner.CutROIs.Count.ValRegIndep & " common ROI's, size <" & ROICombiner.CutROIs.First.Value.Width.ValRegIndep & "x" & ROICombiner.CutROIs.First.Value.Height.ValRegIndep & ">")
 
             'Last.) Generate new files
             Dim FileIdx As Integer = -1
             Dim AlignFolder As String = String.Empty
             For Each FileToProcess As cFileProps In AllCheckedFiles
+                Dim FileName As String = FileToProcess.FileName
                 FileIdx += 1
-                MarkFile(FileToProcess.FileName, Color.Red)
+                MarkFile(FileName, Color.Red)
                 DE()
                 'Load defined ROI
-                Dim FileROI As UInt16(,) = FITSReader.ReadInUInt16(FileToProcess.FileName, True, CutROIs(FileToProcess), True)
+                Dim FileROI As UInt16(,) = FITSReader.ReadInUInt16(FileToProcess.FileName, True, ROICombiner.CutROIs(FileName), True)
                 'Stack file (if requested)
                 If Config.Processing_CalcStackedFile = True Then
                     Dim DataAsUInt32(,) As UInt32 = {} : AIS.DB.IPP.Convert(FileROI, DataAsUInt32)
@@ -401,15 +358,15 @@ Partial Public Class frmMultiFileAction
                 End If
                 'Generate folder
                 If FileIdx = 0 Then
-                    AlignFolder = System.IO.Path.Combine(Config.Gen_root, System.IO.Path.GetFileNameWithoutExtension(FileToProcess.FileName) & "_aligned")
+                    AlignFolder = System.IO.Path.Combine(Config.Gen_root, System.IO.Path.GetFileNameWithoutExtension(FileName) & "_aligned")
                     If System.IO.Directory.Exists(AlignFolder) = False Then System.IO.Directory.CreateDirectory(AlignFolder)
                 End If
                 'Store aligned file (if selected)
                 If Config.Processing_StoreAlignedFiles = True Then
-                    Dim NewFile As String = System.IO.Path.Combine(AlignFolder, System.IO.Path.GetFileName(FileToProcess.FileName))
+                    Dim NewFile As String = System.IO.Path.Combine(AlignFolder, System.IO.Path.GetFileName(FileName))
                     cFITSWriter.Write(NewFile, FileROI, cFITSWriter.eBitPix.Int16)
-                    Log("Stored file <" & FileToProcess.FileName & "> as aligned version in <" & NewFile & ">")
-                    Log("   (CutROIs: " & CutROIs(FileToProcess).Describe)
+                    Log("Stored file <" & FileName & "> as aligned version in <" & NewFile & ">")
+                    Log("   (CutROIs: " & ROICombiner.CutROIs(FileName).Describe)
                 End If
                 MarkFile(FileToProcess.FileName, Color.LimeGreen)
             Next FileToProcess
@@ -464,7 +421,7 @@ Partial Public Class frmMultiFileAction
 
             Dim StackFileName_SigmaClip As String = IO.Path.Combine(Config.Gen_root, Config.Gen_OutputFileSigmaClip)
             cFITSWriter.Write(StackFileName_SigmaClip, Calculated, cFITSWriter.eBitPix.Single)
-            If Config.Stat_OpenStackedFile Then Ato.Utils.StartWithItsEXE(StackFileName_SigmaClip)
+            If Config.Stat_OpenStackedFile Then Utils.StartWithItsEXE(StackFileName_SigmaClip)
 
             Log("Sigma-clipped file <" & StackFileName_SigmaClip & "> generated")
 
@@ -503,8 +460,8 @@ Partial Public Class frmMultiFileAction
             cFITSWriter.Write(StackFileName_float32, OutputData_Float32, cFITSWriter.eBitPix.Single)
 
             'Open file(s)
-            If Config.Stat_OpenStackedFile Then Ato.Utils.StartWithItsEXE(StackFileName_UInt16)
-            If Config.Stat_OpenStackedFile Then Ato.Utils.StartWithItsEXE(StackFileName_float32)
+            If Config.Stat_OpenStackedFile Then Utils.StartWithItsEXE(StackFileName_UInt16)
+            If Config.Stat_OpenStackedFile Then Utils.StartWithItsEXE(StackFileName_float32)
 
         End If
 
@@ -516,9 +473,9 @@ Partial Public Class frmMultiFileAction
         'Scroll in the property grid
         Select Case pgMain.SelectedGridItem.PropertyDescriptor.Name
             Case "CutLimit_Left"
-                Config.CutLimit_Left += Math.Sign(e.Delta) * 5
+                ROICombiner.CutLimit_Left = CUInt(ROICombiner.CutLimit_Left + (Math.Sign(e.Delta) * 5))
             Case "CutLimit_Right"
-                Config.CutLimit_Right += Math.Sign(e.Delta) * 5
+                ROICombiner.CutLimit_Right = CUInt(ROICombiner.CutLimit_Right + (Math.Sign(e.Delta) * 5))
             Case "ROIDisplay_X"
                 Config.ROIDisplay_X += Math.Sign(e.Delta) * Config.ROIDisplay_PositionAndSize
                 CalcAndDisplayCombinedROI()
@@ -980,7 +937,7 @@ Partial Public Class frmMultiFileAction
             'Save and open
             Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
             workbook.SaveAs(FileToGenerate)
-            Ato.Utils.StartWithItsEXE(FileToGenerate)
+            Utils.StartWithItsEXE(FileToGenerate)
 
         End Using
 
@@ -1102,7 +1059,7 @@ Partial Public Class frmMultiFileAction
             'Save and open
             Dim FileToGenerate As String = IO.Path.Combine(AIS.DB.MyPath, sfdMain.FileName)
             workbook.SaveAs(FileToGenerate)
-            Ato.Utils.StartWithItsEXE(FileToGenerate)
+            Utils.StartWithItsEXE(FileToGenerate)
 
         End Using
 

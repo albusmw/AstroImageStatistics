@@ -102,7 +102,7 @@ Public Class frmXCorr
     Private Sub btnStoreAndOpen_Click(sender As Object, e As EventArgs) Handles btnStoreAndOpen.Click
         Dim CorrFile As String = "C:\!Work\XCorr.fits"
         cFITSWriter.Write(CorrFile, Corr, cFITSWriter.eBitPix.Single)
-        AstroImageStatistics.Ato.Utils.StartWithItsEXE(CorrFile)
+        Utils.StartWithItsEXE(CorrFile)
     End Sub
 
     Private Sub btnLoadRef_Click(sender As Object, e As EventArgs) Handles btnLoadRef.Click
