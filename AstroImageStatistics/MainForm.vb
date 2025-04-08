@@ -1472,7 +1472,9 @@ Public Class MainForm
     End Function
 
     Private Sub tsmiTest_AstrometryQuery_Click(sender As Object, e As EventArgs) Handles tsmiTest_AstrometryQuery.Click
-        'https://nova.astrometry.net/api/jobs/4720338/info/
+
+        'C:\GIT\SmallProjects\JSONTest\JSONTest.sln
+
     End Sub
 
     Private Sub tsmiProcessing_LSBMSB_Click(sender As Object, e As EventArgs) Handles tsmiProcessing_LSBMSB.Click

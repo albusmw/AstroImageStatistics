@@ -21,6 +21,8 @@
     <Compile Include="..\..\AstroSoftware\FITSGrep\DBCommands.vb">
       <Link>DBCommands.vb</Link>
     </Compile>
+    <Compile Include="..\..\AstroSoftware\FITSGrep\frmCreateSlideShow.Designer.vb" Link="frmCreateSlideShow.Designer.vb" />
+    <Compile Include="..\..\AstroSoftware\FITSGrep\frmCreateSlideShow.vb" Link="frmCreateSlideShow.vb" />
     <Compile Include="..\..\MyLib\ASCOMDynamic.vb" Link="MyLib\ASCOMDynamic.vb" />
     <Compile Include="..\..\MyLib\AsImProc.vb" Link="AsImProc.vb" />
     <Compile Include="..\..\MyLib\Astro.vb" Link="MyLib\Astro.vb" />
@@ -209,6 +211,7 @@
     </Compile>
   </ItemGroup>
   <ItemGroup>
+    <EmbeddedResource Include="..\..\AstroSoftware\FITSGrep\frmCreateSlideShow.resx" Link="frmCreateSlideShow.resx" />
     <EmbeddedResource Include="..\..\MyLib\frmLogDisplay.resx" Link="MyLib\frmLogDisplay.resx" />
     <EmbeddedResource Include="..\..\src\Forms\frmFITSGrep.resx" Link="frmFITSGrep.resx" />
     <EmbeddedResource Include="..\HelpContent.rtf">
@@ -254,24 +257,24 @@
     <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="RTFExporter" Version="1.1.4" />
     <PackageReference Include="SixLabors.Fonts" Version="2.1.2" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.6" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
     <PackageReference Include="StreamDeckSharp" Version="6.0.0" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.2" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.3" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
-    <PackageReference Include="System.DirectoryServices" Version="9.0.2" />
+    <PackageReference Include="System.DirectoryServices" Version="9.0.3" />
     <PackageReference Include="XLParser" Version="1.7.5" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.0.0" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.2" />
-    <PackageReference Include="System.IO.Packaging" Version="9.0.2" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.0" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.3" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.3" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
     <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
-    <PackageReference Include="System.Security.Permissions" Version="9.0.2" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.2" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.2" />
+    <PackageReference Include="System.Security.Permissions" Version="9.0.3" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.3" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.3" />
     <PackageReference Include="ZedGraph6" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
