@@ -60,6 +60,10 @@
     <Compile Include="..\..\MyLib\Extensions.vb">
       <Link>MyLib\Extensions.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\frmFITSBrowser.Designer.vb" Link="MyLib\frmFITSBrowser.Designer.vb" />
+    <Compile Include="..\..\MyLib\frmFITSBrowser.vb" Link="MyLib\frmFITSBrowser.vb" />
+    <Compile Include="..\..\MyLib\frmImageDisplay.Designer.vb" Link="MyLib\frmImageDisplay.Designer.vb" />
+    <Compile Include="..\..\MyLib\frmImageDisplay.vb" Link="MyLib\frmImageDisplay.vb" />
     <Compile Include="..\..\MyLib\frmLogDisplay.Designer.vb" Link="MyLib\frmLogDisplay.Designer.vb" />
     <Compile Include="..\..\MyLib\frmLogDisplay.vb" Link="MyLib\frmLogDisplay.vb" />
     <Compile Include="..\..\MyLib\GetBuildDateTime.vb" Link="MyLib\GetBuildDateTime.vb" />
@@ -212,6 +216,8 @@
   </ItemGroup>
   <ItemGroup>
     <EmbeddedResource Include="..\..\AstroSoftware\FITSGrep\frmCreateSlideShow.resx" Link="frmCreateSlideShow.resx" />
+    <EmbeddedResource Include="..\..\MyLib\frmFITSBrowser.resx" Link="MyLib\frmFITSBrowser.resx" />
+    <EmbeddedResource Include="..\..\MyLib\frmImageDisplay.resx" Link="MyLib\frmImageDisplay.resx" />
     <EmbeddedResource Include="..\..\MyLib\frmLogDisplay.resx" Link="MyLib\frmLogDisplay.resx" />
     <EmbeddedResource Include="..\..\src\Forms\frmFITSGrep.resx" Link="frmFITSGrep.resx" />
     <EmbeddedResource Include="..\HelpContent.rtf">
@@ -244,6 +250,7 @@
     <PackageReference Include="BitMiracle.LibTiff.NET" Version="2.4.660" />
     <PackageReference Include="ClosedXML" Version="0.104.2" />
     <PackageReference Include="DG.AdvancedDataGridView" Version="1.2.30115.18" />
+    <PackageReference Include="DockPanelSuite" Version="3.1.1" />
     <PackageReference Include="ExcelNumberFormat" Version="1.1.0" />
     <PackageReference Include="FastMember" Version="1.5.0" />
     <PackageReference Include="HidSharp" Version="2.1.0" />
@@ -256,25 +263,25 @@
     <PackageReference Include="OpenMacroBoard.SDK" Version="6.0.0" />
     <PackageReference Include="PDFsharp" Version="6.1.1" />
     <PackageReference Include="RTFExporter" Version="1.1.4" />
-    <PackageReference Include="SixLabors.Fonts" Version="2.1.2" />
-    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.7" />
+    <PackageReference Include="SixLabors.Fonts" Version="2.1.3" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.8" />
     <PackageReference Include="StreamDeckSharp" Version="6.0.0" />
-    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.3" />
+    <PackageReference Include="System.ComponentModel.Composition" Version="9.0.4" />
     <PackageReference Include="System.Data.DataSetExtensions" Version="4.5.0" />
     <PackageReference Include="System.Data.SQLite" Version="1.0.119" />
-    <PackageReference Include="System.DirectoryServices" Version="9.0.3" />
+    <PackageReference Include="System.DirectoryServices" Version="9.0.4" />
     <PackageReference Include="XLParser" Version="1.7.5" />
     <PackageReference Include="Microsoft.AspNetCore.SystemWebAdapters" Version="2.0.0" />
     <PackageReference Include="EntityFramework" Version="6.5.1" />
     <PackageReference Include="Microsoft.CSharp" Version="4.7.0" />
     <PackageReference Include="Newtonsoft.Json" Version="13.0.3" />
-    <PackageReference Include="System.Drawing.Common" Version="9.0.3" />
-    <PackageReference Include="System.IO.Packaging" Version="9.0.3" />
-    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.1" />
+    <PackageReference Include="System.Drawing.Common" Version="9.0.4" />
+    <PackageReference Include="System.IO.Packaging" Version="9.0.4" />
+    <PackageReference Include="System.Runtime.CompilerServices.Unsafe" Version="6.1.2" />
     <PackageReference Include="System.Security.AccessControl" Version="6.0.1" />
-    <PackageReference Include="System.Security.Permissions" Version="9.0.3" />
-    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.3" />
-    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.3" />
+    <PackageReference Include="System.Security.Permissions" Version="9.0.4" />
+    <PackageReference Include="System.Text.Encoding.CodePages" Version="9.0.4" />
+    <PackageReference Include="System.Configuration.ConfigurationManager" Version="9.0.4" />
     <PackageReference Include="ZedGraph6" Version="6.0.0" />
   </ItemGroup>
   <ItemGroup>
