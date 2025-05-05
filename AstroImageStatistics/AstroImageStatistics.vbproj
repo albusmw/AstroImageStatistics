@@ -33,9 +33,11 @@
     <Compile Include="..\..\MyLib\AstroStatistics.vb" Link="MyLib\AstroStatistics.vb" />
     <Compile Include="..\..\MyLib\cAstroBin.vb" Link="MyLib\cAstroBin.vb" />
     <Compile Include="..\..\MyLib\cAstroImageProcessing.vb" Link="MyLib\cAstroImageProcessing.vb" />
+    <Compile Include="..\..\MyLib\cAstroProcessing.vb" Link="MyLib\cAstroProcessing.vb" />
     <Compile Include="..\..\MyLib\cColorMaps.vb" Link="MyLib\cColorMaps.vb" />
     <Compile Include="..\..\MyLib\cCreateSlideShow.vb" Link="MyLib\cCreateSlideShow.vb" />
     <Compile Include="..\..\MyLib\cDLLDynCall.vb" Link="MyLib\cDLLDynCall.vb" />
+    <Compile Include="..\..\MyLib\cFITSDisplay.vb" Link="MyLib\cFITSDisplay.vb" />
     <Compile Include="..\..\MyLib\cFITSHeaderKeywords.vb" Link="MyLib\cFITSHeaderKeywords.vb" />
     <Compile Include="..\..\MyLib\cImageFromData.vb" Link="MyLib\cImageFromData.vb" />
     <Compile Include="..\..\MyLib\cIntelIPP.vb" Link="MyLib\cIntelIPP.vb" />

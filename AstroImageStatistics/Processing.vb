@@ -1,17 +1,16 @@
 ﻿Option Explicit On
 Option Strict On
-Imports Microsoft.VisualBasic.Logging
 
 '''<summary>Class to run combined actions (file loading, ...).</summary>
 Public Class Processing
 
     '''<summary>Load the given file.</summary>
     '''<param name="FileName">File to read in.</param>
-    '''<param name="Container">Container for data and statistics.</param>
+    '''<param name="SingleStatCalc">Container for data and statistics.</param>
     '''<param name="FITSHeader">FITS header as read in.</param>
     '''<param name="DataStartPosition">Position where the data start.</param>
     '''<returns>Error code or empty string on no error.</returns>
-    Public Shared Function LoadFITSFile(ByVal FileName As String, ByRef IPP As cIntelIPP, ByVal ForceDirect As Boolean, ByRef FITSHeader As cFITSHeaderParser, ByRef Container As AstroNET.Statistics, ByRef DataStartPosition As Integer) As String
+    Public Shared Function LoadFITSFile(ByVal FileName As String, ByRef IPP As cIntelIPP, ByVal ForceDirect As Boolean, ByRef FITSHeader As cFITSHeaderParser, ByRef SingleStatCalc As AstroNET.Statistics, ByRef DataStartPosition As Integer) As String
 
         Dim FITSReader As New cFITSReader(AIS.DB.IPPPath)
         Dim DataStartPos As Integer = 0
@@ -19,7 +18,7 @@ Public Class Processing
         '=========================================================================================================
         'Prepare
 
-        Container = New AstroNET.Statistics(AIS.DB.IPP)
+        SingleStatCalc = New AstroNET.Statistics(AIS.DB.IPP)
         Dim UseIPP As Boolean = True : If IsNothing(IPP) Then UseIPP = False
 
         '=========================================================================================================
@@ -30,12 +29,12 @@ Public Class Processing
         '=========================================================================================================
         'Read the FITS data
 
-        Container.ResetAllProcessors()
+        SingleStatCalc.ResetAllProcessors()
         Select Case FITSHeader.BitPix
             Case 8
-                Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt8(FileName, UseIPP)
+                SingleStatCalc.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt8(FileName, UseIPP)
             Case 16
-                With Container.DataProcessor_UInt16
+                With SingleStatCalc.DataProcessor_UInt16
                     .ImageData(0).Data = FITSReader.ReadInUInt16(FileName, UseIPP, ForceDirect)
                     If FITSHeader.NAXIS3 > 1 Then
                         For Idx As Integer = 1 To FITSHeader.NAXIS3 - 1
@@ -45,9 +44,9 @@ Public Class Processing
                     End If
                 End With
             Case 32
-                Container.DataProcessor_Int32.ImageData = FITSReader.ReadInInt32(FileName, UseIPP)
+                SingleStatCalc.DataProcessor_Int32.ImageData = FITSReader.ReadInInt32(FileName, UseIPP)
             Case -32
-                With Container.DataProcessor_Float32
+                With SingleStatCalc.DataProcessor_Float32
                     .ImageData(0).Data = FITSReader.ReadInFloat32(FileName, UseIPP)
                     If FITSHeader.NAXIS3 > 1 Then
                         For Idx As Integer = 1 To FITSHeader.NAXIS3 - 1
