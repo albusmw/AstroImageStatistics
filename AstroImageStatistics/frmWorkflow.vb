@@ -7,7 +7,7 @@ Option Strict On
 Public Class frmWorkflow
 
     Private LogContent As New System.Text.StringBuilder
-    Private WithEvents DD_Bias As Ato.DragDrop
+    Private WithEvents DD_Bias As cDragDrop
 
     Dim ReportIndent As String = "  "
 
@@ -188,7 +188,7 @@ Public Class frmWorkflow
     End Sub
 
     Private Sub frmWorkflow_Load(sender As Object, e As EventArgs) Handles Me.Load
-        DD_Bias = New Ato.DragDrop(lbBiasFiles, True)       'TODO: configure if double-drop same file is allowed!
+        DD_Bias = New cDragDrop(lbBiasFiles, True)       'TODO: configure if double-drop same file is allowed!
     End Sub
 
 End Class

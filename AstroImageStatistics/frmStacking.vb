@@ -27,10 +27,10 @@ Public Class frmStacking
     Private Stopper As cStopper
 
     '''<summary>Drag-and-drop handler.</summary>
-    Private WithEvents DD As Ato.DragDrop
+    Private WithEvents DD As cDragDrop
 
     Private Sub frmStacking_Load(sender As Object, e As EventArgs) Handles Me.Load
-        DD = New Ato.DragDrop(dgvMain)              'Init drap-and-drop
+        DD = New cDragDrop(dgvMain)              'Init drap-and-drop
         pgMain.SelectedObject = Settings            'Settings
     End Sub
 

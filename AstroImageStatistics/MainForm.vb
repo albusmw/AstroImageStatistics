@@ -12,7 +12,7 @@ Public Class MainForm
     Private Log As cLog
 
     '''<summary>Drag-and-drop handler.</summary>
-    Private WithEvents DD As Ato.DragDrop
+    Private WithEvents DD As cDragDrop
 
     Private MyStreamDeck As OpenMacroBoard.SDK.IMacroBoard
 
@@ -312,7 +312,7 @@ Public Class MainForm
         If Locations.Count > 0 Then AIS.Config.FITSViewer = Locations(0)
 
         'Init drap-and-drop
-        DD = New Ato.DragDrop(tbLogOutput, False)
+        DD = New cDragDrop(tbLogOutput, False)
 
         'Test
         Dim X As New ASCOMDynamic

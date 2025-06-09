@@ -10,14 +10,14 @@ Public Class frmAlignTIFFFiles
     Private ImageData2(,) As Double
     Private ImageData3(,) As Double
 
-    Private WithEvents DD1 As Ato.DragDrop
-    Private WithEvents DD2 As Ato.DragDrop
-    Private WithEvents DD3 As Ato.DragDrop
+    Private WithEvents DD1 As cDragDrop
+    Private WithEvents DD2 As cDragDrop
+    Private WithEvents DD3 As cDragDrop
 
     Private Sub frmAlignTIFFFiles_Load(sender As Object, e As EventArgs) Handles Me.Load
-        DD1 = New Ato.DragDrop(tbFile1, True)
-        DD2 = New Ato.DragDrop(tbFile2, True)
-        DD3 = New Ato.DragDrop(tbFile3, True)
+        DD1 = New cDragDrop(tbFile1, True)
+        DD2 = New cDragDrop(tbFile2, True)
+        DD3 = New cDragDrop(tbFile3, True)
     End Sub
 
     Private Sub btnLoad_Click(sender As Object, e As EventArgs) Handles btnLoad.Click

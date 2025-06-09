@@ -37,9 +37,11 @@
     <Compile Include="..\..\MyLib\cColorMaps.vb" Link="MyLib\cColorMaps.vb" />
     <Compile Include="..\..\MyLib\cCreateSlideShow.vb" Link="MyLib\cCreateSlideShow.vb" />
     <Compile Include="..\..\MyLib\cDLLDynCall.vb" Link="MyLib\cDLLDynCall.vb" />
+    <Compile Include="..\..\MyLib\cDragDrop.vb" Link="MyLib\cDragDrop.vb" />
     <Compile Include="..\..\MyLib\cFITSDisplay.vb" Link="MyLib\cFITSDisplay.vb" />
     <Compile Include="..\..\MyLib\cFITSHeaderKeywords.vb" Link="MyLib\cFITSHeaderKeywords.vb" />
     <Compile Include="..\..\MyLib\cImageFromData.vb" Link="MyLib\cImageFromData.vb" />
+    <Compile Include="..\..\MyLib\cINI.vb" Link="MyLib\cINI.vb" />
     <Compile Include="..\..\MyLib\cIntelIPP.vb" Link="MyLib\cIntelIPP.vb" />
     <Compile Include="..\..\MyLib\cLockBitmap.vb" Link="MyLib\cLockBitmap.vb" />
     <Compile Include="..\..\MyLib\ClosedXML.vb">
@@ -72,6 +74,9 @@
     <Compile Include="..\..\MyLib\ImageFileFormatSpecific.vb" Link="MyLib\ImageFileFormatSpecific.vb" />
     <Compile Include="..\..\MyLib\PictureBoxEx.vb" Link="MyLib\PictureBoxEx.vb" />
     <Compile Include="..\..\MyLib\SingleValStatToXLS.vb" Link="MyLib\SingleValStatToXLS.vb" />
+    <Compile Include="..\..\MyLib\SQLT.vb" Link="MyLib\SQLT.vb" />
+    <Compile Include="..\..\MyLib\ucAstroImageControl.Designer.vb" Link="MyLib\ucAstroImageControl.Designer.vb" />
+    <Compile Include="..\..\MyLib\ucAstroImageControl.vb" Link="MyLib\ucAstroImageControl.vb" />
     <Compile Include="..\..\MyLib\Utils.vb" Link="MyLib\Utils.vb" />
     <Compile Include="..\..\QHYCapture\QHYCapture\frmImageForm.designer.vb">
       <Link>common\frmImageForm.designer.vb</Link>
@@ -125,9 +130,6 @@
     <Compile Include="..\..\src\atomics\cStopper.vb">
       <Link>common\cStopper.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\DragDrop.vb">
-      <Link>atomics\DragDrop.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\ImgArrayFunctions.vb">
       <Link>ImgArrayFunctions.vb</Link>
     </Compile>
@@ -147,14 +149,20 @@
     <Compile Include="..\..\src\atomics\SignalProcessing.vb">
       <Link>atomics\SignalProcessing.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\SQLT.vb">
-      <Link>atomics\SQLT.vb</Link>
-    </Compile>
     <Compile Include="..\..\src\atomics\ZEDGraphForm.vb">
       <Link>ZEDGraphForm.vb</Link>
     </Compile>
     <Compile Include="..\..\src\Forms\frmFITSGrep.Designer.vb" Link="frmFITSGrep.Designer.vb" />
     <Compile Include="..\..\src\Forms\frmFITSGrep.vb" Link="frmFITSGrep.vb" />
+    <COMReference Include="Shell32">
+      <WrapperTool>tlbimp</WrapperTool>
+      <VersionMinor>0</VersionMinor>
+      <VersionMajor>1</VersionMajor>
+      <Guid>50a7e9b0-70ef-11d1-b75a-00a0c90564fe</Guid>
+      <Lcid>0</Lcid>
+      <Isolated>false</Isolated>
+      <EmbedInteropTypes>true</EmbedInteropTypes>
+    </COMReference>
     <Compile Update="frmAstroBinSearch.Designer.vb">
       <DependentUpon>frmAstroBinSearch.vb</DependentUpon>
     </Compile>
@@ -221,6 +229,7 @@
     <EmbeddedResource Include="..\..\MyLib\frmFITSBrowser.resx" Link="MyLib\frmFITSBrowser.resx" />
     <EmbeddedResource Include="..\..\MyLib\frmImageDisplay.resx" Link="MyLib\frmImageDisplay.resx" />
     <EmbeddedResource Include="..\..\MyLib\frmLogDisplay.resx" Link="MyLib\frmLogDisplay.resx" />
+    <EmbeddedResource Include="..\..\MyLib\ucAstroImageControl.resx" Link="MyLib\ucAstroImageControl.resx" />
     <EmbeddedResource Include="..\..\src\Forms\frmFITSGrep.resx" Link="frmFITSGrep.resx" />
     <EmbeddedResource Include="..\HelpContent.rtf">
       <Link>HelpContent.rtf</Link>

@@ -5,6 +5,7 @@ Imports AstroImageStatistics.Ato
 Public Class frmAstroBinSearch
 
     Dim AstroBin As cAstroBin
+    Dim PWDFile As String = "MyLocalKeys.ini"
 
     Dim LB As cLogTextBox
     Public ReadOnly Property MyPath As String = System.IO.Path.GetDirectoryName(System.Reflection.Assembly.GetExecutingAssembly.Location)
@@ -12,7 +13,7 @@ Public Class frmAstroBinSearch
 
     Private Sub frmAstroBinSearch_Load(sender As Object, e As EventArgs) Handles MyBase.Load
         LB = New cLogTextBox(tbLog)
-        AstroBin = New cAstroBin("557ecc514617693189a3b30cae4dcf49388edc3e", "7a095792be040799d35119e9d50c8ffe43811061")
+        AstroBin = New cAstroBin(cINI.GetUserINIContent(PWDFile, "AstroBin", "Key"), cINI.GetUserINIContent(PWDFile, "AstroBin", "Secret"))
     End Sub
 
     Private Sub btnSearch_Click(sender As Object, e As EventArgs) Handles btnSearch.Click
