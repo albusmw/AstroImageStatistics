@@ -1,10 +1,11 @@
 ﻿Option Explicit On
 Option Strict On
 
-Imports OpenCvSharp
-
 '''<summary>This form should handle actions that apply to multiple files, e.g. dark statistics, hot pixel search, basic stacking, ...</summary>
 Partial Public Class frmMultiFileAction
+
+    '''<summary>Folder to move bad files to.</summary>
+    Public Property BadFolderName As String = "BAD"
 
     '''<summary>Available columns.</summary>
     Private Enum eColumns
@@ -325,7 +326,7 @@ Partial Public Class frmMultiFileAction
         If (Config.Processing_StoreAlignedFiles = True) Or (Config.Processing_CalcStackedFile = True) Or (Config.Processing_CalcSigmaClip = True) Then
 
             Log("Running common ROI calculation ...")
-            ROICombiner.Clear
+            ROICombiner.Clear()
 
             'Add all combiner-specific parameters (size and delta) to the ROICombiner
             For Each OriginalFile As cFileProps In AllCheckedFiles
@@ -1095,7 +1096,7 @@ Partial Public Class frmMultiFileAction
             Dim CurrentRow As Integer = GetFileRow(AllFiles(Idx))
             Dim FileDirectory As String = System.IO.Path.GetDirectoryName(AllFiles(Idx).FileName)
             'Load .info.txt file
-            Dim InfoFile As String = System.IO.Path.Combine(FileDirectory, System.IO.Path.GetFileNameWithoutExtension(AllFiles(Idx).FileName) & ".info.txt")
+            Dim InfoFile As String = System.IO.Path.Combine(FileDirectory, System.IO.Path.GetFileNameWithoutExtension(AllFiles(Idx).FileName) & "." & cDeepSkyStacker.DSS_FileInfo)
             If System.IO.File.Exists(InfoFile) Then
                 Dim Stars As List(Of DSSFileParser.sStarInfo) = DSSFileParser.ParseInfoFile(InfoFile, AllFiles(Idx).NrStars, AllFiles(Idx).OverallQuality, AllFiles(Idx).SkyBackground)
                 If tbStars.Items.Count = 1 Then
@@ -1108,7 +1109,7 @@ Partial Public Class frmMultiFileAction
                 End If
             End If
             'Load .stackinfo.txt (the stack info) for this file (parsed multiple times but is fast so left like this ...)
-            Dim StackInfoFiles As New List(Of String)(System.IO.Directory.GetFiles(FileDirectory, "*.stackinfo.txt"))
+            Dim StackInfoFiles As New List(Of String)(System.IO.Directory.GetFiles(FileDirectory, "*." & cDeepSkyStacker.DSS_StackInfo))
             If StackInfoFiles.Count > 0 Then
                 DSSFileParser.ParseStackInfo(StackInfoFiles.First, AllFiles(Idx).FileName, AllFiles(Idx).DeltaX, AllFiles(Idx).DeltaY)
             End If
@@ -1127,7 +1128,7 @@ Partial Public Class frmMultiFileAction
             Config.ROIDisplay_X = CInt(CurrentEntry(0).ValRegIndep) - (Config.ROIDisplay_Width \ 2)
             Config.ROIDisplay_Y = CInt(CurrentEntry(1).ValRegIndep) - (Config.ROIDisplay_Height \ 2)
             CalcAndDisplayCombinedROI()
-            RunSinglePixelStat(New Point(CurrentEntry(0).ValRegIndep, CurrentEntry(1).ValRegIndep))
+            RunSinglePixelStat(New Point(CurrentEntry(0).ValRegIndepInteger, CurrentEntry(1).ValRegIndepInteger))
         Catch ex As Exception
             'Do nothing ...
         End Try
@@ -1220,16 +1221,16 @@ Partial Public Class frmMultiFileAction
     Private Sub tsmiAction_HotPixel_Fix_Click(sender As Object, e As EventArgs) Handles tsmiAction_HotPixel_Fix.Click
 
         With ofdMain
-            .Filter = "Hot pixel file (*.hotpixel.txt)|*.hotpixel.txt"
+            .Filter = "Hot pixel file (*." & cDeepSkyStacker.DSS_HotPixel & ")|*." & cDeepSkyStacker.DSS_HotPixel
             If .ShowDialog <> DialogResult.OK Then Exit Sub
         End With
-        Dim HotPixel As String() = System.IO.File.ReadAllLines(ofdMain.FileName)
+        Dim HotPixels As List(Of Drawing.Point) = cDeepSkyStacker.GetHotPixel(ofdMain.FileName)
 
         Dim ReplaceLog As New List(Of String)
         With AIS.DB.LastFile_Data.DataProcessor_UInt16.ImageData(0)
-            For Idx As Integer = 0 To HotPixel.GetUpperBound(0)
-                Dim X As Integer = CInt(HotPixel(Idx).Substring(0, 4))
-                Dim Y As Integer = CInt(HotPixel(Idx).Substring(5, 4))
+            For Each HotPixel As Drawing.Point In HotPixels
+                Dim X As Integer = HotPixel.X
+                Dim Y As Integer = HotPixel.Y
                 'Run median
                 Dim SurPix As New List(Of UInt16)
                 SurPix.Add(.Data(X - 1, Y - 1))
@@ -1246,7 +1247,7 @@ Partial Public Class frmMultiFileAction
                 'Replace wrong pixel
                 ReplaceLog.Add(X.ValRegIndep & ":" & Y.ValRegIndep & ": " & .Data(X, Y).ValRegIndep & "->" & NewVal.ValRegIndep)
                 .Data(X, Y) = NewVal
-            Next Idx
+            Next HotPixel
         End With
         'Log.Log(ReplaceLog)
         'Log.Log("Fixed " & HotPixel.Count & " pixel")
@@ -1254,6 +1255,21 @@ Partial Public Class frmMultiFileAction
         Dim StatisticsReport As List(Of String) = Processing.CalculateStatistics(AIS.DB.LastFile_Data, True, True, AIS.Config.BayerPatternNames, AIS.DB.LastFile_Statistics)
         'Log.Log(StatisticsReport)
 
+    End Sub
+
+    Private Sub cmsTable_MoveToBad_Click(sender As Object, e As EventArgs) Handles cmsTable_MoveToBad.Click
+        'Get path parts and create BAD folder if it does not exist
+        Dim SelectedFile As String = GetSelectedFileName()
+        Dim FileNameOnly As String = System.IO.Path.GetFileName(SelectedFile)
+        Dim FileNameNoExtension As String = System.IO.Path.GetFileNameWithoutExtension(SelectedFile)
+        Dim ParentFolder As String = System.IO.Path.GetDirectoryName(SelectedFile)
+        Dim BadFolder As String = System.IO.Path.Combine(ParentFolder, BadFolderName)
+        If System.IO.Directory.Exists(BadFolder) = False Then System.IO.Directory.CreateDirectory(BadFolder)
+        'Move the file in the BAD folder
+        System.IO.File.Move(System.IO.Path.Combine(ParentFolder, FileNameOnly), System.IO.Path.Combine(BadFolder, FileNameOnly))
+        'Move DSS file is exists
+        Dim DSS_FI As String = System.IO.Path.Combine(ParentFolder, FileNameNoExtension & "." & cDeepSkyStacker.DSS_FileInfo)
+        If System.IO.File.Exists(DSS_FI) Then System.IO.File.Move(DSS_FI, System.IO.Path.Combine(BadFolder, FileNameNoExtension & "." & cDeepSkyStacker.DSS_FileInfo))
     End Sub
 
 End Class

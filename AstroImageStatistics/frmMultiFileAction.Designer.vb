@@ -76,6 +76,7 @@ Partial Class frmMultiFileAction
         ssMain = New StatusStrip()
         tspbMain = New ToolStripProgressBar()
         sfdMain = New SaveFileDialog()
+        cmsTable_MoveToBad = New ToolStripMenuItem()
         CType(adgvMain, ComponentModel.ISupportInitialize).BeginInit()
         cmsTable.SuspendLayout()
         CType(scMain, ComponentModel.ISupportInitialize).BeginInit()
@@ -129,14 +130,14 @@ Partial Class frmMultiFileAction
         ' 
         ' cmsTable
         ' 
-        cmsTable.Items.AddRange(New ToolStripItem() {cmsTable_OpenFile})
+        cmsTable.Items.AddRange(New ToolStripItem() {cmsTable_OpenFile, cmsTable_MoveToBad})
         cmsTable.Name = "cmsTable"
-        cmsTable.Size = New Size(123, 26)
+        cmsTable.Size = New Size(181, 70)
         ' 
         ' cmsTable_OpenFile
         ' 
         cmsTable_OpenFile.Name = "cmsTable_OpenFile"
-        cmsTable_OpenFile.Size = New Size(122, 22)
+        cmsTable_OpenFile.Size = New Size(180, 22)
         cmsTable_OpenFile.Text = "Open file"
         ' 
         ' scMain
@@ -187,7 +188,7 @@ Partial Class frmMultiFileAction
         ' scButtom.Panel2
         ' 
         scButtom.Panel2.Controls.Add(scBottomRight)
-        scButtom.Size = New Size(1527, 629)
+        scButtom.Size = New Size(1527, 628)
         scButtom.SplitterDistance = 457
         scButtom.SplitterWidth = 5
         scButtom.TabIndex = 1
@@ -198,7 +199,7 @@ Partial Class frmMultiFileAction
         pgMain.Location = New Point(4, 3)
         pgMain.Margin = New Padding(4, 3, 4, 3)
         pgMain.Name = "pgMain"
-        pgMain.Size = New Size(449, 623)
+        pgMain.Size = New Size(449, 622)
         pgMain.TabIndex = 0
         ' 
         ' scBottomRight
@@ -216,8 +217,8 @@ Partial Class frmMultiFileAction
         ' 
         scBottomRight.Panel2.Controls.Add(tbLog)
         scBottomRight.Panel2.Controls.Add(Label1)
-        scBottomRight.Size = New Size(1041, 623)
-        scBottomRight.SplitterDistance = 303
+        scBottomRight.Size = New Size(1040, 622)
+        scBottomRight.SplitterDistance = 302
         scBottomRight.TabIndex = 7
         ' 
         ' gbAspects
@@ -228,7 +229,7 @@ Partial Class frmMultiFileAction
         gbAspects.Margin = New Padding(4, 3, 4, 3)
         gbAspects.Name = "gbAspects"
         gbAspects.Padding = New Padding(4, 3, 4, 3)
-        gbAspects.Size = New Size(1032, 297)
+        gbAspects.Size = New Size(1031, 296)
         gbAspects.TabIndex = 6
         gbAspects.TabStop = False
         gbAspects.Text = "Aspect"
@@ -243,7 +244,7 @@ Partial Class frmMultiFileAction
         tcAspect.Margin = New Padding(4, 3, 4, 3)
         tcAspect.Name = "tcAspect"
         tcAspect.SelectedIndex = 0
-        tcAspect.Size = New Size(1025, 268)
+        tcAspect.Size = New Size(1024, 267)
         tcAspect.TabIndex = 0
         ' 
         ' tpFITSHeader
@@ -254,7 +255,7 @@ Partial Class frmMultiFileAction
         tpFITSHeader.Margin = New Padding(4, 3, 4, 3)
         tpFITSHeader.Name = "tpFITSHeader"
         tpFITSHeader.Padding = New Padding(4, 3, 4, 3)
-        tpFITSHeader.Size = New Size(1017, 240)
+        tpFITSHeader.Size = New Size(1016, 239)
         tpFITSHeader.TabIndex = 0
         tpFITSHeader.Text = "FITS header"
         ' 
@@ -267,7 +268,7 @@ Partial Class frmMultiFileAction
         tbFITSHeader.Multiline = True
         tbFITSHeader.Name = "tbFITSHeader"
         tbFITSHeader.ScrollBars = ScrollBars.Both
-        tbFITSHeader.Size = New Size(1009, 234)
+        tbFITSHeader.Size = New Size(1008, 233)
         tbFITSHeader.TabIndex = 2
         tbFITSHeader.WordWrap = False
         ' 
@@ -279,7 +280,7 @@ Partial Class frmMultiFileAction
         tbCombinedROI.Margin = New Padding(4, 3, 4, 3)
         tbCombinedROI.Name = "tbCombinedROI"
         tbCombinedROI.Padding = New Padding(4, 3, 4, 3)
-        tbCombinedROI.Size = New Size(1018, 241)
+        tbCombinedROI.Size = New Size(1017, 240)
         tbCombinedROI.TabIndex = 1
         tbCombinedROI.Text = "(Combined) ROI"
         ' 
@@ -292,7 +293,7 @@ Partial Class frmMultiFileAction
         pbImage.Location = New Point(4, 7)
         pbImage.Margin = New Padding(4, 3, 4, 3)
         pbImage.Name = "pbImage"
-        pbImage.Size = New Size(1008, 230)
+        pbImage.Size = New Size(1007, 229)
         pbImage.SizeMode = PictureBoxSizeMode.Zoom
         pbImage.TabIndex = 5
         pbImage.TabStop = False
@@ -360,7 +361,7 @@ Partial Class frmMultiFileAction
         tbLog.Multiline = True
         tbLog.Name = "tbLog"
         tbLog.ScrollBars = ScrollBars.Both
-        tbLog.Size = New Size(1033, 289)
+        tbLog.Size = New Size(1032, 289)
         tbLog.TabIndex = 0
         tbLog.WordWrap = False
         ' 
@@ -520,24 +521,24 @@ Partial Class frmMultiFileAction
         ' tsmiAction_HotPixel_Method1
         ' 
         tsmiAction_HotPixel_Method1.Name = "tsmiAction_HotPixel_Method1"
-        tsmiAction_HotPixel_Method1.Size = New Size(138, 22)
+        tsmiAction_HotPixel_Method1.Size = New Size(136, 22)
         tsmiAction_HotPixel_Method1.Text = "Method 1"
         ' 
         ' tsmiAction_HotPixel_Method2
         ' 
         tsmiAction_HotPixel_Method2.Name = "tsmiAction_HotPixel_Method2"
-        tsmiAction_HotPixel_Method2.Size = New Size(138, 22)
+        tsmiAction_HotPixel_Method2.Size = New Size(136, 22)
         tsmiAction_HotPixel_Method2.Text = "Method 2"
         ' 
         ' ToolStripMenuItem5
         ' 
         ToolStripMenuItem5.Name = "ToolStripMenuItem5"
-        ToolStripMenuItem5.Size = New Size(135, 6)
+        ToolStripMenuItem5.Size = New Size(133, 6)
         ' 
         ' tsmiAction_HotPixel_Fix
         ' 
         tsmiAction_HotPixel_Fix.Name = "tsmiAction_HotPixel_Fix"
-        tsmiAction_HotPixel_Fix.Size = New Size(138, 22)
+        tsmiAction_HotPixel_Fix.Size = New Size(136, 22)
         tsmiAction_HotPixel_Fix.Text = "Fix hot pixel"
         ' 
         ' ofdMain
@@ -558,6 +559,12 @@ Partial Class frmMultiFileAction
         ' 
         tspbMain.Name = "tspbMain"
         tspbMain.Size = New Size(117, 18)
+        ' 
+        ' cmsTable_MoveToBad
+        ' 
+        cmsTable_MoveToBad.Name = "cmsTable_MoveToBad"
+        cmsTable_MoveToBad.Size = New Size(180, 22)
+        cmsTable_MoveToBad.Text = "Move to BAD folder"
         ' 
         ' frmMultiFileAction
         ' 
@@ -657,4 +664,5 @@ Partial Class frmMultiFileAction
     Friend WithEvents tsmiAction_HotPixel_Method2 As ToolStripMenuItem
     Friend WithEvents ToolStripMenuItem5 As ToolStripSeparator
     Friend WithEvents tsmiAction_HotPixel_Fix As ToolStripMenuItem
+    Friend WithEvents cmsTable_MoveToBad As ToolStripMenuItem
 End Class
