@@ -1426,7 +1426,7 @@ Public Class MainForm
 
     Private Sub FixRADECErrorToolStripMenuItem_Click(sender As Object, e As EventArgs) Handles FixRADECErrorToolStripMenuItem.Click
         'Fix the error that RA_NOM which comes first is also DEC_NOM
-        Dim DirScanner As New Ato.RecursiveDirScanner("\\192.168.100.10\astro\2021_02_13 (SH2-155)")
+        Dim DirScanner As New RecursiveDirScanner("\\192.168.100.10\astro\2021_02_13 (SH2-155)")
         DirScanner.Scan("*.fit?")
         Dim FileCount As Integer = 0
         Dim CorrectCount As Integer = 0

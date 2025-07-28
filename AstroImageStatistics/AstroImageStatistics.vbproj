@@ -45,6 +45,7 @@
     <Compile Include="..\..\MyLib\cINI.vb" Link="MyLib\cINI.vb" />
     <Compile Include="..\..\MyLib\cIntelIPP.vb" Link="MyLib\cIntelIPP.vb" />
     <Compile Include="..\..\MyLib\cLockBitmap.vb" Link="MyLib\cLockBitmap.vb" />
+    <Compile Include="..\..\MyLib\cLogTextBox.vb" Link="MyLib\cLogTextBox.vb" />
     <Compile Include="..\..\MyLib\ClosedXML.vb">
       <Link>MyLib\ClosedXML.vb</Link>
     </Compile>
@@ -76,6 +77,7 @@
     <Compile Include="..\..\MyLib\GetBuildDateTime.vb" Link="MyLib\GetBuildDateTime.vb" />
     <Compile Include="..\..\MyLib\ImageFileFormatSpecific.vb" Link="MyLib\ImageFileFormatSpecific.vb" />
     <Compile Include="..\..\MyLib\PictureBoxEx.vb" Link="MyLib\PictureBoxEx.vb" />
+    <Compile Include="..\..\MyLib\RecursiveDirScan.vb" Link="MyLib\RecursiveDirScan.vb" />
     <Compile Include="..\..\MyLib\SingleValStatToXLS.vb" Link="MyLib\SingleValStatToXLS.vb" />
     <Compile Include="..\..\MyLib\SQLT.vb" Link="MyLib\SQLT.vb" />
     <Compile Include="..\..\MyLib\ucAstroImageControl.Designer.vb" Link="MyLib\ucAstroImageControl.Designer.vb" />
@@ -136,15 +138,8 @@
     <Compile Include="..\..\src\atomics\ImgArrayFunctions.vb">
       <Link>ImgArrayFunctions.vb</Link>
     </Compile>
-    <Compile Include="..\..\src\atomics\cLogTextBox.vb">
-      <Link>cLogTextBox.vb</Link>
-      <SubType>Component</SubType>
-    </Compile>
     <Compile Include="..\..\src\atomics\ImageProcessing.vb">
       <Link>ImageProcessing.vb</Link>
-    </Compile>
-    <Compile Include="..\..\src\atomics\RecursiveDirScan.vb">
-      <Link>atomics\RecursiveDirScan.vb</Link>
     </Compile>
     <Compile Include="..\..\src\atomics\RTFTextBox.vb">
       <Link>RTFTextBox.vb</Link>
