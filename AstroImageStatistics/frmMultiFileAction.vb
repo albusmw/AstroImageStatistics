@@ -25,7 +25,6 @@ Partial Public Class frmMultiFileAction
         DSS_NrStars
     End Enum
 
-
     '''<summary>Files in the list and it's properties.</summary>
     Public AllFiles As New List(Of cFileProps)
 
@@ -89,7 +88,7 @@ Partial Public Class frmMultiFileAction
 
     '''<summary>Return the index of the selected table element in the AllFiles list.</summary>
     Private Function GetFileListIndex() As Integer
-        Dim FileNameToSearch As String = GetSelectedFileName()
+        Dim FileNameToSearch As String = GetSelectedFile.FileName
         For Idx As Integer = 0 To AllFiles.Count - 1
             If AllFiles(Idx).FileName = FileNameToSearch Then
                 Return Idx
@@ -241,6 +240,9 @@ Partial Public Class frmMultiFileAction
         Dim Stacked_UInt32(,) As UInt32 = {}
         Dim SigmaClipROIs(AllCheckedFiles.Count - 1) As c2D(Of UInt16)
 
+        'Temporary parameters to be moved in general processing
+        Dim TakeLastFileAsReference As Boolean = False
+
         'Prepare
 
         tbLog.BackColor = Color.Orange
@@ -256,6 +258,8 @@ Partial Public Class frmMultiFileAction
             Dim FileCount As Integer = 0
             tspbMain.Maximum = AllCheckedFiles.Count
             tspbMain.Value = 0
+            Dim LastShift As New Drawing.Point(0, 0)
+
             For Each FileToProcess As cFileProps In AllCheckedFiles
 
                 'Start with this file
@@ -265,9 +269,11 @@ Partial Public Class frmMultiFileAction
                 tspbMain.Value = FileCount
                 DE()
 
-                'Read in the file
+                'Read in the file - for XCorr a smaller piece would be enough
+                'Dim ROI As New Rectangle(5000, 5000, 3000, 3000)
                 Dim Container As New AstroNET.Statistics(AIS.DB.IPP)
                 Container.ResetAllProcessors()
+                'Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileToProcess.FileName, True, ROI, True)
                 Container.DataProcessor_UInt16.ImageData(0).Data = FITSReader.ReadInUInt16(FileToProcess.FileName, True, True)
 
                 'Calculate statistics
@@ -296,6 +302,7 @@ Partial Public Class frmMultiFileAction
                         Shift = New Drawing.Point(0, 0)
                     Else
                         Shift = cRegistration.MultiAreaCorrelate(CorrRefData, FileContentAsFloat32, Config.Stack_XCorrSegmentation, Config.Stack_TlpReduction)
+                        If TakeLastFileAsReference Then CorrRefData = FileContentAsFloat32.CreateCopy
                     End If
 
                     'Correct shift if binning was selected and sign
@@ -306,7 +313,14 @@ Partial Public Class frmMultiFileAction
                     End If
 
                     'Store calculated shifts
-                    MarkFileDelta(CurrentRow, Shift.X, Shift.Y, Color.LimeGreen)
+                    If TakeLastFileAsReference = False Then
+                        MarkFileDelta(CurrentRow, Shift.X, Shift.Y, Color.LimeGreen)
+                    Else
+                        MarkFileDelta(CurrentRow, Shift.X - LastShift.X, Shift.Y - LastShift.Y, Color.LimeGreen)
+                    End If
+
+                    'Remember this shift
+                    LastShift = Shift
 
                 End If
 
@@ -666,7 +680,7 @@ Partial Public Class frmMultiFileAction
         Dim FilesToLoad As New List(Of cFileProps)
         If Config.ROIDisplay_Mode = cConfig.eROIDisplay.Single Then
             'Display only active file
-            FilesToLoad.Add(AllFiles(GetFileListIndex(GetSelectedFileName)))
+            FilesToLoad.Add(AllFiles(GetFileListIndex(GetSelectedFile.FileName)))
         Else
             'Display all checked files
             FilesToLoad.AddRange(GetListFiles(True))
@@ -817,12 +831,16 @@ Partial Public Class frmMultiFileAction
         Return CType(((Value - Min) / (Max - Min)) * UInt16.MaxValue, UInt16)
     End Function
 
-    '''<summary>Return the selected file name in the table.</summary>
-    Private Function GetSelectedFileName() As String
+    '''<summary>Return the selected file in the table.</summary>
+    Private Function GetSelectedFile() As cFileProps
         Try
-            Return CStr(adgvMain.Rows(adgvMain.SelectedCells(0).RowIndex).Cells(eColumns.FileName).Value)
+            Dim SelectedFileName As String = CStr(adgvMain.Rows(adgvMain.SelectedCells(0).RowIndex).Cells(eColumns.FileName).Value)
+            For Each X As cFileProps In AllFiles
+                If X.FileName = SelectedFileName Then Return X
+            Next X
+            Return Nothing
         Catch ex As Exception
-            Return String.Empty
+            Return Nothing
         End Try
     End Function
 
@@ -1119,7 +1137,7 @@ Partial Public Class frmMultiFileAction
     End Sub
 
     Private Sub cmsTable_OpenFile_Click(sender As Object, e As EventArgs) Handles cmsTable_OpenFile.Click
-        AIS.OpenFile(GetSelectedFileName)
+        AIS.OpenFile(GetSelectedFile.FileName)
     End Sub
 
     Private Sub tbStars_SelectedIndexChanged(sender As Object, e As EventArgs) Handles tbStars.SelectedIndexChanged
@@ -1259,17 +1277,49 @@ Partial Public Class frmMultiFileAction
 
     Private Sub cmsTable_MoveToBad_Click(sender As Object, e As EventArgs) Handles cmsTable_MoveToBad.Click
         'Get path parts and create BAD folder if it does not exist
-        Dim SelectedFile As String = GetSelectedFileName()
+        Dim SelectedFile As String = GetSelectedFile.FileName
         Dim FileNameOnly As String = System.IO.Path.GetFileName(SelectedFile)
         Dim FileNameNoExtension As String = System.IO.Path.GetFileNameWithoutExtension(SelectedFile)
         Dim ParentFolder As String = System.IO.Path.GetDirectoryName(SelectedFile)
         Dim BadFolder As String = System.IO.Path.Combine(ParentFolder, BadFolderName)
         If System.IO.Directory.Exists(BadFolder) = False Then System.IO.Directory.CreateDirectory(BadFolder)
         'Move the file in the BAD folder
-        System.IO.File.Move(System.IO.Path.Combine(ParentFolder, FileNameOnly), System.IO.Path.Combine(BadFolder, FileNameOnly))
+        Dim BadFile As String = System.IO.Path.Combine(ParentFolder, FileNameOnly)
+        If System.IO.File.Exists(BadFile) Then System.IO.File.Move(BadFile, System.IO.Path.Combine(BadFolder, FileNameOnly))
         'Move DSS file is exists
         Dim DSS_FI As String = System.IO.Path.Combine(ParentFolder, FileNameNoExtension & "." & cDeepSkyStacker.DSS_FileInfo)
         If System.IO.File.Exists(DSS_FI) Then System.IO.File.Move(DSS_FI, System.IO.Path.Combine(BadFolder, FileNameNoExtension & "." & cDeepSkyStacker.DSS_FileInfo))
+    End Sub
+
+    Private Sub tsmiFileList_ResetDeltaX_Click(sender As Object, e As EventArgs) Handles tsmiFileList_ResetDeltaX.Click
+        For Each Entry As cFileProps In AllFiles
+            Entry.DeltaX = 0
+        Next Entry
+        RefreshTable()
+    End Sub
+
+    Private Sub tsmiFileList_ResetDeltaY_Click(sender As Object, e As EventArgs) Handles tsmiFileList_ResetDeltaY.Click
+        For Each Entry As cFileProps In AllFiles
+            Entry.DeltaY = 0
+        Next Entry
+        RefreshTable()
+    End Sub
+
+    Private Sub tsmiFileList_ResetProcess_Click(sender As Object, e As EventArgs) Handles tsmiFileList_ResetProcess.Click
+        Dim ValueToSet As Boolean = CBool(IIf(MsgBox("Set all to ...", MsgBoxStyle.YesNo Or MsgBoxStyle.Question, "ALL TO ...") = MsgBoxResult.Yes, True, False))
+        For Each Entry As cFileProps In AllFiles
+            Entry.Process = ValueToSet
+        Next Entry
+        RefreshTable()
+    End Sub
+
+    Private Sub cmsTable_CopyDeltaXYDown_Click(sender As Object, e As EventArgs) Handles cmsTable_CopyDeltaXYDown.Click
+        Dim SelectedFile As cFileProps = GetSelectedFile()
+        For Idx As Integer = adgvMain.SelectedCells(0).RowIndex + 1 To adgvMain.RowCount - 1
+            adgvMain.Rows(Idx).Cells(eColumns.DeltaX).Value = adgvMain.Rows(adgvMain.SelectedCells(0).RowIndex).Cells(eColumns.DeltaX).Value
+            adgvMain.Rows(Idx).Cells(eColumns.DeltaY).Value = adgvMain.Rows(adgvMain.SelectedCells(0).RowIndex).Cells(eColumns.DeltaY).Value
+        Next Idx
+        RefreshTable()
     End Sub
 
 End Class
