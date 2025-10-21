@@ -30,6 +30,7 @@
     <Compile Include="..\..\MyLib\AstroDSP.vb">
       <Link>MyLib\AstroDSP.vb</Link>
     </Compile>
+    <Compile Include="..\..\MyLib\Astronomy.NET.vb" Link="MyLib\Astronomy.NET.vb" />
     <Compile Include="..\..\MyLib\AstroStatistics.vb" Link="MyLib\AstroStatistics.vb" />
     <Compile Include="..\..\MyLib\cAstrobinAPIv2.vb" Link="MyLib\cAstrobinAPIv2.vb" />
     <Compile Include="..\..\MyLib\cAstroImageProcessing.vb" Link="MyLib\cAstroImageProcessing.vb" />
