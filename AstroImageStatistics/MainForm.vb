@@ -2096,14 +2096,6 @@ Public Class MainForm
         NewForm.Show()
     End Sub
 
-    Private Sub tsmiTest_Shannon_Click(sender As Object, e As EventArgs) Handles tsmiTest_Shannon.Click
-        Dim TestFile As String = "C:\Users\albus\OneDrive\Transfer_Kevin_Morefield\QHY600_L_300_025_020_003_060_ExtendFullwell.fits"
-        LoadFile(TestFile)
-        Dim Dic As Dictionary(Of Long, ULong) = AIS.DB.LastFile_Statistics.MonochromHistogram_Int
-        Dim Gene As New cShanFano(Of Long)
-        Gene.GenCodeBook(Dic)
-    End Sub
-
     Private Sub tsmiTest_FlatsEqualizer_Click(sender As Object, e As EventArgs) Handles tsmiTest_FlatsEqualizer.Click
 
         Dim AllFiles As New List(Of String) : AllFiles.AddRange(System.IO.Directory.GetFiles("\\192.168.100.10\dsc\2024_11_13\Flats\06_28_12", "Flats_000*.fits"))
@@ -2188,6 +2180,11 @@ Public Class MainForm
         Disp.Plotter.MaximizePlotArea()
         Disp.HostForm.Icon = Me.Icon
 
+    End Sub
+
+    Private Sub tsmiFile1VsFile2_Click(sender As Object, e As EventArgs) Handles tsmiFile1VsFile2.Click
+        Dim X As New frmStat2Files
+        X.Show()
     End Sub
 
 End Class
